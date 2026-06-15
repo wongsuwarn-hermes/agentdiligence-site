@@ -1,10 +1,10 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>AgentDiligence — Stripe-inspired prototype</title>
-  <meta name="description" content="Stripe-inspired AgentDiligence landing page prototype." />
+  <meta name="description" content="Stripe-inspired AgentDiligence landing page prototype.">
   <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;500;600&family=Source+Code+Pro:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -83,12 +83,17 @@
     .dark h2 { color:#fff; }
     .dark .section-head p { color:#c9d2ff; }
     .report-preview { display:grid; grid-template-columns:1fr 1fr; gap:22px; }
-    .report { background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.14); border-radius:8px; padding:24px; box-shadow:0 20px 40px rgba(3,3,39,.25); }
-    .report h3 { margin:0 0 12px; font-weight:400; font-size:24px; }
-    .report p { color:#d6d9fc; line-height:1.5; }
-    .rows { margin-top:20px; border-top:1px solid rgba(255,255,255,.12); }
+    .report { position:relative; overflow:hidden; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.14); border-radius:8px; padding:24px; box-shadow:0 20px 40px rgba(3,3,39,.25); }
+    .report__mark { position:absolute; top:19px; right:20px; width:42px; height:42px; opacity:.22; }
+    .report__mark path { stroke:#d6d9fc; fill:none; stroke-linecap:round; stroke-linejoin:round; }
+    .report h3 { position:relative; margin:0 0 12px; padding-right:54px; font-weight:400; font-size:24px; }
+    .report p { position:relative; color:#d6d9fc; line-height:1.5; }
+    .rows { position:relative; margin-top:20px; border-top:1px solid rgba(255,255,255,.12); }
     .rows div { display:flex; justify-content:space-between; border-bottom:1px solid rgba(255,255,255,.12); padding:13px 0; font-family:var(--mono); font-size:13px; }
-    .final { padding: 92px 0; text-align:center; background:#fff; }
+    .final { position:relative; overflow:hidden; padding: 92px 0; text-align:center; background:#fff; }
+    .final .wrap { position:relative; z-index:1; }
+    .final-mark { position:absolute; left:50%; top:50%; width:min(620px, 86vw); height:auto; transform:translate(-50%, -50%); opacity:.045; pointer-events:none; }
+    .final-mark path { stroke:var(--purple); fill:none; stroke-linecap:round; stroke-linejoin:round; }
     .final h2 { max-width:780px; margin:0 auto 18px; }
     .final p { max-width:640px; margin:0 auto 25px; font-size:20px; line-height:1.45; color:#425466; }
     footer { padding:34px 0; color:var(--body); border-top:1px solid var(--border); font-size:14px; }
@@ -148,8 +153,8 @@
     <div class="wrap">
       <div class="section-head"><div><div class="kicker">Evidence</div><h2>Decision output, not dashboard noise.</h2></div><p>AgentDiligence turns agent runs into a buyer-readable report: what passed, what failed, where to constrain deployment, and which candidate is worth piloting.</p></div>
       <div class="report-preview">
-        <div class="report"><h3>Comparison report</h3><p>Side-by-side agent performance on the same workflow.</p><div class="rows"><div><span>Task success</span><strong>49/50</strong></div><div><span>Policy violations</span><strong>0</strong></div><div><span>Avg latency</span><strong>8.1s</strong></div><div><span>Recommendation</span><strong>Pilot</strong></div></div></div>
-        <div class="report"><h3>Clickable evidence</h3><p>Every headline number connects to the actual transcript, tool behavior, policy match, and final state.</p><div class="rows"><div><span>Transcript review</span><strong>Included</strong></div><div><span>Final-state proof</span><strong>L4</strong></div><div><span>Failure clusters</span><strong>3 found</strong></div><div><span>Deployment boundary</span><strong>Human-gate &gt; £250</strong></div></div></div>
+        <div class="report"><svg class="report__mark" viewBox="0 0 96 96" aria-hidden="true"><path d="M18 74L56 22" stroke-width="7"/><path d="M32 55H56" stroke-width="7"/><path d="M56 22V74H69C84 74 94 63 94 48S84 22 69 22H56" stroke-width="7"/></svg><h3>Comparison report</h3><p>Side-by-side agent performance on the same workflow.</p><div class="rows"><div><span>Task success</span><strong>49/50</strong></div><div><span>Policy violations</span><strong>0</strong></div><div><span>Avg latency</span><strong>8.1s</strong></div><div><span>Recommendation</span><strong>Pilot</strong></div></div></div>
+        <div class="report"><svg class="report__mark" viewBox="0 0 96 96" aria-hidden="true"><path d="M18 74L56 22" stroke-width="7"/><path d="M32 55H56" stroke-width="7"/><path d="M56 22V74H69C84 74 94 63 94 48S84 22 69 22H56" stroke-width="7"/></svg><h3>Clickable evidence</h3><p>Every headline number connects to the actual transcript, tool behavior, policy match, and final state.</p><div class="rows"><div><span>Transcript review</span><strong>Included</strong></div><div><span>Final-state proof</span><strong>L4</strong></div><div><span>Failure clusters</span><strong>3 found</strong></div><div><span>Deployment boundary</span><strong>Human-gate &gt; £250</strong></div></div></div>
       </div>
     </div>
   </section>
@@ -166,6 +171,7 @@
   </section>
 
   <section class="final">
+    <svg class="final-mark" viewBox="0 0 96 96" aria-hidden="true"><path d="M18 74L56 22" stroke-width="5"/><path d="M32 55H56" stroke-width="5"/><path d="M56 22V74H69C84 74 94 63 94 48S84 22 69 22H56" stroke-width="5"/></svg>
     <div class="wrap"><h2>Stop buying agents from slide decks.</h2><p>Run the workflow. Compare the field. Buy the agent that can prove it works.</p><a class="btn btn-primary" href="mailto:simon@agentdiligence.io?subject=Run%20an%20AgentDiligence%20comparison">Run a comparison →</a></div>
   </section>
 
