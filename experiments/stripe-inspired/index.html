@@ -210,6 +210,9 @@ const gl = canvas.getContext('webgl', { alpha:true, premultipliedAlpha:true, ant
 
 if (!gl) { /* CSS fallback stays */ }
 else {
+  // Keep the CSS radial gradient as the no-WebGL fallback only. Once WebGL is
+  // available, clear it so it does not read as a second, detached cloud.
+  canvas.style.background = 'transparent';
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const VERT = `attribute vec2 p; void main(){ gl_Position=vec4(p,0.0,1.0); }`;
