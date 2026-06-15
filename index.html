@@ -3,292 +3,375 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>AgentDiligence — Test every agent before you trust one</title>
-  <meta name="description" content="AgentDiligence runs the same real workflow across vendor agents, custom agents, and baselines so buyers can compare evidence before they buy or deploy." />
-  <meta property="og:title" content="AgentDiligence — Test every agent before you trust one" />
-  <meta property="og:description" content="Run your real workflow across every candidate agent. See side-by-side evidence. Get a defensible recommendation before you buy." />
-  <meta property="og:image" content="https://agentdiligence.io/assets/agentdiligence-multi-agent-ui.jpg" />
-  <meta name="theme-color" content="#07090d" />
+  <title>AgentDiligence — Buyer-side AI agent diligence</title>
+  <meta name="description" content="AgentDiligence runs buyer-side AI agent evaluations on real workflows before procurement." />
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;500;600&family=Source+Code+Pro:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #07090d;
-      --bg2: #0b0f14;
-      --panel: rgba(18, 22, 29, 0.84);
-      --panel2: rgba(12, 16, 22, 0.94);
-      --line: rgba(255,255,255,.11);
-      --line2: rgba(198,242,78,.32);
-      --text: #f4f6f8;
-      --muted: #8f99a8;
-      --muted2: #c4cad4;
-      --lime: #c6f24e;
-      --cyan: #5be9c9;
-      --green: #55e58a;
-      --amber: #fbbf24;
-      --red: #fb7185;
-      --shadow: 0 30px 100px rgba(0,0,0,.45);
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --purple: #533afd;
+      --purple-hover: #4434d4;
+      --purple-deep: #2e2b8c;
+      --navy: #061b31;
+      --brand-dark: #1c1e54;
+      --dark: #0d253d;
+      --body: #64748d;
+      --label: #273951;
+      --border: #e5edf5;
+      --soft-purple: #d6d9fc;
+      --magenta: #f96bee;
+      --ruby: #ea2261;
+      --green: #15be53;
+      --cyan: #03c7e8;
+      --white: #fff;
+      --shadow: 0 20px 40px rgba(50,50,93,.25), 0 8px 20px rgba(0,0,0,.10);
+      --soft-shadow: 0 6px 18px rgba(50,50,93,.12), 0 2px 8px rgba(0,0,0,.08);
+      --sans: 'Source Sans 3', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      --mono: 'Source Code Pro', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     }
-
     * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body {
-      margin: 0;
-      font-family: var(--sans);
-      color: var(--text);
-      background:
-        radial-gradient(circle at 50% -10%, rgba(198,242,78,.14), transparent 34rem),
-        radial-gradient(circle at 10% 20%, rgba(91,233,201,.08), transparent 28rem),
-        linear-gradient(180deg, #07090d 0%, #0b0e12 45%, #06070a 100%);
-      min-height: 100vh;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background-image:
-        linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
-      background-size: 72px 72px;
-      mask-image: linear-gradient(to bottom, black 0%, transparent 72%);
-    }
-
+    body { margin: 0; font-family: var(--sans); color: var(--body); background: #fff; font-weight: 300; -webkit-font-smoothing: antialiased; }
     a { color: inherit; text-decoration: none; }
-    .wrap { width: min(1180px, calc(100% - 40px)); margin: 0 auto; }
+    .wrap { width: min(1080px, calc(100% - 40px)); margin: 0 auto; }
 
-    .nav {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      backdrop-filter: blur(18px);
-      background: rgba(7,9,13,.72);
-      border-bottom: 1px solid rgba(255,255,255,.08);
+    .hero-shell { position: relative; overflow: hidden; min-height: 780px; background: #fff; }
+    .hero__canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      pointer-events: none;
+      background: radial-gradient(34% 52% at 76% 78%, rgba(83,58,253,.46), transparent 70%);
+      z-index: 0;
     }
-    .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 72px; }
-    .brand { display: flex; align-items: center; gap: 12px; font-weight: 760; letter-spacing: -.03em; }
-    .mark { width: 27px; height: 27px; border: 2px solid var(--lime); transform: skew(-12deg) rotate(45deg); border-radius: 7px; box-shadow: 0 0 22px rgba(198,242,78,.22); }
-    .brand span { font-size: 20px; }
-    .nav-links { display: flex; align-items: center; gap: 25px; color: var(--muted2); font-size: 14px; }
-    .nav-links a:hover { color: var(--text); }
-    .nav-cta { padding: 10px 15px; border: 1px solid rgba(198,242,78,.45); border-radius: 8px; color: var(--lime); background: rgba(198,242,78,.06); }
+    .diagonal { display: none; }
+    nav { position: relative; z-index: 3; padding: 24px 0; color: var(--navy); }
+    .nav-inner { display: flex; align-items:center; justify-content:space-between; }
+    .brand { display:flex; align-items:center; gap:10px; font-weight: 600; letter-spacing:-.02em; font-size: 20px; }
+    .brand-mark { width: 36px; height: 36px; display:block; flex:0 0 auto; }
+    .brand-mark path { stroke: var(--purple); fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .nav-links { display:flex; gap:28px; align-items:center; font-size: 15px; font-weight:400; }
+    .nav-pill { background:rgba(83,58,253,.08); border:1px solid rgba(83,58,253,.18); color: var(--purple); padding:8px 13px; border-radius:999px; }
 
-    .hero { padding: 92px 0 86px; position: relative; }
-    .eyebrow { font: 700 12px/1 var(--mono); letter-spacing: .18em; text-transform: uppercase; color: var(--lime); margin-bottom: 22px; }
-    h1 { margin: 0; max-width: 980px; font-size: clamp(58px, 9vw, 112px); line-height: .86; letter-spacing: -.075em; font-weight: 780; }
-    .hero-copy { margin-top: 26px; display: grid; grid-template-columns: minmax(0, 1fr) 430px; gap: 46px; align-items: end; }
-    .subhead { margin: 0; color: #d8dee8; font-size: clamp(19px, 2.3vw, 25px); line-height: 1.34; letter-spacing: -.025em; max-width: 720px; }
-    .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: flex-end; }
-    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 9px; padding: 14px 18px; border-radius: 9px; font-weight: 720; letter-spacing: -.02em; border: 1px solid rgba(255,255,255,.14); transition: transform .2s ease, border .2s ease, background .2s ease; }
-    .btn:hover { transform: translateY(-1px); }
-    .btn-primary { color: #081006; background: var(--lime); border-color: var(--lime); box-shadow: 0 16px 45px rgba(198,242,78,.18); }
-    .btn-secondary { color: var(--text); background: rgba(255,255,255,.045); }
+    .hero { position: relative; z-index: 2; padding: 86px 0 90px; display:grid; grid-template-columns: .93fr 1.07fr; gap: 48px; align-items:center; overflow:hidden; background:transparent; }
+    .hero__content { position: relative; z-index: 1; max-width: 600px; }
+    .eyebrow { color: var(--purple); font-weight:600; font-size:16px; margin-bottom:20px; }
+    h1 { margin:0; color: var(--navy); font-size: clamp(52px, 7vw, 82px); line-height: .96; letter-spacing: -2.1px; font-weight: 300; max-width: 600px; }
+    .subhead { margin: 24px 0 28px; font-size: 21px; line-height: 1.45; color: #425466; max-width: 560px; }
+    .ch { transition: color .15s linear; }
+    .actions { display:flex; gap: 13px; align-items:center; flex-wrap:wrap; }
+    .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; padding: 10px 17px; border-radius: 999px; font-size:16px; font-weight:500; transition:.18s ease; }
+    .btn-primary { color:#fff; background: var(--purple); box-shadow: var(--soft-shadow); }
+    .btn-primary:hover { background: var(--purple-hover); transform: translateY(-1px); }
+    .btn-link { color: var(--purple); }
 
-    .product-shot-wrap { margin-top: 58px; position: relative; }
-    .product-shot-wrap::before { content: ""; position: absolute; inset: -1px; border-radius: 18px; background: linear-gradient(135deg, rgba(198,242,78,.7), rgba(91,233,201,.05), rgba(255,255,255,.06)); z-index: 0; }
-    .product-shot {
-      position: relative;
-      z-index: 1;
-      border-radius: 18px;
-      padding: 10px;
-      background: rgba(7,9,13,.9);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-    }
-    .product-shot img { display: block; width: 100%; border-radius: 12px; border: 1px solid rgba(255,255,255,.08); }
-    .caption { display:flex; justify-content:space-between; gap:16px; margin-top: 14px; color: var(--muted); font: 12px/1.4 var(--mono); }
+    .section { padding: 96px 0; }
+    .section.alt { background:#f6f9fc; }
+    .section-head { display:grid; grid-template-columns:.8fr 1fr; gap:48px; margin-bottom:44px; align-items:start; }
+    .kicker { color:var(--purple); font-size:15px; font-weight:600; margin-bottom:10px; }
+    h2 { margin:0; color:var(--navy); font-weight:300; font-size:48px; line-height:1.06; letter-spacing:-1px; }
+    .section-head p { margin:0; color:#425466; font-size:19px; line-height:1.5; }
+    .three { display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
+    .feature { background:#fff; border:1px solid var(--border); border-radius:8px; padding:26px; box-shadow:0 4px 12px rgba(23,23,23,.04); }
+    .icon { width:36px; height:36px; border-radius:8px; background:linear-gradient(135deg,var(--purple),var(--magenta)); margin-bottom:26px; box-shadow:0 8px 16px rgba(83,58,253,.2); }
+    .feature h3 { color:var(--navy); margin:0 0 10px; font-size:24px; font-weight:300; letter-spacing:-.3px; }
+    .feature p { margin:0; line-height:1.5; }
 
-    .section { padding: 86px 0; border-top: 1px solid rgba(255,255,255,.08); }
-    .section-head { display: grid; grid-template-columns: .78fr 1fr; gap: 40px; align-items: start; margin-bottom: 34px; }
-    .kicker { color: var(--lime); font: 700 12px/1 var(--mono); text-transform: uppercase; letter-spacing: .16em; }
-    h2 { margin: 10px 0 0; font-size: clamp(38px, 5vw, 64px); line-height: .95; letter-spacing: -.06em; }
-    .section-head p { margin: 4px 0 0; color: var(--muted2); font-size: 19px; line-height: 1.5; }
-
-    .problem-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-    .problem-card, .step, .report-card, .persona-card {
-      border: 1px solid var(--line);
-      background: linear-gradient(180deg, rgba(255,255,255,.052), rgba(255,255,255,.022));
-      border-radius: 14px;
-      padding: 24px;
-    }
-    .problem-card strong { display:block; margin-bottom: 12px; font-size: 21px; letter-spacing: -.035em; }
-    .problem-card p, .step p, .report-card p, .persona-card p { margin:0; color: var(--muted2); line-height:1.55; }
-
-    .steps { display:grid; grid-template-columns: repeat(3, 1fr); gap: 14px; counter-reset: step; }
-    .step { position:relative; min-height: 230px; }
-    .step::before { counter-increment: step; content: "0" counter(step); display:inline-flex; width:38px; height:38px; align-items:center; justify-content:center; margin-bottom: 30px; border-radius:9px; background:rgba(198,242,78,.1); color: var(--lime); font: 700 13px/1 var(--mono); border:1px solid rgba(198,242,78,.25); }
-    .step h3, .report-card h3, .persona-card h3 { margin:0 0 10px; font-size: 24px; letter-spacing:-.04em; }
-
-    .mini-board { display:grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: stretch; }
-    .board-panel { border:1px solid var(--line); border-radius:16px; padding:22px; background:var(--panel2); overflow:hidden; }
-    .task-row { display:flex; justify-content:space-between; gap:10px; padding: 13px 0; border-bottom:1px solid rgba(255,255,255,.08); font: 13px/1.3 var(--mono); color: var(--muted2); }
-    .task-row:first-child { padding-top:0; }
-    .task-row:last-child { border-bottom:0; padding-bottom:0; }
-    .pill { display:inline-flex; align-items:center; border-radius:999px; padding:5px 9px; font:700 11px/1 var(--mono); }
-    .pass { color:#0b1309; background:var(--lime); }
-    .warn { color:#1b1300; background:var(--amber); }
-    .fail { color:#23060b; background:var(--red); }
-    .chips { display:flex; flex-wrap:wrap; gap:10px; margin-top: 22px; }
-    .chip { border:1px solid rgba(255,255,255,.12); color:var(--muted2); border-radius:999px; padding:9px 12px; font: 12px/1 var(--mono); background:rgba(255,255,255,.035); }
-
-    .report-grid { display:grid; grid-template-columns: 1.1fr .9fr; gap: 14px; }
-    .report-card.featured { border-color: var(--line2); box-shadow: inset 0 0 0 1px rgba(198,242,78,.08); }
-    .recommendation { margin-top:18px; padding:18px; border:1px solid var(--line2); border-radius:12px; background:rgba(198,242,78,.065); }
-    .recommendation strong { color:var(--lime); display:block; margin-bottom:7px; }
-
-    .personas { display:grid; grid-template-columns: repeat(3, 1fr); gap:14px; }
-    .persona-card small { display:block; color:var(--lime); font:700 12px/1 var(--mono); letter-spacing:.12em; text-transform:uppercase; margin-bottom:18px; }
-
-    .final { padding: 100px 0 112px; text-align:center; }
-    .final h2 { max-width: 900px; margin: 0 auto 22px; }
-    .final p { max-width: 680px; margin: 0 auto 28px; color: var(--muted2); font-size: 20px; line-height: 1.5; }
-    footer { border-top:1px solid rgba(255,255,255,.08); color:var(--muted); padding: 28px 0 42px; font-size:14px; }
+    .dark { background: var(--brand-dark); color:#fff; position:relative; overflow:hidden; }
+    .dark::before { content:""; position:absolute; inset:0; background: radial-gradient(circle at 80% 20%, rgba(249,107,238,.22), transparent 28rem), radial-gradient(circle at 20% 80%, rgba(83,58,253,.28), transparent 30rem); }
+    .dark .wrap { position:relative; z-index:1; }
+    .dark h2 { color:#fff; }
+    .dark .section-head p { color:#c9d2ff; }
+    .report-preview { display:grid; grid-template-columns:1fr 1fr; gap:22px; }
+    .report { background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.14); border-radius:8px; padding:24px; box-shadow:0 20px 40px rgba(3,3,39,.25); }
+    .report h3 { margin:0 0 12px; font-weight:400; font-size:24px; }
+    .report p { color:#d6d9fc; line-height:1.5; }
+    .rows { margin-top:20px; border-top:1px solid rgba(255,255,255,.12); }
+    .rows div { display:flex; justify-content:space-between; border-bottom:1px solid rgba(255,255,255,.12); padding:13px 0; font-family:var(--mono); font-size:13px; }
+    .final { padding: 92px 0; text-align:center; background:#fff; }
+    .final h2 { max-width:780px; margin:0 auto 18px; }
+    .final p { max-width:640px; margin:0 auto 25px; font-size:20px; line-height:1.45; color:#425466; }
+    footer { padding:34px 0; color:var(--body); border-top:1px solid var(--border); font-size:14px; }
     footer .wrap { display:flex; justify-content:space-between; gap:20px; flex-wrap:wrap; }
 
-    @media (max-width: 880px) {
+    @media (max-width: 950px) {
+      .hero, .section-head, .report-preview { grid-template-columns:1fr; }
+      .hero { padding-top:48px; }
+      .three { grid-template-columns:1fr; }
       .nav-links { display:none; }
-      .hero { padding-top: 62px; }
-      .hero-copy, .section-head, .mini-board, .report-grid { grid-template-columns:1fr; }
-      .hero-actions { justify-content:flex-start; }
-      .problem-grid, .steps, .personas { grid-template-columns:1fr; }
-      .caption { flex-direction:column; }
-      h1 { font-size: clamp(54px, 16vw, 76px); }
+      h1 { font-size:56px; }
+      h2 { font-size:38px; }
+    }
+    @media (max-width:700px){
+      .hero-shell { min-height: 86svh; }
+      .hero { align-items:flex-end; padding: 48px 0 9svh; }
+      .hero__content { max-width:320px; width:100%; }
+      h1 { max-width:100%; font-size:clamp(2rem,.85rem + 4.6vw,2.55rem); line-height:1.04; letter-spacing:-.025em; }
+      .subhead { max-width:100%; font-size:1.05rem; }
     }
   </style>
 </head>
 <body>
-  <nav class="nav">
-    <div class="wrap nav-inner">
-      <a class="brand" href="#top" aria-label="AgentDiligence home"><span class="mark" aria-hidden="true"></span><span>AgentDiligence</span></a>
-      <div class="nav-links">
-        <a href="#problem">Problem</a>
-        <a href="#method">Method</a>
-        <a href="#evidence">Evidence</a>
-        <a href="mailto:simon@agentdiligence.io" class="nav-cta">Run a comparison</a>
+  <div class="hero-shell">
+    <canvas class="hero__canvas" id="heroCanvas" aria-hidden="true"></canvas>
+    <div class="diagonal" aria-hidden="true"></div>
+    <nav>
+      <div class="wrap nav-inner">
+        <a class="brand" href="#" aria-label="AgentDiligence home"><svg class="brand-mark" viewBox="0 0 96 96" aria-hidden="true"><path d="M18 74L56 22" stroke-width="7"/><path d="M32 55H56" stroke-width="7"/><path d="M56 22V74H69C84 74 94 63 94 48S84 22 69 22H56" stroke-width="7"/></svg><span>AgentDiligence</span></a>
+        <div class="nav-links"><a href="#method">Method</a><a href="#evidence">Evidence</a><a href="#buyers">Buyers</a><a class="nav-pill" href="mailto:simon@agentdiligence.io">Run comparison</a></div>
       </div>
-    </div>
-  </nav>
+    </nav>
 
-  <main id="top">
-    <section class="hero">
-      <div class="wrap">
-        <div class="eyebrow">Buyer-side AI agent diligence</div>
-        <h1>Test every agent before you trust one.</h1>
-        <div class="hero-copy">
-          <p class="subhead">Run the same real workflow across vendor agents, your own build, and a baseline. See side-by-side evidence, get a recommendation, then buy with conviction.</p>
-          <div class="hero-actions">
-            <a class="btn btn-primary" href="mailto:simon@agentdiligence.io?subject=Run%20an%20AgentDiligence%20comparison">Run your first comparison →</a>
-            <a class="btn btn-secondary" href="#evidence">See what you get</a>
-          </div>
-        </div>
-
-        <div class="product-shot-wrap" aria-label="Product mockup showing multi-agent side-by-side evaluation">
-          <div class="product-shot">
-            <img src="assets/agentdiligence-multi-agent-ui.jpg" alt="Dark product interface comparing a vendor agent, custom agent, and baseline agent on the same workflow with pass/fail results and a recommendation" />
-          </div>
-          <div class="caption">
-            <span>Same workflow · multiple candidate agents · comparable evidence · buyer recommendation</span>
-            <span>Prototype UI, synthetic example</span>
-          </div>
-        </div>
+    <section class="wrap hero">
+      <div class="hero__content">
+        <div class="eyebrow">Buyer-side agent evaluation</div>
+        <h1 id="heroTitle">Choose the agent that survives your workflow.</h1>
+        <p class="subhead" id="heroSub">AgentDiligence runs the same real task across vendor agents, custom builds, and baselines — then gives buyers the evidence and recommendation before procurement.</p>
+        <div class="actions"><a class="btn btn-primary" href="mailto:simon@agentdiligence.io?subject=Run%20an%20AgentDiligence%20comparison">Run a comparison →</a><a class="btn btn-link" href="#evidence">See the output →</a></div>
       </div>
+
     </section>
+  </div>
 
-    <section id="problem" class="section">
-      <div class="wrap">
-        <div class="section-head">
-          <div><div class="kicker">The problem</div><h2>Demos lie. Procurement guesses.</h2></div>
-          <p>Vendor pitches show the happy path. Real work has policy exceptions, edge cases, tool failures, handoffs, latency constraints, and cost tradeoffs. Buyers need proof before the contract, not surprises after rollout.</p>
-        </div>
-        <div class="problem-grid">
-          <div class="problem-card"><strong>Every agent looks good in a demo.</strong><p>The question is whether it survives your actual workflow, your policies, and your edge cases.</p></div>
-          <div class="problem-card"><strong>Scores alone do not answer the buying question.</strong><p>You need transcripts, final-state checks, failure modes, and a defensible recommendation.</p></div>
-          <div class="problem-card"><strong>Side-by-side beats gut feel.</strong><p>Run vendor, custom, and baseline agents on the same job so the choice is comparative, not political.</p></div>
-        </div>
-      </div>
-    </section>
-
-    <section id="method" class="section">
-      <div class="wrap">
-        <div class="section-head">
-          <div><div class="kicker">How it works</div><h2>A bake-off for the agents you are about to buy.</h2></div>
-          <p>AgentDiligence turns a buyer workflow into a controlled comparison. The output is not a generic benchmark. It is evidence for your decision.</p>
-        </div>
-        <div class="steps">
-          <div class="step"><h3>Define the job.</h3><p>Bring the workflow you actually care about: support resolution, refund policy, onboarding, procurement, claims, or another high-value process.</p></div>
-          <div class="step"><h3>Run the field.</h3><p>Candidate vendor agents, your internal build, and a reference baseline get the same scenario set, constraints, and success criteria.</p></div>
-          <div class="step"><h3>Get a verdict.</h3><p>We package the evidence into a buyer-readable recommendation: automate, assist, human-gate, or do not deploy.</p></div>
-        </div>
-      </div>
-    </section>
-
-    <section id="evidence" class="section">
-      <div class="wrap">
-        <div class="section-head">
-          <div><div class="kicker">Evidence layer</div><h2>Every claim is clickable.</h2></div>
-          <p>Do not settle for a dashboard full of vibes. Drill into what actually happened in each run — the transcript, policy match, tool behavior, final state, and cost to complete the task.</p>
-        </div>
-        <div class="mini-board">
-          <div class="board-panel">
-            <div class="task-row"><span>Scenario</span><strong>Refund dispute outside policy</strong></div>
-            <div class="task-row"><span>Vendor Agent</span><span><span class="pill warn">Human-gate</span></span></div>
-            <div class="task-row"><span>Custom Agent v3</span><span><span class="pill pass">Pilot</span></span></div>
-            <div class="task-row"><span>Baseline</span><span><span class="pill fail">Do not deploy</span></span></div>
-            <div class="task-row"><span>Evidence level</span><strong>L4 final-state proof</strong></div>
-          </div>
-          <div class="board-panel">
-            <div class="kicker">Compare on</div>
-            <div class="chips">
-              <span class="chip">Task success</span><span class="chip">Cost per task</span><span class="chip">Latency</span><span class="chip">Policy adherence</span><span class="chip">Failure modes</span><span class="chip">Edge-case handling</span><span class="chip">Human escalation</span><span class="chip">Final-state proof</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="wrap">
-        <div class="section-head">
-          <div><div class="kicker">Output</div><h2>A report your team can actually use.</h2></div>
-          <p>The deliverable is designed for buyers, not just builders: clear enough for procurement, specific enough for technical review, and concrete enough to challenge vendor claims.</p>
-        </div>
-        <div class="report-grid">
-          <div class="report-card featured"><h3>Agent comparison report</h3><p>Side-by-side results across candidates, with sample runs, policy failures, edge cases, cost/latency tradeoffs, and evidence level for each claim.</p><div class="recommendation"><strong>Recommendation</strong><p>Pilot Custom Agent v3 with refund limits and mandatory human approval above £250. Re-test Vendor Agent after policy-handling configuration.</p></div></div>
-          <div class="report-card"><h3>Decision-ready, not dashboard-only.</h3><p>The point is to answer the buyer's question: which agent should we trust, where should we constrain it, and what needs to be fixed before deployment?</p></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="wrap">
-        <div class="section-head">
-          <div><div class="kicker">Who it's for</div><h2>For teams buying or shipping agents into real workflows.</h2></div>
-          <p>AgentDiligence sits before procurement and deployment — where the cost of choosing wrong is still avoidable.</p>
-        </div>
-        <div class="personas">
-          <div class="persona-card"><small>Buyers</small><h3>Compare vendors before contract.</h3><p>Replace pitch-driven selection with a controlled field test on your workflow.</p></div>
-          <div class="persona-card"><small>Platform teams</small><h3>Validate internal builds.</h3><p>Know when your custom agent beats a vendor — and when it does not.</p></div>
-          <div class="persona-card"><small>Operators</small><h3>Set deployment boundaries.</h3><p>Identify which tasks can automate, assist, or must stay human-gated.</p></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="final">
-      <div class="wrap">
-        <h2>Stop buying AI agents on vibes.</h2>
-        <p>Run the same work through every candidate. Get the evidence before you sign, integrate, or expose customers to the agent.</p>
-        <a class="btn btn-primary" href="mailto:simon@agentdiligence.io?subject=Run%20an%20AgentDiligence%20comparison">Run your first comparison →</a>
-      </div>
-    </section>
-  </main>
-
-  <footer>
+  <section id="method" class="section">
     <div class="wrap">
-      <span>© 2026 AgentDiligence</span>
-      <span>Buyer-side diligence for AI-agent procurement and deployment.</span>
-      <a href="mailto:simon@agentdiligence.io">simon@agentdiligence.io</a>
+      <div class="section-head"><div><div class="kicker">Method</div><h2>A procurement bake-off for AI agents.</h2></div><p>Instead of asking which demo looked best, run every candidate against the same workflow and compare what actually happened.</p></div>
+      <div class="three">
+        <div class="feature"><div class="icon"></div><h3>Define the real job.</h3><p>Use your actual workflow, policies, edge cases, and decision criteria — not a vendor’s happy-path script.</p></div>
+        <div class="feature"><div class="icon"></div><h3>Run the candidate field.</h3><p>Vendor agents, internal builds, and reference baselines face the same scenario set under the same constraints.</p></div>
+        <div class="feature"><div class="icon"></div><h3>Defend the decision.</h3><p>Get a recommendation backed by transcripts, policy checks, final-state proof, and cost/latency tradeoffs.</p></div>
+      </div>
     </div>
-  </footer>
+  </section>
+
+  <section id="evidence" class="section dark">
+    <div class="wrap">
+      <div class="section-head"><div><div class="kicker">Evidence</div><h2>Decision output, not dashboard noise.</h2></div><p>AgentDiligence turns agent runs into a buyer-readable report: what passed, what failed, where to constrain deployment, and which candidate is worth piloting.</p></div>
+      <div class="report-preview">
+        <div class="report"><h3>Comparison report</h3><p>Side-by-side agent performance on the same workflow.</p><div class="rows"><div><span>Task success</span><strong>49/50</strong></div><div><span>Policy violations</span><strong>0</strong></div><div><span>Avg latency</span><strong>8.1s</strong></div><div><span>Recommendation</span><strong>Pilot</strong></div></div></div>
+        <div class="report"><h3>Clickable evidence</h3><p>Every headline number connects to the actual transcript, tool behavior, policy match, and final state.</p><div class="rows"><div><span>Transcript review</span><strong>Included</strong></div><div><span>Final-state proof</span><strong>L4</strong></div><div><span>Failure clusters</span><strong>3 found</strong></div><div><span>Deployment boundary</span><strong>Human-gate &gt; £250</strong></div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="buyers" class="section alt">
+    <div class="wrap">
+      <div class="section-head"><div><div class="kicker">For buyers</div><h2>Know what you are buying before agents touch customers.</h2></div><p>Useful for procurement teams, platform teams, and operators deciding between packaged vendors, internal builds, and reference baselines.</p></div>
+      <div class="three">
+        <div class="feature"><h3>Vendor selection</h3><p>Compare Zendesk, Freshworks, Gorgias, or another candidate against your actual service workflow.</p></div>
+        <div class="feature"><h3>Custom-vs-packaged</h3><p>See whether your internal build is actually better than buying, and where each approach breaks.</p></div>
+        <div class="feature"><h3>Deployment boundaries</h3><p>Identify which tasks are ready to automate, assist, or keep behind human approval.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="final">
+    <div class="wrap"><h2>Stop buying agents from slide decks.</h2><p>Run the workflow. Compare the field. Buy the agent that can prove it works.</p><a class="btn btn-primary" href="mailto:simon@agentdiligence.io?subject=Run%20an%20AgentDiligence%20comparison">Run a comparison →</a></div>
+  </section>
+
+  <footer><div class="wrap"><span>© 2026 AgentDiligence</span><span>Stripe-inspired prototype — not the live homepage</span><a href="mailto:simon@agentdiligence.io">simon@agentdiligence.io</a></div></footer>
+<script>
+const CONFIG = {
+  colors: ['#91a5ff', '#7f55ff', '#32dacd', '#ff8d76'],  // stronger Stripe-like cloud palette, still under dark text
+  speed: 0.06, scale: 1.35, warp: 1.7, edgeAmp: 0.10, grain: 0.02,
+  // gentle breathing drift only — the cloud stays on the right
+  driftX: 0.05, driftY: 0.02, driftXHz: 0.32, driftYHz: 0.24,
+  // Cloud position is DOM-anchored, not hand-tuned in WebGL UV space.
+  // yOffsetPx is measured from the real headline bottom; increase to move down.
+  desktop: { x:0.74, yOffsetPx:-100, radius:0.416, feather:0.32, opacity:1.00 },
+  mobile:  { x:0.58, yOffsetPx:-116, radius:0.32, feather:0.256, opacity:1.00 },
+  mobileMaxWidth: 700,
+};
+const TXT = { dark:'#15172b', muted:'#5a5f73' };
+const WHITE = [255,255,255];
+const TINT  = [58,31,156];   // #3a1f9c — text drifts from its base toward this dark violet
+
+function hexRGB(h){ const n=parseInt(h.slice(1),16); return [(n>>16)&255,(n>>8)&255,n&255]; }
+
+/* ---- split title + subtitle into per-character spans ---- */
+function splitChars(el, baseHex){
+  const rgb = hexRGB(baseHex);
+  const text = el.textContent.replace(/\s+/g,' ').trim();
+  el.textContent='';
+  const list=[];
+  for(const c of text){
+    const s=document.createElement('span');
+    s.className='ch'; s.textContent=c; s.style.color=baseHex;
+    el.appendChild(s);
+    list.push({ el:s, rgb, uvx:0, uvy:0, cq:-1 });
+  }
+  return list;
+}
+const chars = [
+  ...splitChars(document.getElementById('heroTitle'), TXT.dark),
+  ...splitChars(document.getElementById('heroSub'),   TXT.muted),
+];
+
+const canvas = document.getElementById('heroCanvas');
+const gl = canvas.getContext('webgl', { alpha:true, premultipliedAlpha:true, antialias:false })
+        || canvas.getContext('experimental-webgl', { alpha:true, premultipliedAlpha:true, antialias:false });
+
+if (!gl) { /* CSS fallback stays */ }
+else {
+  // Keep the CSS radial gradient as the no-WebGL fallback only. Once WebGL is
+  // available, clear it so it does not read as a second, detached cloud.
+  canvas.style.background = 'transparent';
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const VERT = `attribute vec2 p; void main(){ gl_Position=vec4(p,0.0,1.0); }`;
+  const FRAG = `
+    precision highp float;
+    uniform float u_time; uniform vec2 u_res; uniform vec2 u_center;
+    uniform vec3 u_c1,u_c2,u_c3,u_c4;
+    uniform float u_speed,u_scale,u_warp,u_grain,u_radius,u_feather,u_edge,u_opacity;
+    vec3 permute(vec3 x){ return mod(((x*34.0)+1.0)*x,289.0); }
+    float snoise(vec2 v){
+      const vec4 C=vec4(0.211324865405187,0.366025403784439,-0.577350269189626,0.024390243902439);
+      vec2 i=floor(v+dot(v,C.yy)); vec2 x0=v-i+dot(i,C.xx);
+      vec2 i1=(x0.x>x0.y)?vec2(1.0,0.0):vec2(0.0,1.0);
+      vec4 x12=x0.xyxy+C.xxzz; x12.xy-=i1; i=mod(i,289.0);
+      vec3 perm=permute(permute(i.y+vec3(0.0,i1.y,1.0))+i.x+vec3(0.0,i1.x,1.0));
+      vec3 m=max(0.5-vec3(dot(x0,x0),dot(x12.xy,x12.xy),dot(x12.zw,x12.zw)),0.0); m=m*m; m=m*m;
+      vec3 x=2.0*fract(perm*C.www)-1.0; vec3 h=abs(x)-0.5; vec3 ox=floor(x+0.5);
+      vec3 a0=x-ox; m*=1.79284291400159-0.85373472095314*(a0*a0+h*h);
+      vec3 g; g.x=a0.x*x0.x+h.x*x0.y; g.yz=a0.yz*x12.xz+h.yz*x12.yw;
+      return 130.0*dot(m,g);
+    }
+    float fbm(vec2 p){ float s=0.0,a=0.5; for(int i=0;i<5;i++){ s+=a*snoise(p); p*=2.0; a*=0.5; } return s; }
+    vec3 ramp(float t){
+      t=clamp(t,0.0,1.0);
+      vec3 col=mix(u_c1,u_c2,smoothstep(0.0,0.45,t));
+      col=mix(col,u_c3,smoothstep(0.40,0.72,t));
+      col=mix(col,u_c4,smoothstep(0.68,1.0,t));
+      return col;
+    }
+    void main(){
+      vec2 uv=gl_FragCoord.xy/u_res.xy; float asp=u_res.x/u_res.y;
+      vec2 p=(gl_FragCoord.xy-0.5*u_res.xy)/u_res.y; p*=u_scale;
+      float t=u_time*u_speed;
+      vec2 q=vec2(fbm(p+0.10*t), fbm(p+vec2(5.2,1.3)));
+      vec2 r=vec2(fbm(p+u_warp*q+vec2(1.7,9.2)+0.15*t), fbm(p+u_warp*q+vec2(8.3,2.8)-0.12*t));
+      float f=fbm(p+2.0*r); float v=0.5+0.5*f;
+      vec3 col=ramp(v);
+      vec2 d2=uv-u_center; d2.x*=asp; float d=length(d2);
+      float edge=u_radius+u_edge*fbm(d2*2.4+0.2*t);
+      float mask=smoothstep(edge, edge-u_feather, d);
+      mask*=mix(0.80,1.0,v)*u_opacity;
+      float gr=fract(sin(dot(gl_FragCoord.xy,vec2(12.9898,78.233)))*43758.5453);
+      col+=(gr-0.5)*u_grain;
+      gl_FragColor=vec4(col*mask, mask);
+    }
+  `;
+
+  const sh=(t,s)=>{const o=gl.createShader(t);gl.shaderSource(o,s);gl.compileShader(o);
+    if(!gl.getShaderParameter(o,gl.COMPILE_STATUS))console.error(gl.getShaderInfoLog(o));return o;};
+  const prog=gl.createProgram();
+  gl.attachShader(prog,sh(gl.VERTEX_SHADER,VERT));
+  gl.attachShader(prog,sh(gl.FRAGMENT_SHADER,FRAG));
+  gl.linkProgram(prog); gl.useProgram(prog);
+
+  const b=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,b);
+  gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+  const a=gl.getAttribLocation(prog,'p'); gl.enableVertexAttribArray(a);
+  gl.vertexAttribPointer(a,2,gl.FLOAT,false,0,0);
+
+  const U=n=>gl.getUniformLocation(prog,n);
+  const u_time=U('u_time'),u_res=U('u_res'),u_center=U('u_center');
+  const u_radius=U('u_radius'),u_feather=U('u_feather'),u_opacity=U('u_opacity');
+  const h3=h=>{const n=parseInt(h.slice(1),16);return[((n>>16)&255)/255,((n>>8)&255)/255,(n&255)/255];};
+  gl.uniform3fv(U('u_c1'),h3(CONFIG.colors[0])); gl.uniform3fv(U('u_c2'),h3(CONFIG.colors[1]));
+  gl.uniform3fv(U('u_c3'),h3(CONFIG.colors[2])); gl.uniform3fv(U('u_c4'),h3(CONFIG.colors[3]));
+  gl.uniform1f(U('u_speed'),CONFIG.speed); gl.uniform1f(U('u_scale'),CONFIG.scale);
+  gl.uniform1f(U('u_warp'),CONFIG.warp);   gl.uniform1f(U('u_edge'),CONFIG.edgeAmp);
+  gl.uniform1f(U('u_grain'),CONFIG.grain);
+
+  let view=null;
+  let cloudCenter = { x: CONFIG.desktop.x, y: 0.5 };
+  function applyResponsive(){
+    const m = window.innerWidth <= CONFIG.mobileMaxWidth ? CONFIG.mobile : CONFIG.desktop;
+    if(m!==view){ view=m; gl.uniform1f(u_radius,m.radius); gl.uniform1f(u_feather,m.feather); gl.uniform1f(u_opacity,m.opacity); }
+  }
+  applyResponsive();
+
+  function resize(){
+    const dpr=Math.min(window.devicePixelRatio||1,2);
+    const w=canvas.clientWidth*dpr, h=canvas.clientHeight*dpr;
+    if(canvas.width!==w||canvas.height!==h){ canvas.width=w; canvas.height=h; gl.viewport(0,0,w,h); gl.uniform2f(u_res,w,h); }
+  }
+
+  function measure(){
+    const c=canvas.getBoundingClientRect(); if(c.width===0) return;
+    const title=document.getElementById('heroTitle');
+    const tr=title.getBoundingClientRect();
+    const targetYFromTop=(tr.bottom-c.top)+view.yOffsetPx;
+    cloudCenter.x=view.x;
+    // WebGL UV y is bottom-up; DOM coordinates are top-down.
+    cloudCenter.y=1-Math.min(1,Math.max(0,targetYFromTop/c.height));
+    for(const ch of chars){
+      const r=ch.el.getBoundingClientRect();
+      ch.uvx=(r.left+r.width*0.5-c.left)/c.width;
+      ch.uvy=1-((r.top +r.height*0.5-c.top )/c.height);
+    }
+  }
+  measure();
+  window.addEventListener('resize', ()=>{ applyResponsive(); measure(); });
+  window.addEventListener('scroll', measure, { passive:true });
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+
+  function smoothstep(e0,e1,x){ const t=Math.min(1,Math.max(0,(x-e0)/(e1-e0))); return t*t*(3-2*t); }
+
+  /* ---- proportional recolor: blend base -> white by how far under the cloud ---- */
+  function updateChars(cx, cy){
+    const asp=canvas.width/canvas.height;
+    const lo=view.radius-view.feather, hi=view.radius;
+    for(const ch of chars){
+      const dx=(ch.uvx-cx)*asp, dy=ch.uvy-cy;
+      const d=Math.sqrt(dx*dx+dy*dy);
+      const cover=1-smoothstep(lo,hi,d);          // 0 = clear, 1 = deep under cloud
+      const cq=Math.round(cover*64);              // quantise to skip redundant writes
+      if(cq===ch.cq) continue;
+      ch.cq=cq;
+      const c=cq/64, e=c*c*(3-2*c);               // eased coverage
+      // base dark tone -> dark violet tint; both ends read on the pale cloud
+      const r =Math.round(ch.rgb[0]+(TINT[0]-ch.rgb[0])*e);
+      const g =Math.round(ch.rgb[1]+(TINT[1]-ch.rgb[1])*e);
+      const bl=Math.round(ch.rgb[2]+(TINT[2]-ch.rgb[2])*e);
+      ch.el.style.color=`rgb(${r},${g},${bl})`;
+    }
+  }
+
+  function draw(ms){
+    resize(); applyResponsive();
+    const t=ms*0.001;
+    measure();
+    const cx=cloudCenter.x+CONFIG.driftX*Math.sin(t*CONFIG.driftXHz);
+    const cy=cloudCenter.y+CONFIG.driftY*Math.sin(t*CONFIG.driftYHz);
+    gl.uniform2f(u_center, cx, cy);
+    gl.clearColor(0,0,0,0); gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.uniform1f(u_time, t);
+    gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+    updateChars(cx, cy);
+  }
+
+  if(reduceMotion){
+    resize(); applyResponsive(); measure(); draw(0);
+    window.addEventListener('resize',()=>{ applyResponsive(); measure(); draw(0); });
+  } else {
+    let running=true,raf;
+    const loop=ms=>{ if(running){ draw(ms); raf=requestAnimationFrame(loop); } };
+    raf=requestAnimationFrame(loop);
+    if('IntersectionObserver'in window){
+      new IntersectionObserver(([e])=>{
+        if(e.isIntersecting&&!running){ running=true; raf=requestAnimationFrame(loop); }
+        else if(!e.isIntersecting){ running=false; cancelAnimationFrame(raf); }
+      },{threshold:0}).observe(canvas);
+    }
+    document.addEventListener('visibilitychange',()=>{
+      if(document.hidden){ running=false; cancelAnimationFrame(raf); }
+      else if(!running){ running=true; raf=requestAnimationFrame(loop); }
+    });
+  }
+}
+</script>
 </body>
 </html>
