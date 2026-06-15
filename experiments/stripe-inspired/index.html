@@ -41,7 +41,7 @@
       height: 100%;
       display: block;
       pointer-events: none;
-      background: radial-gradient(34% 52% at 76% 58%, rgba(109,59,245,.34), transparent 70%);
+      background: radial-gradient(34% 52% at 76% 68%, rgba(83,58,253,.46), transparent 70%);
       z-index: 0;
     }
     .diagonal { display: none; }
@@ -171,12 +171,12 @@
   <footer><div class="wrap"><span>© 2026 AgentDiligence</span><span>Stripe-inspired prototype — not the live homepage</span><a href="mailto:simon@agentdiligence.io">simon@agentdiligence.io</a></div></footer>
 <script>
 const CONFIG = {
-  colors: ['#b8c2ff', '#a88aff', '#78e0d4', '#ffb09f'],  // saturated but still pale enough for dark text
+  colors: ['#91a5ff', '#7f55ff', '#32dacd', '#ff8d76'],  // stronger Stripe-like cloud palette, still under dark text
   speed: 0.06, scale: 1.35, warp: 1.7, edgeAmp: 0.10, grain: 0.02,
   // gentle breathing drift only — the cloud stays on the right
   driftX: 0.05, driftY: 0.05, driftXHz: 0.32, driftYHz: 0.24,
-  desktop: { center:[0.74,0.58], radius:0.40, feather:0.34, opacity:1.00 },
-  mobile:  { center:[0.58,0.28], radius:0.32, feather:0.28, opacity:0.88 },
+  desktop: { center:[0.74,0.68], radius:0.40, feather:0.34, opacity:1.00 },
+  mobile:  { center:[0.58,0.38], radius:0.32, feather:0.28, opacity:1.00 },
   mobileMaxWidth: 700,
 };
 const TXT = { dark:'#15172b', muted:'#5a5f73' };
