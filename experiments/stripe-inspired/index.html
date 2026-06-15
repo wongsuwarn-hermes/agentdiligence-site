@@ -48,7 +48,8 @@
     nav { position: relative; z-index: 3; padding: 24px 0; color: var(--navy); }
     .nav-inner { display: flex; align-items:center; justify-content:space-between; }
     .brand { display:flex; align-items:center; gap:10px; font-weight: 600; letter-spacing:-.02em; font-size: 20px; }
-    .mark { width: 25px; height: 25px; border: 2px solid var(--purple); transform: skew(-12deg) rotate(45deg); border-radius: 7px; opacity:.92; }
+    .brand-mark { width: 36px; height: 36px; display:block; flex:0 0 auto; }
+    .brand-mark path { stroke: var(--purple); fill: none; stroke-linecap: round; stroke-linejoin: round; }
     .nav-links { display:flex; gap:28px; align-items:center; font-size: 15px; font-weight:400; }
     .nav-pill { background:rgba(83,58,253,.08); border:1px solid rgba(83,58,253,.18); color: var(--purple); padding:8px 13px; border-radius:999px; }
 
@@ -116,7 +117,7 @@
     <div class="diagonal" aria-hidden="true"></div>
     <nav>
       <div class="wrap nav-inner">
-        <a class="brand" href="#"><span class="mark"></span><span>AgentDiligence</span></a>
+        <a class="brand" href="#" aria-label="AgentDiligence home"><svg class="brand-mark" viewBox="0 0 96 96" aria-hidden="true"><path d="M22 58a30 30 0 1 1 44 12" stroke-width="7"/><path d="M66 70l17 17" stroke-width="10"/><path d="M22 58l27-38v48" stroke-width="7"/><path d="M34 55h31" stroke-width="7"/><path d="M61 32v36h13c12 0 20-7 20-18s-8-18-20-18H61" stroke-width="7"/></svg><span>AgentDiligence</span></a>
         <div class="nav-links"><a href="#method">Method</a><a href="#evidence">Evidence</a><a href="#buyers">Buyers</a><a class="nav-pill" href="mailto:simon@agentdiligence.io">Run comparison</a></div>
       </div>
     </nav>
