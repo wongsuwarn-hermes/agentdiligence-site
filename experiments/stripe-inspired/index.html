@@ -64,27 +64,6 @@
     .btn-primary:hover { background: var(--purple-hover); transform: translateY(-1px); }
     .btn-link { color: var(--purple); }
 
-    .dashboard-stack { position: relative; min-height: 570px; }
-    .main-card { position:absolute; right:0; top: 8px; width:min(690px, 100%); background:#fff; border-radius: 8px; box-shadow: var(--shadow); overflow:hidden; border:1px solid rgba(229,237,245,.88); }
-    .browser-bar { height:38px; background:#f6f9fc; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:6px; padding:0 14px; }
-    .dot { width:9px; height:9px; border-radius:50%; background:#c6d2e1; }
-    .dot:nth-child(1) { background:#f96bee; } .dot:nth-child(2) { background:#ffd166; } .dot:nth-child(3) { background:#15be53; }
-    .board { padding: 18px; }
-    .task-bar { display:flex; justify-content:space-between; gap:20px; padding:14px 16px; border:1px solid var(--border); border-radius:6px; background:#fff; color:var(--label); font-weight:500; }
-    .task-bar span { color:var(--body); font-family:var(--mono); font-size:12px; }
-    .agents { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:14px; }
-    .agent { border:1px solid var(--border); border-radius:7px; padding:14px; background:linear-gradient(180deg,#fff,#fbfdff); min-height: 250px; }
-    .agent.best { border-color: var(--purple); box-shadow: 0 0 0 1px rgba(83,58,253,.08), 0 12px 24px rgba(50,50,93,.14); }
-    .agent-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; color:var(--navy); font-weight:600; }
-    .tag { font:700 10px/1 var(--mono); padding:5px 7px; border-radius:999px; background:#ecfdf4; color:#108c3d; }
-    .metric { display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-top:1px solid var(--border); color:var(--label); font-size:14px; }
-    .metric small { color:var(--body); font-family:var(--mono); font-size:12px; }
-    .verdict { margin-top:14px; padding:10px; border-radius:6px; background:#f3f0ff; color:var(--purple-deep); font-weight:600; font-size:14px; }
-    .side-card { position:absolute; left: 0; bottom: 18px; width: 320px; background: var(--brand-dark); color:#fff; border-radius:8px; box-shadow: var(--shadow); padding: 18px; }
-    .side-card h3 { margin:0 0 8px; font-size:22px; line-height:1.1; font-weight:400; letter-spacing:-.3px; }
-    .side-card p { margin:0; color:#c9d2ff; line-height:1.45; }
-    .mini-row { display:flex; justify-content:space-between; margin-top:14px; font-family:var(--mono); font-size:12px; color:#fff; border-top:1px solid rgba(255,255,255,.14); padding-top:12px; }
-
     .section { padding: 96px 0; }
     .section.alt { background:#f6f9fc; }
     .section-head { display:grid; grid-template-columns:.8fr 1fr; gap:48px; margin-bottom:44px; align-items:start; }
@@ -117,9 +96,7 @@
     @media (max-width: 950px) {
       .hero, .section-head, .report-preview { grid-template-columns:1fr; }
       .hero { padding-top:48px; }
-      .dashboard-stack { min-height:auto; }
-      .main-card, .side-card { position:relative; width:100%; right:auto; left:auto; top:auto; bottom:auto; margin-top:24px; }
-      .agents, .three { grid-template-columns:1fr; }
+      .three { grid-template-columns:1fr; }
       .nav-links { display:none; }
       h1 { font-size:56px; }
       h2 { font-size:38px; }
@@ -130,7 +107,6 @@
       .hero__content { max-width:320px; width:100%; }
       h1 { max-width:100%; font-size:clamp(2rem,.85rem + 4.6vw,2.55rem); line-height:1.04; letter-spacing:-.025em; }
       .subhead { max-width:100%; font-size:1.05rem; }
-      .dashboard-stack { display:none; }
     }
   </style>
 </head>
@@ -153,20 +129,6 @@
         <div class="actions"><a class="btn btn-primary" href="mailto:simon@agentdiligence.io?subject=Run%20an%20AgentDiligence%20comparison">Run a comparison →</a><a class="btn btn-link" href="#evidence">See the output →</a></div>
       </div>
 
-      <div class="dashboard-stack" aria-label="AgentDiligence comparison product mockup">
-        <div class="main-card">
-          <div class="browser-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
-          <div class="board">
-            <div class="task-bar"><strong>Refund dispute outside policy</strong><span>50 cases · support workflow</span></div>
-            <div class="agents">
-              <div class="agent"><div class="agent-top"><span>Vendor Agent</span><span class="tag">GATE</span></div><div class="metric"><span>Resolved</span><small>47/50</small></div><div class="metric"><span>Policy</span><small>2 fails</small></div><div class="metric"><span>Cost</span><small>$0.018</small></div><div class="metric"><span>Latency</span><small>12.4s</small></div><div class="verdict">Human-gate</div></div>
-              <div class="agent best"><div class="agent-top"><span>Custom v3</span><span class="tag">PILOT</span></div><div class="metric"><span>Resolved</span><small>49/50</small></div><div class="metric"><span>Policy</span><small>0 fails</small></div><div class="metric"><span>Cost</span><small>$0.031</small></div><div class="metric"><span>Latency</span><small>8.1s</small></div><div class="verdict">Recommended</div></div>
-              <div class="agent"><div class="agent-top"><span>Baseline</span><span class="tag">FAIL</span></div><div class="metric"><span>Resolved</span><small>41/50</small></div><div class="metric"><span>Policy</span><small>6 fails</small></div><div class="metric"><span>Cost</span><small>$0.009</small></div><div class="metric"><span>Latency</span><small>15.2s</small></div><div class="verdict">Do not deploy</div></div>
-            </div>
-          </div>
-        </div>
-        <div class="side-card"><h3>Recommendation: pilot Custom v3 with limits.</h3><p>Highest accuracy, zero policy violations, acceptable cost. Every score links to transcript-level evidence.</p><div class="mini-row"><span>Evidence level</span><strong>L4</strong></div></div>
-      </div>
     </section>
   </div>
 
