@@ -174,12 +174,12 @@
 const CONFIG = {
   colors: ['#91a5ff', '#7f55ff', '#32dacd', '#ff8d76'],  // stronger Stripe-like cloud palette, still under dark text
   speed: 0.06, scale: 1.35, warp: 1.7, edgeAmp: 0.10, grain: 0.02,
-  // gentle breathing drift only — the cloud stays on the right
-  driftX: 0.05, driftY: 0.02, driftXHz: 0.32, driftYHz: 0.24,
+  // gentle breathing drift only — cap horizontal travel so the cloud never reaches the far-right edge.
+  driftX: 0.015, driftY: 0.02, driftXHz: 0.32, driftYHz: 0.24,
   // Cloud position is DOM-anchored, not hand-tuned in WebGL UV space.
   // yOffsetPx is measured from the real headline bottom; increase to move down.
-  desktop: { x:0.74, yOffsetPx:-100, radius:0.416, feather:0.32, opacity:1.00 },
-  mobile:  { x:0.58, yOffsetPx:-116, radius:0.32, feather:0.256, opacity:1.00 },
+  desktop: { x:0.60, maxX:0.62, yOffsetPx:-100, radius:0.416, feather:0.32, opacity:1.00 },
+  mobile:  { x:0.58, maxX:0.62, yOffsetPx:-116, radius:0.32, feather:0.256, opacity:1.00 },
   mobileMaxWidth: 700,
 };
 const TXT = { dark:'#15172b', muted:'#5a5f73' };
@@ -344,7 +344,8 @@ else {
     resize(); applyResponsive();
     const t=ms*0.001;
     measure();
-    const cx=cloudCenter.x+CONFIG.driftX*Math.sin(t*CONFIG.driftXHz);
+    const rawCx=cloudCenter.x+CONFIG.driftX*Math.sin(t*CONFIG.driftXHz);
+    const cx=Math.min(view.maxX, rawCx);
     const cy=cloudCenter.y+CONFIG.driftY*Math.sin(t*CONFIG.driftYHz);
     gl.uniform2f(u_center, cx, cy);
     gl.clearColor(0,0,0,0); gl.clear(gl.COLOR_BUFFER_BIT);
