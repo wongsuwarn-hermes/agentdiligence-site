@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AgentDiligence Evaluation Thread Prototypes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root { --purple:#533afd; --navy:#061b31; --body:#64748d; --border:#e5edf5; }
+    * { box-sizing:border-box; } body { margin:0; font-family:'Source Sans 3',system-ui,sans-serif; color:var(--body); background:#fff; }
+    .wrap { width:min(980px,calc(100% - 40px)); margin:0 auto; padding:54px 0; }
+    a { color:inherit; text-decoration:none; } .brand { display:flex; align-items:center; gap:10px; color:var(--navy); font-weight:600; font-size:20px; margin-bottom:80px; }
+    .mark { width:36px; height:36px; } .mark path { stroke:var(--purple); fill:none; stroke-linecap:round; stroke-linejoin:round; }
+    .kicker { color:var(--purple); font-weight:600; margin-bottom:14px; }
+    h1 { color:var(--navy); font-size:clamp(44px,7vw,78px); line-height:.96; letter-spacing:-.045em; font-weight:300; max-width:760px; margin:0 0 18px; }
+    .sub { font-size:21px; line-height:1.45; color:#425466; max-width:690px; margin:0 0 34px; }
+    .grid { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:42px; }
+    .card { border:1px solid var(--border); border-radius:14px; padding:24px; min-height:190px; box-shadow:0 8px 22px rgba(23,23,23,.045); transition:.18s ease; }
+    .card:hover { transform:translateY(-2px); border-color:rgba(83,58,253,.28); box-shadow:0 16px 34px rgba(83,58,253,.10); }
+    .card span { color:var(--navy); display:block; font-size:24px; font-weight:400; margin-bottom:12px; }
+    .card p { margin:0; line-height:1.45; }
+    @media(max-width:760px){ .grid{grid-template-columns:1fr;} .brand{margin-bottom:48px;} }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <a class="brand" href="../../" aria-label="AgentDiligence home"><svg class="mark" viewBox="0 0 96 96" aria-hidden="true"><path d="M18 74L56 22" stroke-width="7"/><path d="M32 55H56" stroke-width="7"/><path d="M56 22V74H69C84 74 94 63 94 48S84 22 69 22H56" stroke-width="7"/></svg><span>AgentDiligence</span></a>
+    <div class="kicker">Hero animation prototypes</div>
+    <h1>Three AgentDiligence-native takes on colourful thread motion.</h1>
+    <p class="sub">Each keeps the Stripe-inspired polish, but shifts the metaphor toward buyer-side evaluation: candidate paths, real-work constraints, and a calmer decision output.</p>
+    <div class="grid">
+        <a class="card" href="test-gates.html"><span>Test Gates</span><p>Threads pass through subtle evaluation gates; weaker paths fade before the recommendation.</p></a>
+        <a class="card" href="signal-field.html"><span>Signal Field</span><p>A calmer, more atmospheric field where candidate paths are tested inside buyer-specific constraints.</p></a>
+        <a class="card" href="decision-weave.html"><span>Decision Weave</span><p>Vendor paths resolve into a more ordered scorecard-like output without literal dashboard imagery.</p></a>
+    </div>
+  </main>
+</body>
+</html>
