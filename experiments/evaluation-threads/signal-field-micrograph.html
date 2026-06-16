@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Evaluation Threads — Signal Field — Micrograph — AgentDiligence</title>
+  <meta name="description" content="AgentDiligence runs pre-procurement AI agent evaluations on real workflows before deployment.">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;500;600&family=Source+Code+Pro:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --purple: #533afd;
+      --purple-hover: #4434d4;
+      --purple-deep: #2e2b8c;
+      --navy: #061b31;
+      --brand-dark: #1c1e54;
+      --dark: #0d253d;
+      --body: #64748d;
+      --label: #273951;
+      --border: #e5edf5;
+      --soft-purple: #d6d9fc;
+      --magenta: #f96bee;
+      --ruby: #ea2261;
+      --green: #15be53;
+      --cyan: #03c7e8;
+      --white: #fff;
+      --shadow: 0 20px 40px rgba(50,50,93,.25), 0 8px 20px rgba(0,0,0,.10);
+      --soft-shadow: 0 6px 18px rgba(50,50,93,.12), 0 2px 8px rgba(0,0,0,.08);
+      --sans: 'Source Sans 3', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      --mono: 'Source Code Pro', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: var(--sans); color: var(--body); background: #fff; font-weight: 300; -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    .wrap { width: min(1080px, calc(100% - 40px)); margin: 0 auto; }
+
+    .hero-shell { position: relative; overflow: hidden; min-height: 780px; background: #fff; }
+    .hero__canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      pointer-events: none;
+      background: radial-gradient(38% 58% at 78% 46%, rgba(83,58,253,.18), rgba(3,199,232,.06) 42%, transparent 74%);
+      z-index: 0;
+    }
+    .diagonal { display: none; }
+    nav { position: relative; z-index: 3; padding: 24px 0; color: var(--navy); }
+    .nav-inner { display: flex; align-items:center; justify-content:space-between; }
+    .brand { display:flex; align-items:center; gap:10px; font-weight: 600; letter-spacing:-.02em; font-size: 20px; }
+    .brand-mark { width: 36px; height: 36px; display:block; flex:0 0 auto; }
+    .brand-mark path { stroke: var(--purple); fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .nav-links { display:flex; gap:28px; align-items:center; font-size: 15px; font-weight:400; }
+    .nav-pill { background:rgba(83,58,253,.08); border:1px solid rgba(83,58,253,.18); color: var(--purple); padding:8px 13px; border-radius:999px; }
+
+    .hero { position: relative; z-index: 2; padding: 86px 0 90px; display:grid; grid-template-columns: .93fr 1.07fr; gap: 48px; align-items:center; overflow:hidden; background:transparent; }
+    .hero__content { position: relative; z-index: 1; max-width: 600px; }
+    .eyebrow { color: var(--purple); font-weight:600; font-size:16px; margin-bottom:20px; }
+    h1 { margin:0; color: var(--navy); font-size: clamp(52px, 7vw, 82px); line-height: .96; letter-spacing: -2.1px; font-weight: 300; max-width: 600px; }
+    .subhead { margin: 24px 0 28px; font-size: 21px; line-height: 1.45; color: #425466; max-width: 560px; }
+    .ch { transition: color .15s linear; }
+    .actions { display:flex; gap: 13px; align-items:center; flex-wrap:wrap; }
+    .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; padding: 10px 17px; border-radius: 999px; font-size:16px; font-weight:500; transition:.18s ease; }
+    .btn-primary { color:#fff; background: var(--purple); box-shadow: var(--soft-shadow); }
+    .btn-primary:hover { background: var(--purple-hover); transform: translateY(-1px); }
+    .btn-link { color: var(--purple); }
+
+    .section { padding: 96px 0; }
+    .section.alt { background:#f6f9fc; }
+    .section-head { display:grid; grid-template-columns:.8fr 1fr; gap:48px; margin-bottom:44px; align-items:start; }
+    .kicker { color:var(--purple); font-size:15px; font-weight:600; margin-bottom:10px; }
+    h2 { margin:0; color:var(--navy); font-weight:300; font-size:48px; line-height:1.06; letter-spacing:-1px; }
+    .section-head p { margin:0; color:#425466; font-size:19px; line-height:1.5; }
+    .three { display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
+    .feature { background:#fff; border:1px solid var(--border); border-radius:8px; padding:26px; box-shadow:0 4px 12px rgba(23,23,23,.04); }
+    .icon { width:36px; height:36px; border-radius:8px; background:linear-gradient(135deg,var(--purple),var(--magenta)); margin-bottom:26px; box-shadow:0 8px 16px rgba(83,58,253,.2); }
+    .feature h3 { color:var(--navy); margin:0 0 10px; font-size:24px; font-weight:300; letter-spacing:-.3px; }
+    .feature p { margin:0; line-height:1.5; }
+
+    .dark { background: var(--brand-dark); color:#fff; position:relative; overflow:hidden; }
+    .dark::before { content:""; position:absolute; inset:0; background: radial-gradient(circle at 80% 20%, rgba(249,107,238,.22), transparent 28rem), radial-gradient(circle at 20% 80%, rgba(83,58,253,.28), transparent 30rem); }
+    .dark .wrap { position:relative; z-index:1; }
+    .dark h2 { color:#fff; }
+    .dark .section-head p { color:#c9d2ff; }
+    .report-preview { display:grid; grid-template-columns:1fr 1fr; gap:22px; }
+    .report { position:relative; overflow:hidden; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.14); border-radius:8px; padding:24px; box-shadow:0 20px 40px rgba(3,3,39,.25); }
+    .report__mark { position:absolute; top:19px; right:20px; width:42px; height:42px; opacity:.22; }
+    .report__mark path { stroke:#d6d9fc; fill:none; stroke-linecap:round; stroke-linejoin:round; }
+    .report h3 { position:relative; margin:0 0 12px; padding-right:54px; font-weight:400; font-size:24px; }
+    .report p { position:relative; color:#d6d9fc; line-height:1.5; }
+    .rows { position:relative; margin-top:20px; border-top:1px solid rgba(255,255,255,.12); }
+    .rows div { display:flex; justify-content:space-between; border-bottom:1px solid rgba(255,255,255,.12); padding:13px 0; font-family:var(--mono); font-size:13px; }
+    .final { position:relative; overflow:hidden; padding: 92px 0; text-align:center; background:#fff; }
+    .final .wrap { position:relative; z-index:1; }
+    .final-mark { position:absolute; left:50%; top:50%; width:min(620px, 86vw); height:auto; transform:translate(-50%, -50%); opacity:.045; pointer-events:none; }
+    .final-mark path { stroke:var(--purple); fill:none; stroke-linecap:round; stroke-linejoin:round; }
+    .final h2 { max-width:780px; margin:0 auto 18px; }
+    .final p { max-width:640px; margin:0 auto 25px; font-size:20px; line-height:1.45; color:#425466; }
+    footer { padding:34px 0; color:var(--body); border-top:1px solid var(--border); font-size:14px; }
+    footer .wrap { display:flex; justify-content:space-between; gap:20px; flex-wrap:wrap; }
+
+    @media (max-width: 950px) {
+      .hero, .section-head, .report-preview { grid-template-columns:1fr; }
+      .hero { padding-top:48px; }
+      .three { grid-template-columns:1fr; }
+      .nav-links { display:none; }
+      h1 { font-size:56px; }
+      h2 { font-size:38px; }
+    }
+    @media (max-width:700px){
+      .hero-shell { min-height: 86svh; }
+      .hero { align-items:flex-end; padding: 48px 0 9svh; }
+      .hero__content { max-width:320px; width:100%; }
+      h1 { max-width:100%; font-size:clamp(2rem,.85rem + 4.6vw,2.55rem); line-height:1.04; letter-spacing:-.025em; }
+      .subhead { max-width:100%; font-size:1.05rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="hero-shell">
+    <canvas class="hero__canvas" id="heroCanvas" aria-hidden="true"></canvas>
+    <div class="diagonal" aria-hidden="true"></div>
+    <nav>
+      <div class="wrap nav-inner">
+        <a class="brand" href="#" aria-label="AgentDiligence home"><svg class="brand-mark" viewBox="0 0 96 96" aria-hidden="true"><path d="M18 74L56 22" stroke-width="7"/><path d="M32 55H56" stroke-width="7"/><path d="M56 22V74H69C84 74 94 63 94 48S84 22 69 22H56" stroke-width="7"/></svg><span>AgentDiligence</span></a>
+        <div class="nav-links"><a href="#method">Method</a><a href="#evidence">Evidence</a><a href="#buyers">Teams</a><a class="nav-pill" href="mailto:simon@agentdiligence.io">Run comparison</a></div>
+      </div>
+    </nav>
+
+    <section class="wrap hero">
+      <div class="hero__content">
+        <div class="eyebrow">Pre-procurement agent evaluation</div>
+        <h1 id="heroTitle">Vendor benchmarks aren’t your benchmarks.</h1>
+        <p class="subhead" id="heroSub">AgentDiligence tests the agents you’re considering on your real workflows and tools, then gives your team an independent scorecard before you buy.</p>
+        <div class="actions"><a class="btn btn-primary" href="mailto:simon@agentdiligence.io?subject=Run%20an%20AgentDiligence%20comparison">Run a comparison →</a><a class="btn btn-link" href="#evidence">See the output →</a></div>
+      </div>
+
+    </section>
+  </div>
+
+  <section id="method" class="section">
+    <div class="wrap">
+      <div class="section-head"><div><div class="kicker">Method</div><h2>A procurement bake-off for AI agents.</h2></div><p>Instead of asking which demo looked best, test every candidate on tasks built from your business, policies, edge cases, and standards.</p></div>
+      <div class="three">
+        <div class="feature"><div class="icon"></div><h3>Define the real job.</h3><p>Use your actual workflow, policies, edge cases, and decision criteria — not a vendor’s happy-path script.</p></div>
+        <div class="feature"><div class="icon"></div><h3>Run the candidate field.</h3><p>Vendor agents and your current process face your scenario set under identical constraints.</p></div>
+        <div class="feature"><div class="icon"></div><h3>Defend the decision.</h3><p>Get a recommendation backed by transcripts, policy checks, final-state proof, and cost/latency tradeoffs.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="evidence" class="section dark">
+    <div class="wrap">
+      <div class="section-head"><div><div class="kicker">Evidence</div><h2>Decision output, not dashboard noise.</h2></div><p>AgentDiligence turns agent runs into a decision-ready report: what passed, what failed, where to constrain deployment, and which candidate is worth piloting.</p></div>
+      <div class="report-preview">
+        <div class="report"><svg class="report__mark" viewBox="0 0 96 96" aria-hidden="true"><path d="M18 74L56 22" stroke-width="7"/><path d="M32 55H56" stroke-width="7"/><path d="M56 22V74H69C84 74 94 63 94 48S84 22 69 22H56" stroke-width="7"/></svg><h3>Comparison report</h3><p>Side-by-side agent performance on your workflows.</p><div class="rows"><div><span>Task success</span><strong>49/50</strong></div><div><span>Policy violations</span><strong>0</strong></div><div><span>Avg latency</span><strong>8.1s</strong></div><div><span>Recommendation</span><strong>Pilot</strong></div></div></div>
+        <div class="report"><svg class="report__mark" viewBox="0 0 96 96" aria-hidden="true"><path d="M18 74L56 22" stroke-width="7"/><path d="M32 55H56" stroke-width="7"/><path d="M56 22V74H69C84 74 94 63 94 48S84 22 69 22H56" stroke-width="7"/></svg><h3>Clickable evidence</h3><p>Every headline number connects to the actual transcript, tool behavior, policy match, and final state.</p><div class="rows"><div><span>Transcript review</span><strong>Included</strong></div><div><span>Final-state proof</span><strong>L4</strong></div><div><span>Failure clusters</span><strong>3 found</strong></div><div><span>Deployment boundary</span><strong>Human-gate &gt; £250</strong></div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="buyers" class="section alt">
+    <div class="wrap">
+      <div class="section-head"><div><div class="kicker">For teams</div><h2>Know what you are buying before agents touch customers.</h2></div><p>Useful for procurement, platform, and operations teams deciding between packaged vendors, current workflows, and whether an agent is ready to deploy.</p></div>
+      <div class="three">
+        <div class="feature"><h3>Vendor selection</h3><p>Compare Zendesk, Freshworks, Gorgias, or another candidate against your actual service workflow.</p></div>
+        <div class="feature"><h3>Current process</h3><p>See whether a vendor agent is actually better than today’s workflow, and where each approach breaks.</p></div>
+        <div class="feature"><h3>Deployment boundaries</h3><p>Identify which tasks are ready to automate, assist, or keep behind human approval.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="final">
+    <svg class="final-mark" viewBox="0 0 96 96" aria-hidden="true"><path d="M18 74L56 22" stroke-width="5"/><path d="M32 55H56" stroke-width="5"/><path d="M56 22V74H69C84 74 94 63 94 48S84 22 69 22H56" stroke-width="5"/></svg>
+    <div class="wrap"><h2>Stop buying agents from slide decks.</h2><p>Run the workflow. Compare the field. Buy the agent that can prove it works.</p><a class="btn btn-primary" href="mailto:simon@agentdiligence.io?subject=Run%20an%20AgentDiligence%20comparison">Run a comparison →</a></div>
+  </section>
+
+  <footer><div class="wrap"><span>© 2026 AgentDiligence</span><span>Pre-procurement AI agent diligence</span><a href="mailto:simon@agentdiligence.io">simon@agentdiligence.io</a></div></footer>
+<script>
+(() => {
+  const canvas = document.getElementById('heroCanvas');
+  const ctx = canvas.getContext('2d', { alpha: true });
+  if (!ctx) return;
+
+  const MODE = 'micrograph';
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const palette = ['#4f46ff', '#7257ff', '#15c7e8', '#25d6b5', '#ff4fa3', '#ff9d63', '#8a7cff'];
+  let raf = 0;
+  let running = true;
+  canvas.style.background = 'transparent';
+
+  function resize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const w = Math.round(canvas.clientWidth * dpr);
+    const h = Math.round(canvas.clientHeight * dpr);
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width = w;
+      canvas.height = h;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+  }
+
+  function lerp(a, b, t) { return a + (b - a) * t; }
+  function ease(t) { return t * t * (3 - 2 * t); }
+
+  function sampleRibbon(i, u, t, w, h, mobile) {
+    const x0 = mobile ? w * 1.06 : w * 1.05;
+    const x1 = mobile ? w * .72 : w * .51;
+    const baseY = mobile ? h * .43 : h * .39;
+    const spread = mobile ? h * .18 : h * .22;
+    const lane = (i - 6.5) / 7.0;
+    const perspective = 1 - .18 * u;
+    const x = lerp(x0, x1, u) + Math.sin(u * Math.PI * 2 + t * .18 + i) * (mobile ? 12 : 22) * (1-u);
+    const wave1 = Math.sin(u * 8.2 + t * .55 + i * .72);
+    const wave2 = Math.sin(u * 15.0 - t * .32 + i * 1.36);
+    const pinch = Math.exp(-Math.pow((u - .55) / .23, 2));
+    const y = baseY + lane * spread * perspective * (1 - .48 * pinch) + wave1 * (mobile ? 15 : 31) + wave2 * (mobile ? 5 : 10);
+    const z = .52 + .34 * Math.sin(u * Math.PI + i * .64 + t * .18) + .16 * pinch;
+    return { x, y, z };
+  }
+
+  function drawPath(points, color, width, alpha, blur, lighten = false) {
+    ctx.save();
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.shadowColor = color;
+    ctx.shadowBlur = blur;
+    ctx.strokeStyle = color;
+    ctx.globalAlpha = alpha;
+    ctx.lineWidth = width;
+    ctx.beginPath();
+    ctx.moveTo(points[0].x, points[0].y);
+    for (let i = 1; i < points.length - 2; i++) {
+      const xc = (points[i].x + points[i + 1].x) / 2;
+      const yc = (points[i].y + points[i + 1].y) / 2;
+      ctx.quadraticCurveTo(points[i].x, points[i].y, xc, yc);
+    }
+    const p = points[points.length - 1];
+    ctx.quadraticCurveTo(points[points.length - 2].x, points[points.length - 2].y, p.x, p.y);
+    ctx.stroke();
+    if (lighten) {
+      ctx.globalAlpha = alpha * .45;
+      ctx.shadowBlur = 0;
+      ctx.strokeStyle = 'rgba(255,255,255,.92)';
+      ctx.lineWidth = Math.max(1, width * .18);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  function ribbonPoints(i, t, w, h, mobile, offset = 0) {
+    const pts = [];
+    const n = mobile ? 38 : 58;
+    for (let j = 0; j < n; j++) {
+      const u = j / (n - 1);
+      const p = sampleRibbon(i, u, t, w, h, mobile);
+      p.y += offset * (1.1 + .35 * p.z);
+      pts.push(p);
+    }
+    return pts;
+  }
+
+  function drawVolume(t, w, h, mobile) {
+    const cx = mobile ? w * .93 : w * .75;
+    const cy = mobile ? h * .45 : h * .40;
+    const rx = mobile ? w * .30 : w * .34;
+    const ry = mobile ? h * .22 : h * .29;
+    ctx.save();
+    for (let i = 0; i < (MODE === 'micrograph' ? 18 : 12); i++) {
+      const k = i / 17;
+      const rot = Math.sin(t * .11 + i * .4) * .16;
+      ctx.beginPath();
+      ctx.ellipse(cx + Math.sin(t * .18 + i) * 8, cy + Math.cos(t * .15 + i) * 5, rx * (1 - i * .025), ry * (1 - i * .038), rot, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(80,70,255,${MODE === 'micrograph' ? (.032 + k * .02) : (.045 + k * .018)})`;
+      ctx.lineWidth = MODE === 'micrograph' ? .9 : 1.2;
+      ctx.stroke();
+    }
+    const glow = ctx.createRadialGradient(cx, cy, 0, cx, cy, rx * 1.05);
+    glow.addColorStop(0, MODE === 'micrograph' ? 'rgba(91,105,255,.20)' : 'rgba(91,105,255,.24)');
+    glow.addColorStop(.38, 'rgba(24,199,232,.13)');
+    glow.addColorStop(.68, 'rgba(255,79,163,.08)');
+    glow.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = glow;
+    ctx.fillRect(cx - rx * 1.25, cy - ry * 1.4, rx * 2.5, ry * 2.8);
+    ctx.restore();
+  }
+
+  function drawParticles(t, w, h, mobile) {
+    const count = MODE === 'micrograph' ? 90 : 42;
+    const left = mobile ? w * .72 : w * .50;
+    const right = w * 1.02;
+    const top = mobile ? h * .24 : h * .14;
+    const bottom = mobile ? h * .65 : h * .65;
+    ctx.save();
+    for (let i = 0; i < count; i++) {
+      const seed = Math.sin(i * 928.17) * 10000;
+      const fx = seed - Math.floor(seed);
+      const fy = (Math.sin(i * 319.91) * 10000) % 1;
+      const x = left + (right - left) * fx + Math.sin(t * .22 + i) * 7;
+      const y = top + (bottom - top) * Math.abs(fy) + Math.cos(t * .18 + i * 1.7) * 6;
+      const r = MODE === 'micrograph' ? (.55 + (i % 5) * .38) : (.9 + (i % 4) * .55);
+      const a = MODE === 'micrograph' ? (.08 + (i % 7) * .018) : (.10 + (i % 5) * .025);
+      ctx.fillStyle = i % 4 === 0 ? `rgba(21,199,232,${a})` : i % 4 === 1 ? `rgba(255,79,163,${a})` : `rgba(83,58,253,${a})`;
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  function drawFilaments(t, w, h, mobile) {
+    const count = MODE === 'micrograph' ? 28 : 12;
+    ctx.save();
+    for (let i = 0; i < count; i++) {
+      const pts = ribbonPoints(i % 14, t * (i % 2 ? .8 : 1.1) + i * .13, w, h, mobile, (i - count/2) * (mobile ? .6 : .9));
+      const color = i % 3 === 0 ? '#15c7e8' : i % 3 === 1 ? '#7257ff' : '#ff4fa3';
+      drawPath(pts, color, MODE === 'micrograph' ? .75 : 1.1, MODE === 'micrograph' ? .22 : .16, MODE === 'micrograph' ? 3 : 5, false);
+    }
+    ctx.restore();
+  }
+
+  function drawRibbons(t, w, h, mobile) {
+    const order = Array.from({ length: 14 }, (_, i) => i).sort((a, b) => {
+      const za = sampleRibbon(a, .55, t, w, h, mobile).z;
+      const zb = sampleRibbon(b, .55, t, w, h, mobile).z;
+      return za - zb;
+    });
+    for (const i of order) {
+      const pts = ribbonPoints(i, t, w, h, mobile);
+      const z = sampleRibbon(i, .55, t, w, h, mobile).z;
+      const color = palette[i % palette.length];
+      const isBack = z < .45;
+      const base = MODE === 'micrograph' ? 2.7 : 4.4;
+      const width = base + z * (MODE === 'micrograph' ? 5.2 : 8.0) + (i % 3) * .55;
+      drawPath(pts, color, width + 22, isBack ? .045 : .075, 28, false);
+      drawPath(pts, color, width + 11, isBack ? .13 : .21, 20, false);
+      drawPath(pts, color, width + 3, isBack ? .42 : .66, 13, false);
+      drawPath(pts, color, Math.max(1.4, width * .38), isBack ? .72 : .96, 3, true);
+    }
+  }
+
+  function drawDepthShadows(t, w, h, mobile) {
+    ctx.save();
+    ctx.globalCompositeOperation = 'multiply';
+    for (let i = 0; i < 7; i++) {
+      const pts = ribbonPoints(i * 2, t + .4, w, h, mobile, 18 + i * 2);
+      drawPath(pts, 'rgba(71,60,180,.16)', MODE === 'micrograph' ? 9 : 16, .20, 18, false);
+    }
+    ctx.restore();
+  }
+
+  function fadeTextSide(w, h, mobile) {
+    const x0 = mobile ? w * .50 : w * .42;
+    const x1 = mobile ? w * .78 : w * .60;
+    const g = ctx.createLinearGradient(x0, 0, x1, 0);
+    g.addColorStop(0, 'rgba(255,255,255,1)');
+    g.addColorStop(.40, 'rgba(255,255,255,.92)');
+    g.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = g;
+    ctx.fillRect(x0, 0, x1 - x0, h);
+    const bottom = ctx.createLinearGradient(0, h*.62, 0, h*.98);
+    bottom.addColorStop(0, 'rgba(255,255,255,0)');
+    bottom.addColorStop(1, 'rgba(255,255,255,.96)');
+    ctx.fillStyle = bottom;
+    ctx.fillRect(0, h*.58, w, h*.42);
+  }
+
+  function draw(ms = 0) {
+    resize();
+    const w = canvas.clientWidth;
+    const h = canvas.clientHeight;
+    const mobile = w <= 700;
+    const t = reduceMotion ? 18 : ms * .001;
+    ctx.clearRect(0, 0, w, h);
+
+    drawVolume(t, w, h, mobile);
+    drawDepthShadows(t, w, h, mobile);
+    drawFilaments(t, w, h, mobile);
+    drawRibbons(t, w, h, mobile);
+    drawParticles(t, w, h, mobile);
+    fadeTextSide(w, h, mobile);
+  }
+
+  function loop(ms) {
+    if (!running) return;
+    draw(ms);
+    raf = requestAnimationFrame(loop);
+  }
+
+  window.addEventListener('resize', () => draw(performance.now()));
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => draw(performance.now()));
+
+  if (reduceMotion) {
+    draw(0);
+  } else {
+    raf = requestAnimationFrame(loop);
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting && !running) { running = true; raf = requestAnimationFrame(loop); }
+        if (!entry.isIntersecting) { running = false; cancelAnimationFrame(raf); }
+      }, { threshold: 0 }).observe(canvas);
+    }
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) { running = false; cancelAnimationFrame(raf); }
+      else if (!running) { running = true; raf = requestAnimationFrame(loop); }
+    });
+  }
+})();
+</script>
+</body>
+</html>
