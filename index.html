@@ -1,384 +1,958 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AgentDiligence — Pre-procurement AI agent diligence</title>
-  <meta name="description" content="AgentDiligence runs pre-procurement AI agent evaluations on real workflows before deployment.">
-  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;500;600&family=Source+Code+Pro:wght@400;500;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --purple: #533afd;
-      --purple-hover: #4434d4;
-      --purple-deep: #2e2b8c;
-      --navy: #061b31;
-      --brand-dark: #1c1e54;
-      --dark: #0d253d;
-      --body: #64748d;
-      --label: #273951;
-      --border: #e5edf5;
-      --soft-purple: #d6d9fc;
-      --magenta: #f96bee;
-      --ruby: #ea2261;
-      --green: #15be53;
-      --cyan: #03c7e8;
-      --white: #fff;
-      --shadow: 0 20px 40px rgba(50,50,93,.25), 0 8px 20px rgba(0,0,0,.10);
-      --soft-shadow: 0 6px 18px rgba(50,50,93,.12), 0 2px 8px rgba(0,0,0,.08);
-      --sans: 'Source Sans 3', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-      --mono: 'Source Code Pro', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-    }
-    * { box-sizing: border-box; }
-    body { margin: 0; font-family: var(--sans); color: var(--body); background: #fff; font-weight: 300; -webkit-font-smoothing: antialiased; }
-    a { color: inherit; text-decoration: none; }
-    .wrap { width: min(1080px, calc(100% - 40px)); margin: 0 auto; }
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2032%2032%22%20fill%3D%22none%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%230B1020%22/%3E%3Cg%20transform%3D%22translate%284%2C4%29%22%3E%3Cpath%20d%3D%22M8.5%204%20H5%20V20%20H8.5%22%20stroke%3D%22%235C7CA6%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22/%3E%3Cpath%20d%3D%22M15.5%204%20H19%20V20%20H15.5%22%20stroke%3D%22%235C7CA6%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22/%3E%3Crect%20x%3D%229.4%22%20y%3D%229.4%22%20width%3D%225.2%22%20height%3D%225.2%22%20rx%3D%221.5%22%20fill%3D%22%2338BDF8%22/%3E%3Cline%20x1%3D%2212%22%20y1%3D%223.5%22%20x2%3D%2212%22%20y2%3D%2220.5%22%20stroke%3D%22%23CDEBFF%22%20stroke-width%3D%221.15%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.68%22/%3E%3C/g%3E%3C/svg%3E" />
+<title>AgentDiligence — Pre-procurement AI agent evaluation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --ink:#0B1020;
+    --ink2:#0A1A2F;
+    --panel:#0F1730;
+    --panel-2:#111C38;
+    --text:#EAF0FB;
+    --muted:#9AA8C2;
+    --faint:#6B7A99;
+    --line:rgba(125,160,210,.14);
+    --line-strong:rgba(125,160,210,.28);
+    --indigo:#635BFF;
+    --cyan:#38BDF8;
+    --sky:#7DD3FC;
+    --mint:#34E0A1;
+    --amber:#F5A524;
+    --maxw:1140px;
+  }
 
-    .hero-shell { position: relative; overflow: hidden; min-height: 780px; background: #fff; }
-    .hero__canvas {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      display: block;
-      pointer-events: none;
-      background: radial-gradient(34% 52% at 76% 78%, rgba(83,58,253,.46), transparent 70%);
-      z-index: 0;
-    }
-    .diagonal { display: none; }
-    nav { position: relative; z-index: 3; padding: 24px 0; color: var(--navy); }
-    .nav-inner { display: flex; align-items:center; justify-content:space-between; }
-    .brand { display:flex; align-items:center; gap:10px; font-weight: 600; letter-spacing:-.02em; font-size: 20px; }
-    .brand-mark { width: 36px; height: 36px; display:block; flex:0 0 auto; }
-    .brand-mark path { stroke: var(--purple); fill: none; stroke-linecap: round; stroke-linejoin: round; }
-    .nav-links { display:flex; gap:28px; align-items:center; font-size: 15px; font-weight:400; }
-    .nav-pill { background:rgba(83,58,253,.08); border:1px solid rgba(83,58,253,.18); color: var(--purple); padding:8px 13px; border-radius:999px; }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--ink);
+    color:var(--text);
+    font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    font-size:17px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  a{color:inherit;text-decoration:none;}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px;}
+  .mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;}
+  .eyebrow{
+    font-family:"IBM Plex Mono",monospace;
+    font-size:12.5px;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--cyan);
+  }
 
-    .hero { position: relative; z-index: 2; padding: 86px 0 90px; display:grid; grid-template-columns: .93fr 1.07fr; gap: 48px; align-items:center; overflow:hidden; background:transparent; }
-    .hero__content { position: relative; z-index: 1; max-width: 600px; }
-    .eyebrow { color: var(--purple); font-weight:600; font-size:16px; margin-bottom:20px; }
-    h1 { margin:0; color: var(--navy); font-size: clamp(52px, 7vw, 82px); line-height: .96; letter-spacing: -2.1px; font-weight: 300; max-width: 600px; }
-    .subhead { margin: 24px 0 28px; font-size: 21px; line-height: 1.45; color: #425466; max-width: 560px; }
-    .ch { transition: color .15s linear; }
-    .actions { display:flex; gap: 13px; align-items:center; flex-wrap:wrap; }
-    .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; padding: 10px 17px; border-radius: 999px; font-size:16px; font-weight:500; transition:.18s ease; }
-    .btn-primary { color:#fff; background: var(--purple); box-shadow: var(--soft-shadow); }
-    .btn-primary:hover { background: var(--purple-hover); transform: translateY(-1px); }
-    .btn-link { color: var(--purple); }
+  /* ---------- NAV ---------- */
+  .nav{
+    position:fixed;top:0;left:0;right:0;z-index:50;
+    border-bottom:1px solid transparent;
+    transition:background .25s ease, border-color .25s ease, backdrop-filter .25s ease;
+  }
+  .nav.scrolled{
+    background:rgba(11,16,32,.72);
+    backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+    border-bottom-color:var(--line);
+  }
+  /* scanline scroll-progress */
+  .scan-progress{position:fixed;top:0;left:0;right:0;height:2px;z-index:120;background:rgba(125,160,210,.08);pointer-events:none;}
+  .scan-progress-fill{height:100%;width:0;position:relative;background:linear-gradient(90deg,var(--indigo),var(--cyan));box-shadow:0 0 10px rgba(56,189,248,.5);}
+  .scan-progress-fill::after{content:"";position:absolute;right:-1px;top:-3px;width:2px;height:8px;background:#CDEBFF;box-shadow:0 0 6px #CDEBFF;}
+  @media (prefers-reduced-motion:reduce){
+    .scan-progress-fill::after{display:none;}
+  }
+  .nav-inner{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px 0;
+  }
+  .brand{display:flex;align-items:center;gap:10px;font-family:"Space Grotesk";font-weight:600;font-size:18px;letter-spacing:-.01em;}
+  .brand-mark{width:23px;height:23px;display:block;flex:none;}
+  .brand .dot{
+    width:13px;height:13px;border-radius:3px;
+    background:conic-gradient(from 210deg,var(--indigo),var(--cyan),var(--mint),var(--indigo));
+    box-shadow:0 0 16px rgba(56,189,248,.6);
+  }
+  .nav-links{display:flex;align-items:center;gap:30px;font-size:14.5px;color:var(--muted);}
+  .nav-links a:hover{color:var(--text);}
+  .nav-links .nav-cta{
+    color:var(--text);border:1px solid var(--line-strong);
+    padding:8px 16px;border-radius:8px;font-weight:500;
+  }
+  .nav-links .nav-cta:hover{border-color:var(--cyan);background:rgba(56,189,248,.06);}
+  .nav-toggle{display:none;}
 
-    .section { padding: 96px 0; }
-    .section.alt { background:#f6f9fc; }
-    .section-head { display:grid; grid-template-columns:.8fr 1fr; gap:48px; margin-bottom:44px; align-items:start; }
-    .kicker { color:var(--purple); font-size:15px; font-weight:600; margin-bottom:10px; }
-    h2 { margin:0; color:var(--navy); font-weight:300; font-size:48px; line-height:1.06; letter-spacing:-1px; }
-    .section-head p { margin:0; color:#425466; font-size:19px; line-height:1.5; }
-    .three { display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
-    .feature { background:#fff; border:1px solid var(--border); border-radius:8px; padding:26px; box-shadow:0 4px 12px rgba(23,23,23,.04); }
-    .icon { width:36px; height:36px; border-radius:8px; background:linear-gradient(135deg,var(--purple),var(--magenta)); margin-bottom:26px; box-shadow:0 8px 16px rgba(83,58,253,.2); }
-    .feature h3 { color:var(--navy); margin:0 0 10px; font-size:24px; font-weight:300; letter-spacing:-.3px; }
-    .feature p { margin:0; line-height:1.5; }
+  /* ---------- HERO ---------- */
+  .hero{position:relative;overflow:hidden;min-height:760px;display:flex;align-items:center;background:var(--ink);}
+  .hero-grad{
+    position:absolute;inset:-20% -10% 0 -10%;z-index:0;
+    filter:blur(60px);opacity:.85;
+    background:
+      radial-gradient(40% 55% at 78% 18%, rgba(99,91,255,.55), transparent 70%),
+      radial-gradient(45% 50% at 92% 60%, rgba(56,189,248,.45), transparent 70%),
+      radial-gradient(40% 45% at 62% 88%, rgba(52,224,161,.30), transparent 72%),
+      radial-gradient(50% 60% at 30% 30%, rgba(99,91,255,.18), transparent 70%);
+    animation:drift 22s ease-in-out infinite alternate;
+  }
+  @keyframes drift{
+    0%{transform:translate3d(0,0,0) scale(1);}
+    100%{transform:translate3d(-3%,2%,0) scale(1.08);}
+  }
+  #field{position:absolute;inset:0;z-index:1;width:100%;height:100%;display:block;}
+  .hero-veil{
+    position:absolute;inset:0;z-index:2;pointer-events:none;
+    background:linear-gradient(105deg, var(--ink) 6%, rgba(11,16,32,.82) 36%, rgba(11,16,32,.35) 60%, rgba(11,16,32,0) 78%);
+  }
+  .hero-base{
+    position:absolute;left:0;right:0;bottom:0;height:160px;z-index:2;pointer-events:none;
+    background:linear-gradient(to top, var(--ink), transparent);
+  }
+  .hero-content{position:relative;z-index:3;width:100%;padding-top:120px;padding-bottom:64px;}
+  .hero h1{
+    font-family:"Space Grotesk";font-weight:600;
+    font-size:clamp(40px,6.4vw,76px);line-height:1.04;letter-spacing:-.025em;
+    margin:20px 0 0;
+  }
+  .hero h1 .ln,.hero h1 em{display:block;}
+  .hero h1 em{font-style:normal;color:var(--cyan);}
+  .hero .sub{margin:24px 0 0;max-width:46ch;color:var(--muted);font-size:18.5px;}
+  .cta-row{display:flex;gap:14px;margin-top:34px;flex-wrap:wrap;}
+  .btn{
+    display:inline-flex;align-items:center;gap:9px;
+    padding:13px 22px;border-radius:10px;font-weight:600;font-size:15px;
+    border:1px solid transparent;transition:transform .15s ease, box-shadow .15s ease, background .15s ease;
+  }
+  .btn-primary{
+    color:#04101a;
+    background:linear-gradient(120deg,var(--mint),var(--cyan));
+    box-shadow:0 10px 30px -8px rgba(56,189,248,.5);
+  }
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 16px 38px -8px rgba(56,189,248,.62);}
+  .btn-ghost{color:var(--text);border-color:var(--line-strong);}
+  .btn-ghost:hover{border-color:var(--cyan);background:rgba(56,189,248,.06);}
 
-    .dark { background: var(--brand-dark); color:#fff; position:relative; overflow:hidden; }
-    .dark::before { content:""; position:absolute; inset:0; background: radial-gradient(circle at 80% 20%, rgba(249,107,238,.22), transparent 28rem), radial-gradient(circle at 20% 80%, rgba(83,58,253,.28), transparent 30rem); }
-    .dark .wrap { position:relative; z-index:1; }
-    .dark h2 { color:#fff; }
-    .dark .section-head p { color:#c9d2ff; }
-    .report-preview { display:grid; grid-template-columns:1fr 1fr; gap:22px; }
-    .report { position:relative; overflow:hidden; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.14); border-radius:8px; padding:24px; box-shadow:0 20px 40px rgba(3,3,39,.25); }
-    .report__mark { position:absolute; top:19px; right:20px; width:42px; height:42px; opacity:.22; }
-    .report__mark path { stroke:#d6d9fc; fill:none; stroke-linecap:round; stroke-linejoin:round; }
-    .report h3 { position:relative; margin:0 0 12px; padding-right:54px; font-weight:400; font-size:24px; }
-    .report p { position:relative; color:#d6d9fc; line-height:1.5; }
-    .rows { position:relative; margin-top:20px; border-top:1px solid rgba(255,255,255,.12); }
-    .rows div { display:flex; justify-content:space-between; border-bottom:1px solid rgba(255,255,255,.12); padding:13px 0; font-family:var(--mono); font-size:13px; }
-    .final { position:relative; overflow:hidden; padding: 92px 0; text-align:center; background:#fff; }
-    .final .wrap { position:relative; z-index:1; }
-    .final-mark { position:absolute; left:50%; top:50%; width:min(620px, 86vw); height:auto; transform:translate(-50%, -50%); opacity:.045; pointer-events:none; }
-    .final-mark path { stroke:var(--purple); fill:none; stroke-linecap:round; stroke-linejoin:round; }
-    .final h2 { max-width:780px; margin:0 auto 18px; }
-    .final p { max-width:640px; margin:0 auto 25px; font-size:20px; line-height:1.45; color:#425466; }
-    footer { padding:34px 0; color:var(--body); border-top:1px solid var(--border); font-size:14px; }
-    footer .wrap { display:flex; justify-content:space-between; gap:20px; flex-wrap:wrap; }
+  /* scoreline ticker */
+  .scoreline{
+    margin-top:54px;display:flex;align-items:center;flex-wrap:wrap;gap:12px 26px;
+    padding-top:22px;border-top:1px solid var(--line);
+    font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--faint);
+    letter-spacing:.02em;
+  }
+  .scoreline .live{display:inline-flex;align-items:center;gap:8px;color:var(--mint);}
+  .scoreline .live .pip{width:7px;height:7px;border-radius:50%;background:var(--mint);box-shadow:0 0 10px var(--mint);animation:pulse 1.6s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.25;}}
+  .scoreline .metric b{color:var(--text);font-weight:500;}
+  .scoreline .metric{color:var(--muted);}
+  .scoreline .sl-label{font-family:"IBM Plex Mono",monospace;color:var(--cyan);text-transform:uppercase;letter-spacing:.1em;}
+  .scoreline .sep{color:var(--line-strong);}
 
-    @media (max-width: 950px) {
-      .hero, .section-head, .report-preview { grid-template-columns:1fr; }
-      .hero { padding-top:48px; }
-      .three { grid-template-columns:1fr; }
-      .nav-links { display:none; }
-      h1 { font-size:56px; }
-      h2 { font-size:38px; }
-    }
-    @media (max-width:700px){
-      .hero-shell { min-height: 86svh; }
-      .hero { align-items:flex-end; padding: 48px 0 9svh; }
-      .hero__content { max-width:320px; width:100%; }
-      h1 { max-width:100%; font-size:clamp(2rem,.85rem + 4.6vw,2.55rem); line-height:1.04; letter-spacing:-.025em; }
-      .subhead { max-width:100%; font-size:1.05rem; }
-    }
-  </style>
+  /* ---------- SECTIONS ---------- */
+  section{padding:104px 0;}
+  .sec-head{max-width:62ch;}
+  .sec-head h2{
+    font-family:"Space Grotesk";font-weight:600;
+    font-size:clamp(28px,3.6vw,42px);line-height:1.08;letter-spacing:-.02em;margin:14px 0 0;
+  }
+  .sec-head p{color:var(--muted);margin:16px 0 0;font-size:18px;max-width:54ch;}
+
+  .grid{display:grid;gap:18px;margin-top:48px;}
+  .g3{grid-template-columns:repeat(3,1fr);}
+  .g2{grid-template-columns:repeat(2,1fr);}
+
+  .card{
+    background:linear-gradient(180deg,var(--panel),var(--ink2));
+    border:1px solid var(--line);border-radius:16px;padding:28px;
+    position:relative;transition:border-color .2s ease, transform .2s ease;
+  }
+  .card:hover{border-color:var(--line-strong);transform:translateY(-3px);}
+  .card .idx{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--cyan);}
+  .card h3{font-family:"Space Grotesk";font-weight:600;font-size:20px;letter-spacing:-.01em;margin:14px 0 10px;}
+  .card p{color:var(--muted);font-size:15.5px;margin:0;}
+
+  /* evidence rows */
+  .evidence .card{padding:30px;}
+  .rows{margin-top:20px;border-top:1px solid var(--line);}
+  .rows .row{
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+    padding:13px 0;border-bottom:1px solid var(--line);
+    font-family:"IBM Plex Mono",monospace;font-size:13.5px;
+  }
+  .rows .row span{color:var(--muted);}
+  .rows .row b{color:var(--text);font-weight:500;}
+  .rows .row b.good{color:var(--mint);}
+  .rows .row b.warn{color:var(--amber);}
+
+  /* ---------- YC-grade additions ---------- */
+  a:focus-visible,.btn:focus-visible,button:focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:6px;}
+  section[id]{scroll-margin-top:84px;}
+  .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s cubic-bezier(.2,.7,.2,1),transform .6s cubic-bezier(.2,.7,.2,1);}
+  .reveal.in{opacity:1;transform:none;}
+  .reveal.d1{transition-delay:.07s;} .reveal.d2{transition-delay:.14s;} .reveal.d3{transition-delay:.21s;} .reveal.d4{transition-delay:.28s;}
+
+  /* trust strip */
+  .trust{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:rgba(15,23,48,.32);}
+  .trust-inner{display:flex;align-items:center;gap:18px 40px;flex-wrap:wrap;justify-content:space-between;padding-top:20px;padding-bottom:20px;}
+  .trust-label{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);}
+  .trust-logos{display:flex;align-items:center;gap:28px;flex-wrap:wrap;}
+  .trust-logos span{font-family:"Space Grotesk";font-weight:500;font-size:16px;color:var(--muted);opacity:.6;transition:opacity .2s ease,color .2s ease;}
+  .trust-logos span:hover{opacity:1;color:var(--text);}
+  .trust-logos .trust-lead{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);opacity:1;}
+  .trust-logos .trust-lead:hover{color:var(--faint);}
+
+  /* report artifact — the product shot */
+  .report{margin-top:44px;position:relative;border:1px solid var(--line-strong);border-radius:18px;
+    background:linear-gradient(180deg,#101a36,#0b1428);
+    box-shadow:rgba(3,10,30,.5) 0 40px 60px -36px, rgba(56,189,248,.08) 0 1px 0 0 inset;overflow:hidden;}
+  .report .rc{position:absolute;width:13px;height:13px;z-index:4;pointer-events:none;border:1.5px solid rgba(94,126,168,.6);}
+  .report .rc-tl{top:11px;left:11px;border-right:none;border-bottom:none;border-top-left-radius:4px;}
+  .report .rc-tr{top:11px;right:11px;border-left:none;border-bottom:none;border-top-right-radius:4px;}
+  .report .rc-bl{bottom:11px;left:11px;border-right:none;border-top:none;border-bottom-left-radius:4px;}
+  .report .rc-br{bottom:11px;right:11px;border-left:none;border-top:none;border-bottom-right-radius:4px;}
+  .report-top{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:18px 24px;border-bottom:1px solid var(--line);}
+  .report-id{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:inline-flex;align-items:center;gap:9px;}
+  .report-id .dot-live{width:7px;height:7px;border-radius:50%;background:var(--mint);box-shadow:0 0 9px var(--mint);animation:pulse 1.6s ease-in-out infinite;}
+  .report-verdict{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.07em;color:var(--faint);text-transform:uppercase;}
+  .report-verdict b{color:var(--mint);font-weight:600;}
+  .report-scroll{overflow-x:auto;}
+  .report-table{min-width:660px;}
+  .rt-head,.rt-row{display:grid;grid-template-columns:minmax(150px,1.7fr) repeat(4,minmax(70px,1fr));align-items:center;gap:12px;padding:0 24px;}
+  .rt-head{height:42px;font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);border-bottom:1px solid var(--line);}
+  .rt-row{height:62px;border-bottom:1px solid var(--line);transition:background .2s ease;}
+  .rt-row:last-child{border-bottom:0;}
+  .rt-row:hover{background:rgba(125,160,210,.04);}
+  .rt-win{background:linear-gradient(90deg,rgba(52,224,161,.10),transparent 60%);box-shadow:inset 2px 0 0 var(--mint);}
+  .rt-name{font-family:"Space Grotesk";font-weight:500;font-size:15px;color:var(--text);display:flex;flex-direction:column;gap:2px;}
+  .rt-name em{font-style:normal;font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--faint);}
+  .num{font-family:"IBM Plex Mono",monospace;font-size:14px;color:var(--muted);font-feature-settings:"tnum";}
+  .num.good{color:var(--mint);} .num.warn{color:var(--amber);} .num.dim{color:var(--line-strong);}
+  .pill{font-family:"IBM Plex Mono",monospace;font-style:normal;font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;padding:4px 9px;border-radius:6px;border:1px solid transparent;white-space:nowrap;}
+  .pill-pilot{color:var(--mint);background:rgba(52,224,161,.12);border-color:rgba(52,224,161,.32);}
+  .pill-constrain{color:var(--amber);background:rgba(245,165,36,.10);border-color:rgba(245,165,36,.30);}
+  .pill-avoid{color:var(--amber);background:rgba(245,165,36,.12);border-color:rgba(245,165,36,.34);}
+  .pill-assist{color:var(--cyan);background:rgba(56,189,248,.10);border-color:rgba(56,189,248,.30);}
+  .pill-base{color:var(--faint);background:rgba(125,160,210,.07);border-color:var(--line);}
+  .report-foot{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:16px 24px;border-top:1px solid var(--line);background:rgba(8,13,28,.5);font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--faint);}
+  .report-links{display:flex;gap:18px;flex-wrap:wrap;}
+  .report-links a{color:var(--cyan);}
+  .report-links a:hover{text-decoration:underline;}
+  .report-cap{margin:14px 2px 0;font-size:13px;color:var(--faint);}
+
+  /* evidence facets */
+  .facets{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:30px;}
+  .facets > div{border:1px solid var(--line);border-radius:12px;padding:16px 18px;background:rgba(15,23,48,.3);}
+  .facets span{display:block;font-size:13px;color:var(--muted);margin-bottom:6px;}
+  .facets b{font-family:"IBM Plex Mono",monospace;font-weight:500;font-size:15px;color:var(--text);}
+  .facets b.warn{color:var(--amber);}
+
+  @media (max-width:880px){ .facets{grid-template-columns:repeat(2,1fr);} }
+  @media (max-width:560px){ .facets{grid-template-columns:1fr;} }
+  @media (prefers-reduced-motion:reduce){ .reveal{opacity:1;transform:none;transition:none;} }
+
+  /* graded hairline divider — a quiet inflow→verdict echo between sections */
+  .divider{position:relative;height:1px;margin:0;border:0;
+    background:linear-gradient(90deg, rgba(110,104,255,0), rgba(110,104,255,.20) 20%, rgba(64,196,250,.28) 60%, rgba(52,224,161,.32) 100%);}
+  .divider::after{content:"";position:absolute;right:0;top:50%;width:5px;height:5px;margin-top:-2.5px;border-radius:50%;
+    background:var(--mint);box-shadow:0 0 9px rgba(52,224,161,.75);opacity:.55;}
+
+  /* closing */
+  .closing{
+    position:relative;overflow:hidden;
+    text-align:center;
+    background:
+      radial-gradient(60% 120% at 50% 0%, rgba(99,91,255,.16), transparent 60%),
+      radial-gradient(50% 120% at 50% 100%, rgba(56,189,248,.12), transparent 60%);
+  }
+  #field-cta{position:absolute;inset:0;z-index:0;width:100%;height:100%;opacity:.6;
+    -webkit-mask-image:linear-gradient(to bottom, transparent 0%, #000 16%, #000 84%, transparent 100%);
+    mask-image:linear-gradient(to bottom, transparent 0%, #000 16%, #000 84%, transparent 100%);}
+  .closing-veil{position:absolute;inset:0;z-index:1;pointer-events:none;
+    background:radial-gradient(58% 72% at 50% 50%, rgba(11,16,32,.80), rgba(11,16,32,.40) 58%, transparent 80%);}
+  .closing .wrap{position:relative;z-index:2;}
+  .closing h2{font-family:"Space Grotesk";font-weight:700;font-size:clamp(32px,5vw,56px);line-height:1.04;letter-spacing:-.025em;margin:0 auto;max-width:18ch;}
+  .closing p{color:var(--muted);margin:20px auto 0;max-width:48ch;font-size:18px;}
+  .closing .cta-row{justify-content:center;}
+
+  footer{border-top:1px solid var(--line);padding:34px 0;}
+  .foot-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;color:var(--faint);font-size:14px;}
+  .foot-inner .mono{font-size:12.5px;letter-spacing:.04em;}
+
+  /* ---------- WORK-TRACE NARRATIVE COMPONENTS ---------- */
+  /* QA triad */
+  .qa-card{display:flex;flex-direction:column;gap:14px;}
+  .qa-label{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);}
+  .qa-q{font-family:"Space Grotesk";font-weight:500;font-size:18px;line-height:1.3;letter-spacing:-.01em;color:var(--muted);margin:0;}
+  .card.is-answer{border-color:rgba(52,224,161,.4);background:linear-gradient(180deg,rgba(18,38,38,.55),var(--ink2));box-shadow:0 0 0 1px rgba(52,224,161,.14),0 30px 50px -30px rgba(52,224,161,.25);}
+  .card.is-answer .qa-label{color:var(--mint);}
+  .card.is-answer .qa-q{color:var(--text);}
+
+  /* steps pipeline */
+  .steps{margin-top:48px;}
+  .step{display:grid;grid-template-columns:auto 1fr;gap:22px;padding-bottom:34px;position:relative;}
+  .step:last-child{padding-bottom:0;}
+  .step::before{content:"";position:absolute;left:18px;top:42px;bottom:-2px;width:1px;background:linear-gradient(to bottom,var(--line-strong),var(--line));}
+  .step:last-child::before{display:none;}
+  .step-num{width:37px;height:37px;border-radius:10px;display:grid;place-items:center;font-family:"IBM Plex Mono",monospace;font-size:14px;color:var(--cyan);background:rgba(56,189,248,.08);border:1px solid var(--line-strong);position:relative;z-index:1;}
+  .step-body h3{font-family:"Space Grotesk";font-weight:600;font-size:19px;letter-spacing:-.01em;margin:6px 0 8px;}
+  .step-body h3 .tag{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--mint);margin-left:9px;vertical-align:middle;opacity:.92;}
+  .step-body h3 .tag::before{content:"[";margin-right:4px;}
+  .step-body h3 .tag::after{content:"]";margin-left:4px;}
+  .step-body p{color:var(--muted);font-size:15.5px;margin:0;max-width:62ch;}
+
+  /* evidence levels */
+  .levels{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:30px;}
+  .level{border:1px solid var(--line);border-radius:12px;padding:20px;background:rgba(15,23,48,.3);}
+  .level .lv{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.08em;color:var(--cyan);}
+  .level h4{font-family:"Space Grotesk";font-weight:600;font-size:16px;margin:10px 0 6px;letter-spacing:-.01em;}
+  .level p{color:var(--muted);font-size:14px;margin:0;}
+  .level.floor{background:rgba(15,23,48,.14);border-style:dashed;border-color:rgba(125,160,210,.2);}
+  .level.floor .lv{color:var(--faint);}
+  .level.floor h4{color:var(--muted);}
+
+  /* callout */
+  .callout{text-align:center;}
+  .callout .wrap{max-width:760px;}
+  .callout q{display:block;font-family:"Space Grotesk";font-weight:600;font-size:clamp(24px,3.4vw,34px);line-height:1.16;letter-spacing:-.02em;color:var(--text);quotes:none;}
+  .callout p{color:var(--muted);margin:18px auto 0;font-size:17px;max-width:56ch;}
+
+  /* packages */
+  .pkg-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:44px;}
+  .pkg{position:relative;display:flex;flex-direction:column;border:1px solid var(--line);border-radius:16px;padding:26px;background:linear-gradient(180deg,var(--panel),var(--ink2));transition:border-color .2s ease,transform .2s ease;}
+  .pkg:hover{border-color:var(--line-strong);transform:translateY(-3px);}
+  .pkg.is-lead{border-color:rgba(56,189,248,.42);box-shadow:0 0 0 1px rgba(56,189,248,.14),0 30px 50px -30px rgba(56,189,248,.3);}
+  .pkg-tag{position:absolute;top:0;right:20px;transform:translateY(-50%);font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:#04101a;background:linear-gradient(120deg,var(--mint),var(--cyan));padding:4px 10px;border-radius:6px;}
+  .pkg-name{font-family:"Space Grotesk";font-weight:600;font-size:19px;letter-spacing:-.01em;margin:0;}
+  .pkg-q{color:var(--cyan);font-size:13.5px;margin:9px 0 16px;font-family:"IBM Plex Mono",monospace;}
+  .pkg ul{list-style:none;margin:0 0 22px;padding:0;display:flex;flex-direction:column;gap:9px;}
+  .pkg li{position:relative;padding-left:20px;color:var(--muted);font-size:14.5px;line-height:1.45;}
+  .pkg li::before{content:"";position:absolute;left:0;top:8px;width:7px;height:7px;border-radius:2px;background:var(--cyan);opacity:.55;}
+  .pkg .pkg-cta{margin-top:auto;align-self:flex-start;}
+  .pkg-soon{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);border:1px solid var(--line);border-radius:5px;padding:2px 7px;margin-left:8px;vertical-align:middle;}
+  .pkg-foot{font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--faint);margin:24px 2px 0;}
+  .btn-sm{padding:10px 17px;font-size:14px;}
+
+  /* who */
+  .who-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:44px;}
+  .who-card{border:1px solid var(--line);border-radius:16px;padding:28px;background:linear-gradient(180deg,var(--panel),var(--ink2));}
+  .who-card h3{font-family:"Space Grotesk";font-weight:600;font-size:18px;margin:0 0 16px;letter-spacing:-.01em;}
+  .who-card ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:11px;}
+  .who-card li{position:relative;padding-left:22px;color:var(--muted);font-size:15px;line-height:1.45;}
+  .who-card li::before{content:"";position:absolute;left:0;top:7px;width:8px;height:8px;border-radius:2.5px;background:var(--cyan);opacity:.62;}
+  .who-note{color:var(--faint);font-size:14.5px;margin:26px 2px 0;max-width:72ch;}
+
+  @media (max-width:880px){ .levels,.pkg-grid,.who-grid{grid-template-columns:1fr;} }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width:880px){
+    .nav-links a:not(.nav-cta){display:none;}
+    .nav-cta{padding:9px 15px;font-size:13.5px;}
+    .g3{grid-template-columns:1fr;}
+    .g2{grid-template-columns:1fr;}
+    .hero{min-height:660px;}
+    .hero-content{padding-top:104px;padding-bottom:56px;}
+    .hero-veil{background:linear-gradient(180deg, rgba(11,16,32,.55) 0%, rgba(11,16,32,.78) 60%, var(--ink) 100%);}
+    section{padding:76px 0;}
+  }
+
+  @media (max-width:600px){
+    .wrap{padding-left:28px;padding-right:28px;}
+    .brand{font-size:16px;gap:8px;}
+    .brand-mark{width:20px;height:20px;}
+    .nav-links{gap:0;}
+    .nav-links .nav-cta{display:none;}
+    .hero h1{font-size:30px;}
+    .hero .sub{font-size:16px;margin-top:18px;max-width:100%;}
+    .eyebrow{font-size:12px;overflow-wrap:anywhere;}
+    .cta-row{flex-direction:column;align-items:flex-start;}
+    .btn{max-width:100%;justify-content:center;}
+    .sec-head p{font-size:16px;}
+    .closing h2{font-size:30px;}
+    .callout q{font-size:23px;}
+    section{padding:62px 0;}
+    .hero-content{padding-top:94px;padding-bottom:46px;}
+    .scoreline{font-size:11.5px;gap:7px 14px;margin-top:34px;padding-top:18px;}
+    .trust-logos{gap:14px 22px;}
+    .trust-logos span{font-size:15px;}
+    /* report → stacked cards */
+    .report-scroll{overflow-x:visible;}
+    .report-table{min-width:0;}
+    .rt-head{display:none;}
+    .rt-row{display:block;height:auto;padding:16px 18px;}
+    .rt-name{display:block;font-size:16px;margin-bottom:12px;}
+    .rt-row .num{display:inline-block;margin:0 20px 0 0;font-size:14px;vertical-align:top;}
+    .rt-row .num::before{content:attr(data-label);display:block;font-family:"IBM Plex Mono",monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-bottom:3px;font-weight:500;}
+    .rt-row > span:last-child{display:block;margin-top:14px;}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    .hero-grad{animation:none;}
+    .scoreline .live .pip{animation:none;}
+    *{scroll-behavior:auto;}
+  }
+</style>
+<noscript><style>.reveal{opacity:1 !important;transform:none !important;}</style></noscript>
 </head>
 <body>
-  <div class="hero-shell">
-    <canvas class="hero__canvas" id="heroCanvas" aria-hidden="true"></canvas>
-    <div class="diagonal" aria-hidden="true"></div>
-    <nav>
-      <div class="wrap nav-inner">
-        <a class="brand" href="#" aria-label="AgentDiligence home"><svg class="brand-mark" viewBox="0 0 96 96" aria-hidden="true"><path d="M18 74L56 22" stroke-width="7"/><path d="M32 55H56" stroke-width="7"/><path d="M56 22V74H69C84 74 94 63 94 48S84 22 69 22H56" stroke-width="7"/></svg><span>AgentDiligence</span></a>
-        <div class="nav-links"><a href="#method">Method</a><a href="#evidence">Evidence</a><a href="#buyers">Teams</a><a class="nav-pill" href="mailto:simon@agentdiligence.io">Run comparison</a></div>
-      </div>
-    </nav>
 
-    <section class="wrap hero">
-      <div class="hero__content">
-        <div class="eyebrow">Pre-procurement agent evaluation</div>
-        <h1 id="heroTitle">Vendor benchmarks aren’t your benchmarks.</h1>
-        <p class="subhead" id="heroSub">AgentDiligence tests the agents you’re considering on your real workflows and tools, then gives your team an independent scorecard before you buy.</p>
-        <div class="actions"><a class="btn btn-primary" href="mailto:simon@agentdiligence.io?subject=Run%20an%20AgentDiligence%20comparison">Run a comparison →</a><a class="btn btn-link" href="#evidence">See the output →</a></div>
-      </div>
+<!-- ================= HERO ================= -->
+<header class="hero">
+  <div class="hero-grad" aria-hidden="true"></div>
+  <canvas id="field" aria-hidden="true"></canvas>
+  <div class="hero-veil" aria-hidden="true"></div>
+  <div class="hero-base" aria-hidden="true"></div>
 
-    </section>
+  <div class="scan-progress" aria-hidden="true"><div class="scan-progress-fill"></div></div>
+  <nav class="nav">
+    <div class="wrap nav-inner">
+      <a class="brand" href="#top"><svg class="brand-mark" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8.5 4 H5 V20 H8.5" stroke="#3E5C80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M15.5 4 H19 V20 H15.5" stroke="#3E5C80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><rect x="9.4" y="9.4" width="5.2" height="5.2" rx="1.5" fill="#38BDF8"/><line x1="12" y1="3.5" x2="12" y2="20.5" stroke="#CDEBFF" stroke-width="1.1" stroke-linecap="round" opacity=".6"/></svg>AgentDiligence</a>
+      <div class="nav-links">
+        <a href="#how">How it works</a>
+        <a href="#evidence">Evidence</a>
+        <a href="#pricing">Packages</a>
+        <a class="nav-cta" href="mailto:simon@agentdiligence.io?subject=Run%20an%20AgentDiligence%20comparison">Run comparison</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="wrap hero-content" id="top">
+    <p class="eyebrow">Independent AI-agent evaluation · Support &amp; service</p>
+    <h1><span class="ln">Don't buy the demo.</span> <em>Prove the agent.</em></h1>
+    <p class="sub">AgentDiligence turns the tickets, timelines, and actions behind the work your support team already does into replayable, evidence-backed tests. We then test all the agents you're weighing up and show what's safe to automate before you sign.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="mailto:simon@agentdiligence.io?subject=Run%20an%20AgentDiligence%20comparison">Run a comparison →</a>
+      <a class="btn btn-ghost" href="#evidence">See a sample report →</a>
+    </div>
+
+    <div class="scoreline" aria-label="What an AgentDiligence evaluation measures">
+      <span class="sl-label">Evaluates</span>
+      <span class="metric">Resolution</span><span class="sep">·</span>
+      <span class="metric">Serious incidents</span><span class="sep">·</span>
+      <span class="metric">Evidence level</span><span class="sep">·</span>
+      <span class="metric">Quality-adjusted cost</span><span class="sep">·</span>
+      <span class="metric">Verdict</span>
+    </div>
   </div>
+</header>
 
-  <section id="method" class="section">
-    <div class="wrap">
-      <div class="section-head"><div><div class="kicker">Method</div><h2>A procurement bake-off for AI agents.</h2></div><p>Instead of asking which demo looked best, test every candidate on tasks built from your business, policies, edge cases, and standards.</p></div>
-      <div class="three">
-        <div class="feature"><div class="icon"></div><h3>Define the real job.</h3><p>Use your actual workflow, policies, edge cases, and decision criteria — not a vendor’s happy-path script.</p></div>
-        <div class="feature"><div class="icon"></div><h3>Run the candidate field.</h3><p>Vendor agents and your current process face your scenario set under identical constraints.</p></div>
-        <div class="feature"><div class="icon"></div><h3>Defend the decision.</h3><p>Get a recommendation backed by transcripts, policy checks, final-state proof, and cost/latency tradeoffs.</p></div>
+<!-- ================= TRUST ================= -->
+<div class="trust">
+  <div class="wrap trust-inner">
+    <span class="trust-label">Independent &amp; vendor-neutral — paid by buyers to assess agents, not by vendors to sell them</span>
+    <div class="trust-logos">
+      <span class="trust-lead">Typical shortlist</span>
+      <span>Intercom Fin</span><span>Zendesk AI</span><span>Gorgias AI</span><span>Freshworks</span><span>Ada</span><span>Decagon</span>
+    </div>
+  </div>
+</div>
+
+<!-- ================= WHY ================= -->
+<section id="why">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">The gap</p>
+      <h2>A demo is not evidence. A benchmark is not your business.</h2>
+      <p>Evaluating an AI agent answers three different questions. Only one of them tells you whether it's safe to put on your work.</p>
+    </div>
+    <div class="grid g3">
+      <div class="card qa-card reveal d1">
+        <span class="qa-label">Vendor demo</span>
+        <p class="qa-q">Can the vendor show a convincing happy path?</p>
+      </div>
+      <div class="card qa-card reveal d2">
+        <span class="qa-label">Public benchmark</span>
+        <p class="qa-q">Which model wins on shared, generic tasks?</p>
+      </div>
+      <div class="card qa-card is-answer reveal d3">
+        <span class="qa-label">AgentDiligence</span>
+        <p class="qa-q">Can this agent safely do <em style="font-style:normal;color:var(--mint)">your</em> work, to your standards, with evidence you can inspect?</p>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <section id="evidence" class="section dark">
-    <div class="wrap">
-      <div class="section-head"><div><div class="kicker">Evidence</div><h2>Decision output, not dashboard noise.</h2></div><p>AgentDiligence turns agent runs into a decision-ready report: what passed, what failed, where to constrain deployment, and which candidate is worth piloting.</p></div>
-      <div class="report-preview">
-        <div class="report"><svg class="report__mark" viewBox="0 0 96 96" aria-hidden="true"><path d="M18 74L56 22" stroke-width="7"/><path d="M32 55H56" stroke-width="7"/><path d="M56 22V74H69C84 74 94 63 94 48S84 22 69 22H56" stroke-width="7"/></svg><h3>Comparison report</h3><p>Side-by-side agent performance on your workflows.</p><div class="rows"><div><span>Task success</span><strong>49/50</strong></div><div><span>Policy violations</span><strong>0</strong></div><div><span>Avg latency</span><strong>8.1s</strong></div><div><span>Recommendation</span><strong>Pilot</strong></div></div></div>
-        <div class="report"><svg class="report__mark" viewBox="0 0 96 96" aria-hidden="true"><path d="M18 74L56 22" stroke-width="7"/><path d="M32 55H56" stroke-width="7"/><path d="M56 22V74H69C84 74 94 63 94 48S84 22 69 22H56" stroke-width="7"/></svg><h3>Clickable evidence</h3><p>Every headline number connects to the actual transcript, tool behavior, policy match, and final state.</p><div class="rows"><div><span>Transcript review</span><strong>Included</strong></div><div><span>Final-state proof</span><strong>L4</strong></div><div><span>Failure clusters</span><strong>3 found</strong></div><div><span>Deployment boundary</span><strong>Human-gate &gt; £250</strong></div></div></div>
+<div class="wrap"><hr class="divider" /></div>
+
+<!-- ================= HOW ================= -->
+<section id="how">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">How it works</p>
+      <h2>Your support history is the exam.</h2>
+      <p>We don't hand you a generic test set. We replay the work your team already did — the tickets, timelines, and actions behind it — and turn it into proof.</p>
+    </div>
+    <div class="steps">
+      <div class="step reveal">
+        <div class="step-num">01</div>
+        <div class="step-body">
+          <h3>Ingest your work traces</h3>
+          <p>Tickets, timelines, status and assignee changes, internal notes, backend actions, and outcomes — exported, read-only, and handled privately. No prior eval set required.</p>
+        </div>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">02</div>
+        <div class="step-body">
+          <h3>Build Task Specs <span class="tag">primitive</span></h3>
+          <p>Each trace becomes a replayable AgentDiligence Task Spec: the situation, the hidden business state, your policies, the allowed and forbidden actions, the expected final state, and the evidence bar it has to clear.</p>
+        </div>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">03</div>
+        <div class="step-body">
+          <h3>Run the candidate field</h3>
+          <p>Packaged vendors, a cheaper challenger, a reference agent, and your current process all face the same specs under identical constraints, with repeated runs where consistency matters. We test the agents — we never sit between you and your vendors.</p>
+        </div>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">04</div>
+        <div class="step-body">
+          <h3>Capture Evidence Packets <span class="tag">primitive</span></h3>
+          <p>Every run produces an Evidence Packet — transcript, vendor source and handoff records, and independent backend final-state proof — scored from Level 2 to Level 4.</p>
+        </div>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">05</div>
+        <div class="step-body">
+          <h3>Decide</h3>
+          <p>A plain-English recommendation: which categories are safe to automate, assist, human-gate, or avoid — and which agent, if any, is worth buying or piloting.</p>
+        </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <section id="buyers" class="section alt">
-    <div class="wrap">
-      <div class="section-head"><div><div class="kicker">For teams</div><h2>Know what you are buying before agents touch customers.</h2></div><p>Useful for procurement, platform, and operations teams deciding between packaged vendors, current workflows, and whether an agent is ready to deploy.</p></div>
-      <div class="three">
-        <div class="feature"><h3>Vendor selection</h3><p>Compare Zendesk, Freshworks, Gorgias, or another candidate against your actual service workflow.</p></div>
-        <div class="feature"><h3>Current process</h3><p>See whether a vendor agent is actually better than today’s workflow, and where each approach breaks.</p></div>
-        <div class="feature"><h3>Deployment boundaries</h3><p>Identify which tasks are ready to automate, assist, or keep behind human approval.</p></div>
+<div class="wrap"><hr class="divider" /></div>
+
+<!-- ================= EVIDENCE ================= -->
+<section id="evidence" class="evidence">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Evidence</p>
+      <h2>Decision output, not dashboard noise.</h2>
+      <p>Every run becomes a decision-ready report: what passed, what failed, what's safe to automate, and how to route the rest. Every figure links to the evidence behind it.</p>
+    </div>
+    <div class="report reveal">
+      <i class="rc rc-tl"></i><i class="rc rc-tr"></i><i class="rc rc-bl"></i><i class="rc rc-br"></i>
+      <div class="report-top">
+        <span class="report-id">Sample report · Refunds &amp; billing · 60 task specs · 3 runs each</span>
+        <span class="report-verdict">Recommendation <b>Pilot — routed</b></span>
+      </div>
+      <div class="report-scroll">
+        <div class="report-table">
+          <div class="rt-head">
+            <span>Arm</span><span>Resolved</span><span>Incidents</span><span>Cost / res</span><span>Verdict</span>
+          </div>
+          <div class="rt-row rt-win">
+            <span class="rt-name">Premium vendor agent <em>packaged</em></span>
+            <span class="num" data-label="Resolved">47 / 60</span>
+            <span class="num good" data-label="Incidents">0</span>
+            <span class="num" data-label="Cost / res">£0.79</span>
+            <span><i class="pill pill-pilot">Pilot</i></span>
+          </div>
+          <div class="rt-row">
+            <span class="rt-name">Challenger agent <em>low-cost</em></span>
+            <span class="num" data-label="Resolved">41 / 60</span>
+            <span class="num warn" data-label="Incidents">3</span>
+            <span class="num" data-label="Cost / res">£0.18</span>
+            <span><i class="pill pill-avoid">Avoid · refunds</i></span>
+          </div>
+          <div class="rt-row">
+            <span class="rt-name">Reference agent <em>frontier model</em></span>
+            <span class="num" data-label="Resolved">44 / 60</span>
+            <span class="num warn" data-label="Incidents">1</span>
+            <span class="num" data-label="Cost / res">£0.31</span>
+            <span><i class="pill pill-assist">Assist</i></span>
+          </div>
+          <div class="rt-row">
+            <span class="rt-name">Your current process <em>human baseline</em></span>
+            <span class="num" data-label="Resolved">52 / 60</span>
+            <span class="num good" data-label="Incidents">0</span>
+            <span class="num" data-label="Cost / res">£5.20</span>
+            <span><i class="pill pill-base">Baseline</i></span>
+          </div>
+        </div>
+      </div>
+      <div class="report-foot">
+        <span>3 serious-incident clusters · Human-gate refunds &gt; £250 · Evidence verified to L4</span>
+        <div class="report-links"><a href="#evidence">View transcripts →</a><a href="#evidence">Final-state proof →</a></div>
       </div>
     </div>
-  </section>
+    <p class="report-cap reveal">Illustrative — sample figures, anonymised arms. In a real engagement, arms are named, every figure links to its transcript, tool calls, policy match, and final-state proof, and cost is per <em style="font-style:normal">safe</em> resolution.</p>
 
-  <section class="final">
-    <svg class="final-mark" viewBox="0 0 96 96" aria-hidden="true"><path d="M18 74L56 22" stroke-width="5"/><path d="M32 55H56" stroke-width="5"/><path d="M56 22V74H69C84 74 94 63 94 48S84 22 69 22H56" stroke-width="5"/></svg>
-    <div class="wrap"><h2>Stop buying agents from slide decks.</h2><p>Run the workflow. Compare the field. Buy the agent that can prove it works.</p><a class="btn btn-primary" href="mailto:simon@agentdiligence.io?subject=Run%20an%20AgentDiligence%20comparison">Run a comparison →</a></div>
-  </section>
+    <div class="levels">
+      <div class="level floor reveal d1"><span class="lv">Level 1</span><h4>Claim or score only</h4><p>A pass-rate or a slick demo — the vendor's word, nothing behind it. Not evidence; packets start at Level 2.</p></div>
+      <div class="level reveal d2"><span class="lv">Level 2</span><h4>Transcript &amp; screenshots</h4><p>What the agent said and showed the customer, captured verbatim.</p></div>
+      <div class="level reveal d3"><span class="lv">Level 3</span><h4>Source, ticket &amp; handoff records</h4><p>Vendor-side evidence: where answers came from, what was logged, how it escalated.</p></div>
+      <div class="level reveal d4"><span class="lv">Level 4</span><h4>Independent final-state proof</h4><p>We check the backend itself: was the refund actually issued, the case actually resolved?</p></div>
+    </div>
+  </div>
+</section>
 
-  <footer><div class="wrap"><span>© 2026 AgentDiligence</span><span>Pre-procurement AI agent diligence</span><a href="mailto:simon@agentdiligence.io">simon@agentdiligence.io</a></div></footer>
+<div class="wrap"><hr class="divider" /></div>
+
+<!-- ================= CALLOUT ================= -->
+<section class="callout">
+  <div class="wrap reveal">
+    <q>“Vendor PoCs are free. Choosing wrong isn't.”</q>
+    <p>Every vendor runs its own proof-of-concept — on its own tickets, scored its own way. AgentDiligence turns them into one fair decision: same tasks, same bar, same evidence format.</p>
+  </div>
+</section>
+
+<!-- ================= PACKAGES ================= -->
+<section id="pricing">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Engagements</p>
+      <h2>Start with a snapshot. Scale to assurance.</h2>
+      <p>Productized evaluations, scoped to the decision in front of you. Most teams start with a Vendor Decision Report.</p>
+    </div>
+    <div class="pkg-grid">
+      <div class="pkg reveal d1">
+        <h3 class="pkg-name">Work-Trace Snapshot</h3>
+        <p class="pkg-q">What's safe, risky, or worth evaluating?</p>
+        <ul>
+          <li>A sample of your support history, normalized into Task Specs</li>
+          <li>An automation-readiness map across ticket categories</li>
+          <li>Where the evidence is strong — and where it's missing</li>
+        </ul>
+        <a class="btn btn-ghost btn-sm pkg-cta" href="mailto:simon@agentdiligence.io?subject=AgentDiligence%20Work-Trace%20Snapshot">Start here →</a>
+      </div>
+      <div class="pkg is-lead reveal d2">
+        <span class="pkg-tag">Most teams start here</span>
+        <h3 class="pkg-name">Vendor Decision Report</h3>
+        <p class="pkg-q">Which vendor or route should we buy or pilot?</p>
+        <ul>
+          <li>2–4 vendor, reference, and baseline arms, head to head</li>
+          <li>50–150 Task Specs built from your own work</li>
+          <li>Serious-incident table and quality-adjusted cost</li>
+          <li>Buy · pilot · constrain · avoid — with the evidence</li>
+        </ul>
+        <a class="btn btn-primary btn-sm pkg-cta" href="mailto:simon@agentdiligence.io?subject=AgentDiligence%20Vendor%20Decision%20Report">Run a comparison →</a>
+      </div>
+      <div class="pkg reveal d1">
+        <h3 class="pkg-name">Enterprise Evaluation</h3>
+        <p class="pkg-q">What's safe to automate across the org?</p>
+        <ul>
+          <li>Multiple workflows, markets, and languages</li>
+          <li>Deeper Level 4 evidence and blind review</li>
+          <li>Board- and procurement-ready synthesis</li>
+        </ul>
+        <a class="btn btn-ghost btn-sm pkg-cta" href="mailto:simon@agentdiligence.io?subject=AgentDiligence%20Enterprise%20Evaluation">Talk to us →</a>
+      </div>
+      <div class="pkg reveal d2">
+        <h3 class="pkg-name">Regression &amp; Assurance <span class="pkg-soon">ongoing</span></h3>
+        <p class="pkg-q">Does the deployed agent still clear the bar?</p>
+        <ul>
+          <li>Quarterly retests as models and policies change</li>
+          <li>Renewal and expansion evidence on demand</li>
+          <li>Incident monitoring against your Task Spec library</li>
+        </ul>
+        <a class="btn btn-ghost btn-sm pkg-cta" href="mailto:simon@agentdiligence.io?subject=AgentDiligence%20Regression%20and%20Assurance">Talk to us →</a>
+      </div>
+    </div>
+    <p class="pkg-foot reveal">Engagements are priced to the decision — typically a small fraction of the first-year agent spend. Ask for a scope.</p>
+  </div>
+</section>
+
+<div class="wrap"><hr class="divider" /></div>
+
+<!-- ================= WHO ================= -->
+<section id="who">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Who it's for</p>
+      <h2>Built for the team that owns the support decision.</h2>
+      <p>Support and service leaders at scaleups choosing — or second-guessing — an AI agent on customer-facing work.</p>
+    </div>
+    <div class="who-grid">
+      <div class="who-card reveal d1">
+        <h3>You're a fit if</h3>
+        <ul>
+          <li>You handle 500–5,000+ tickets a month, with history worth replaying</li>
+          <li>You run a mainstream helpdesk — Zendesk, Intercom, Gorgias, Freshdesk, Front, Jira Service Management, ServiceNow</li>
+          <li>You're considering, piloting, renewing, or replacing an AI support agent</li>
+          <li>Service quality is tied to revenue, retention, and trust</li>
+        </ul>
+      </div>
+      <div class="who-card triggers reveal d2">
+        <h3>Right when you're</h3>
+        <ul>
+          <li>Weighing Intercom Fin, Zendesk AI, Gorgias AI, Ada, or Freddy</li>
+          <li>Mid-migration between helpdesks</li>
+          <li>Heading into a renewal negotiation or building a vendor shortlist</li>
+          <li>Once burned by a bot rollout that overpromised</li>
+        </ul>
+      </div>
+    </div>
+    <p class="who-note reveal">Support is the first proving ground. The same Task Spec → Evidence Packet engine applies anywhere humans leave a work trail — finance ops, claims handling, contract review.</p>
+  </div>
+</section>
+
+<!-- ================= CLOSING ================= -->
+<section class="closing">
+  <canvas id="field-cta" aria-hidden="true"></canvas>
+  <div class="closing-veil" aria-hidden="true"></div>
+  <div class="wrap">
+    <h2>Prove it on your own work — before you sign.</h2>
+    <p>Send us a slice of your support history. We'll show you what's safe to automate, and what isn't.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="mailto:simon@agentdiligence.io?subject=Run%20an%20AgentDiligence%20comparison">Run a comparison →</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-inner">
+    <span>© 2026 AgentDiligence</span>
+    <span class="mono">INDEPENDENT AI-AGENT EVALUATION</span>
+    <a href="mailto:simon@agentdiligence.io">simon@agentdiligence.io</a>
+  </div>
+</footer>
+
 <script>
-const CONFIG = {
-  colors: ['#91a5ff', '#7f55ff', '#32dacd', '#ff8d76'],  // stronger Stripe-like cloud palette, still under dark text
-  speed: 0.06, scale: 1.35, warp: 1.7, edgeAmp: 0.10, grain: 0.02,
-  // gentle breathing drift only — cap horizontal travel so the cloud never reaches the far-right edge.
-  driftX: 0.015, driftY: 0.02, driftXHz: 0.32, driftYHz: 0.24,
-  // Cloud position is DOM-anchored, not hand-tuned in WebGL UV space.
-  // yOffsetPx is measured from the real headline bottom; increase to move down.
-  desktop: { x:0.645, maxX:0.665, yOffsetPx:-60, radius:0.416, feather:0.32, opacity:1.00 },
-  mobile:  { x:0.70, maxX:0.74, yOffsetPx:-76, radius:0.32, feather:0.256, opacity:1.00 },
-  mobileMaxWidth: 700,
-};
-const TXT = { dark:'#15172b', muted:'#5a5f73' };
-const WHITE = [255,255,255];
-const TINT  = [58,31,156];   // #3a1f9c — text drifts from its base toward this dark violet
+(function(){
+  "use strict";
+  var canvas = document.getElementById("field");
+  var ctx = canvas.getContext("2d");
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-function hexRGB(h){ const n=parseInt(h.slice(1),16); return [(n>>16)&255,(n>>8)&255,n&255]; }
+  var INDIGO=[110,104,255], CYAN=[64,196,250], MINT=[52,224,161], AMBER=[245,165,36], RAW=[92,108,134], RED=[240,88,96];
+  var NS=0.00135, FTZ=0.05, EPS=1.7, DRIFT=15, SP=66;
 
-/* ---- split title + subtitle into per-character spans ---- */
-function splitChars(el, baseHex){
-  const rgb = hexRGB(baseHex);
-  const text = el.textContent.replace(/\s+/g,' ').trim();
-  el.textContent='';
-  const list=[];
-  for(const c of text){
-    const s=document.createElement('span');
-    s.className='ch'; s.textContent=c; s.style.color=baseHex;
-    el.appendChild(s);
-    list.push({ el:s, rgb, uvx:0, uvy:0, cq:-1 });
+  function clamp(v,a,b){return v<a?a:(v>b?b:v);}
+  function lerp(a,b,t){return a+(b-a)*t;}
+  function a3(x){return x.toFixed(3);}
+
+  // ---- Perlin noise (improved, seeded) — shared by all fields ----
+  var perm=new Uint8Array(512);
+  (function(){
+    var p=new Uint8Array(256),i,seed=20260616;
+    for(i=0;i<256;i++)p[i]=i;
+    function rnd(){seed=(seed*1103515245+12345)&0x7fffffff;return seed/0x7fffffff;}
+    for(i=255;i>0;i--){var j=(rnd()*(i+1))|0,t=p[i];p[i]=p[j];p[j]=t;}
+    for(i=0;i<512;i++)perm[i]=p[i&255];
+  })();
+  function fade(t){return t*t*t*(t*(t*6-15)+10);}
+  function grd(h,x,y,z){h&=15;var u=h<8?x:y,v=h<4?y:(h===12||h===14?x:z);return ((h&1)?-u:u)+((h&2)?-v:v);}
+  function noise(x,y,z){
+    var X=Math.floor(x)&255,Y=Math.floor(y)&255,Z=Math.floor(z)&255;
+    x-=Math.floor(x);y-=Math.floor(y);z-=Math.floor(z);
+    var u=fade(x),v=fade(y),w=fade(z);
+    var A=perm[X]+Y,AA=perm[A]+Z,AB=perm[A+1]+Z,B=perm[X+1]+Y,BA=perm[B]+Z,BB=perm[B+1]+Z;
+    return lerp(
+      lerp(lerp(grd(perm[AA],x,y,z),grd(perm[BA],x-1,y,z),u),
+           lerp(grd(perm[AB],x,y-1,z),grd(perm[BB],x-1,y-1,z),u),v),
+      lerp(lerp(grd(perm[AA+1],x,y,z-1),grd(perm[BA+1],x-1,y,z-1),u),
+           lerp(grd(perm[AB+1],x,y-1,z-1),grd(perm[BB+1],x-1,y-1,z-1),u),v),
+      w);
   }
-  return list;
-}
-const chars = [
-  ...splitChars(document.getElementById('heroTitle'), TXT.dark),
-  ...splitChars(document.getElementById('heroSub'),   TXT.muted),
-];
+  function flow(x,y,t,out){
+    var n1=noise(x*NS,(y+EPS)*NS,t),n2=noise(x*NS,(y-EPS)*NS,t);
+    var n3=noise((x+EPS)*NS,y*NS,t),n4=noise((x-EPS)*NS,y*NS,t);
+    var dy=(n1-n2)/(2*EPS), dx=(n3-n4)/(2*EPS);
+    var vx=dy, vy=-dx, m=Math.hypot(vx,vy)||1e-6;
+    out[0]=(vx/m)*SP+DRIFT; out[1]=(vy/m)*SP;
+  }
 
-const canvas = document.getElementById('heroCanvas');
-const gl = canvas.getContext('webgl', { alpha:true, premultipliedAlpha:true, antialias:false })
-        || canvas.getContext('experimental-webgl', { alpha:true, premultipliedAlpha:true, antialias:false });
+  // ---- reusable field instance ----
+  function createField(canvas, o){
+    var ctx=canvas.getContext("2d");
+    var W=0,H=0,DPR=1,P=[],blooms=[],evid=[],scanX=0,sweepId=0,lastT=0,raf=null,_v=[0,0];
+    var AM=o.alpha, SA=(o.scanA==null?1:o.scanA), GRADE=o.grading, SCAN=o.scan, SSP=o.scanSpeed||130, HM=o.histMax;
 
-if (!gl) { /* CSS fallback stays */ }
-else {
-  // Keep the CSS radial gradient as the no-WebGL fallback only. Once WebGL is
-  // available, clear it so it does not read as a second, detached cloud.
-  canvas.style.background = 'transparent';
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function mkP(spread){ return {x:spread?W*Math.sqrt(Math.random()):-10-Math.random()*60,y:Math.random()*H,hist:[],verdict:null,sweep:-1,g:0,w:0.85+Math.random()*0.95}; }
+    function build(){ var c=clamp(Math.round(W*H/o.density),o.min||120,o.max||400); P=[]; for(var i=0;i<c;i++)P.push(mkP(true)); }
 
-  const VERT = `attribute vec2 p; void main(){ gl_Position=vec4(p,0.0,1.0); }`;
-  const FRAG = `
-    precision highp float;
-    uniform float u_time; uniform vec2 u_res; uniform vec2 u_center;
-    uniform vec3 u_c1,u_c2,u_c3,u_c4;
-    uniform float u_speed,u_scale,u_warp,u_grain,u_radius,u_feather,u_edge,u_opacity;
-    vec3 permute(vec3 x){ return mod(((x*34.0)+1.0)*x,289.0); }
-    float snoise(vec2 v){
-      const vec4 C=vec4(0.211324865405187,0.366025403784439,-0.577350269189626,0.024390243902439);
-      vec2 i=floor(v+dot(v,C.yy)); vec2 x0=v-i+dot(i,C.xx);
-      vec2 i1=(x0.x>x0.y)?vec2(1.0,0.0):vec2(0.0,1.0);
-      vec4 x12=x0.xyxy+C.xxzz; x12.xy-=i1; i=mod(i,289.0);
-      vec3 perm=permute(permute(i.y+vec3(0.0,i1.y,1.0))+i.x+vec3(0.0,i1.x,1.0));
-      vec3 m=max(0.5-vec3(dot(x0,x0),dot(x12.xy,x12.xy),dot(x12.zw,x12.zw)),0.0); m=m*m; m=m*m;
-      vec3 x=2.0*fract(perm*C.www)-1.0; vec3 h=abs(x)-0.5; vec3 ox=floor(x+0.5);
-      vec3 a0=x-ox; m*=1.79284291400159-0.85373472095314*(a0*a0+h*h);
-      vec3 g; g.x=a0.x*x0.x+h.x*x0.y; g.yz=a0.yz*x12.xz+h.yz*x12.yw;
-      return 130.0*dot(m,g);
+    function resize(){
+      var r=canvas.getBoundingClientRect();
+      W=r.width;H=r.height;DPR=Math.min(window.devicePixelRatio||1,1.5);
+      canvas.width=Math.round(W*DPR);canvas.height=Math.round(H*DPR);
+      ctx.setTransform(DPR,0,0,DPR,0,0);
+      build();
+      if(reduce) seedStatic();
     }
-    float fbm(vec2 p){ float s=0.0,a=0.5; for(int i=0;i<5;i++){ s+=a*snoise(p); p*=2.0; a*=0.5; } return s; }
-    vec3 ramp(float t){
-      t=clamp(t,0.0,1.0);
-      vec3 col=mix(u_c1,u_c2,smoothstep(0.0,0.45,t));
-      col=mix(col,u_c3,smoothstep(0.40,0.72,t));
-      col=mix(col,u_c4,smoothstep(0.68,1.0,t));
-      return col;
+
+    function update(dt,t,moveScan){
+      var tz=t*FTZ;
+      for(var i=0;i<P.length;i++){
+        var p=P[i];
+        // graded-ness eases toward a positional target: fast as the sweep grades,
+        // slow on the way back so the wrap-around reset fades instead of snapping
+        if(SCAN){
+          var rel=p.x-scanX, TZ=40, gt=clamp(0.5-rel/(2*TZ),0,1); gt=gt*gt*(3-2*gt);
+          var k=(gt>p.g)?8.0:1.4; p.g+=(gt-p.g)*clamp(k*dt,0,1);
+          var dd=rel<0?-rel:rel; p.fl=dd<46?1-dd/46:0;       // measurement beat: only at the physical line
+        } else { p.g=0; p.fl=0; }
+        flow(p.x,p.y,tz,_v);
+        var rvx=_v[0], rvy=_v[1], gf=p.g;
+        // behind the sweep, motion settles: less curl, more aligned/horizontal
+        var vx=rvx+((0.4*rvx+14)-rvx)*gf;
+        var vy=rvy+((0.20*rvy)-rvy)*gf;
+        if(SCAN){ var sb=1.52-1.12*clamp(p.x/W,0,1); vx*=sb; vy*=sb; }   // much slower right -> denser cloud on the right
+        p.hist.push(p.x,p.y); if(p.hist.length>HM) p.hist.splice(0,2);
+        p.x+=vx*dt; p.y+=vy*dt;
+        if(GRADE && SCAN && p.sweep!==sweepId && Math.abs(p.x-scanX)<8 && p.x>0 && p.x<W){
+          p.sweep=sweepId;
+          var rv=Math.random();
+          p.verdict = rv>0.13 ? "pass" : (rv>0.035 ? "fail" : "incident");
+          if(p.verdict==="incident"){
+            if(blooms.length<18) blooms.push({x:p.x,y:p.y,r:3,max:28,life:1,c:RED});
+          } else if(p.verdict==="fail"){
+            if(blooms.length<18 && Math.random()<0.55) blooms.push({x:p.x,y:p.y,r:3,max:30,life:1,c:AMBER});
+          } else if(blooms.length<18 && Math.random()<0.03){ blooms.push({x:p.x,y:p.y,r:3,max:22,life:1,c:MINT}); }
+          if(evid.length<44 && Math.random()<0.07) evid.push({x:p.x,y:p.y,life:1,c:p.verdict==="pass"?MINT:AMBER});
+        }
+        if(p.x>W+16 || p.y<-60 || p.y>H+60){ p.x=-10-Math.random()*50; p.y=Math.random()*H; p.hist.length=0; p.verdict=null; p.sweep=-1; p.g=0; }
+      }
+      if(SCAN && moveScan){ scanX+=SSP*dt; if(scanX>W+30){ scanX=-30; sweepId++; } }
     }
-    void main(){
-      vec2 uv=gl_FragCoord.xy/u_res.xy; float asp=u_res.x/u_res.y;
-      vec2 p=(gl_FragCoord.xy-0.5*u_res.xy)/u_res.y; p*=u_scale;
-      float t=u_time*u_speed;
-      vec2 q=vec2(fbm(p+0.10*t), fbm(p+vec2(5.2,1.3)));
-      vec2 r=vec2(fbm(p+u_warp*q+vec2(1.7,9.2)+0.15*t), fbm(p+u_warp*q+vec2(8.3,2.8)-0.12*t));
-      float f=fbm(p+2.0*r); float v=0.5+0.5*f;
-      vec3 col=ramp(v);
-      vec2 d2=uv-u_center; d2.x*=asp; float d=length(d2);
-      float edge=u_radius+u_edge*fbm(d2*2.4+0.2*t);
-      float mask=smoothstep(edge, edge-u_feather, d);
-      mask*=mix(0.80,1.0,v)*u_opacity;
-      float gr=fract(sin(dot(gl_FragCoord.xy,vec2(12.9898,78.233)))*43758.5453);
-      col+=(gr-0.5)*u_grain;
-      gl_FragColor=vec4(col*mask, mask);
+
+    function pcolor(p){
+      if(!SCAN){
+        var f=clamp(p.x/W,0,1);
+        return (lerp(INDIGO[0],CYAN[0],f)|0)+","+(lerp(INDIGO[1],CYAN[1],f)|0)+","+(lerp(INDIGO[2],CYAN[2],f)|0);
+      }
+      var g=p.g||0, vt=p.verdict==="incident"?RED:(p.verdict==="fail"?AMBER:MINT);
+      var r=lerp(RAW[0],vt[0],g), gg=lerp(RAW[1],vt[1],g), b=lerp(RAW[2],vt[2],g);
+      var fl=p.fl||0;          // measurement beat, tied to the physical line (no re-flash on reset)
+      if(fl>0.001){ r=lerp(r,214,fl*0.55); gg=lerp(gg,240,fl*0.55); b=lerp(b,255,fl*0.55); }
+      return (r|0)+","+(gg|0)+","+(b|0);
     }
-  `;
 
-  const sh=(t,s)=>{const o=gl.createShader(t);gl.shaderSource(o,s);gl.compileShader(o);
-    if(!gl.getShaderParameter(o,gl.COMPILE_STATUS))console.error(gl.getShaderInfoLog(o));return o;};
-  const prog=gl.createProgram();
-  gl.attachShader(prog,sh(gl.VERTEX_SHADER,VERT));
-  gl.attachShader(prog,sh(gl.FRAGMENT_SHADER,FRAG));
-  gl.linkProgram(prog); gl.useProgram(prog);
-
-  const b=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,b);
-  gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
-  const a=gl.getAttribLocation(prog,'p'); gl.enableVertexAttribArray(a);
-  gl.vertexAttribPointer(a,2,gl.FLOAT,false,0,0);
-
-  const U=n=>gl.getUniformLocation(prog,n);
-  const u_time=U('u_time'),u_res=U('u_res'),u_center=U('u_center');
-  const u_radius=U('u_radius'),u_feather=U('u_feather'),u_opacity=U('u_opacity');
-  const h3=h=>{const n=parseInt(h.slice(1),16);return[((n>>16)&255)/255,((n>>8)&255)/255,(n&255)/255];};
-  gl.uniform3fv(U('u_c1'),h3(CONFIG.colors[0])); gl.uniform3fv(U('u_c2'),h3(CONFIG.colors[1]));
-  gl.uniform3fv(U('u_c3'),h3(CONFIG.colors[2])); gl.uniform3fv(U('u_c4'),h3(CONFIG.colors[3]));
-  gl.uniform1f(U('u_speed'),CONFIG.speed); gl.uniform1f(U('u_scale'),CONFIG.scale);
-  gl.uniform1f(U('u_warp'),CONFIG.warp);   gl.uniform1f(U('u_edge'),CONFIG.edgeAmp);
-  gl.uniform1f(U('u_grain'),CONFIG.grain);
-
-  let view=null;
-  let cloudCenter = { x: CONFIG.desktop.x, y: 0.5 };
-  function applyResponsive(){
-    const m = window.innerWidth <= CONFIG.mobileMaxWidth ? CONFIG.mobile : CONFIG.desktop;
-    if(m!==view){ view=m; gl.uniform1f(u_radius,m.radius); gl.uniform1f(u_feather,m.feather); gl.uniform1f(u_opacity,m.opacity); }
-  }
-  applyResponsive();
-
-  function resize(){
-    const dpr=Math.min(window.devicePixelRatio||1,2);
-    const w=canvas.clientWidth*dpr, h=canvas.clientHeight*dpr;
-    if(canvas.width!==w||canvas.height!==h){ canvas.width=w; canvas.height=h; gl.viewport(0,0,w,h); gl.uniform2f(u_res,w,h); }
-  }
-
-  function measure(){
-    const c=canvas.getBoundingClientRect(); if(c.width===0) return;
-    const title=document.getElementById('heroTitle');
-    const tr=title.getBoundingClientRect();
-    const targetYFromTop=(tr.bottom-c.top)+view.yOffsetPx;
-    cloudCenter.x=view.x;
-    // WebGL UV y is bottom-up; DOM coordinates are top-down.
-    cloudCenter.y=1-Math.min(1,Math.max(0,targetYFromTop/c.height));
-    for(const ch of chars){
-      const r=ch.el.getBoundingClientRect();
-      ch.uvx=(r.left+r.width*0.5-c.left)/c.width;
-      ch.uvy=1-((r.top +r.height*0.5-c.top )/c.height);
+    function draw(){
+      ctx.clearRect(0,0,W,H);
+      ctx.globalCompositeOperation="lighter"; ctx.lineCap="round"; ctx.lineJoin="round";
+      for(var i=0;i<P.length;i++){
+        var p=P[i], h=p.hist, n=h.length;
+        if(n<6) continue;
+        var col=pcolor(p);
+        var gg2=p.g||0;
+        var fl=SCAN?(p.fl||0):0, ab=1+fl*0.75;
+        var aMul=SCAN?(0.55+1.1*gg2):1, A=ab*aMul;                       // raw recedes, graded glows
+        if(SCAN){ var xt=p.x/(W*0.24); if(xt<1){ A*=0.28+0.72*(xt<0?0:xt); } }   // fade the left so the cloud sits right + text stays clean
+        var s0=SCAN?Math.min(((Math.floor((n*0.26)*gg2)>>1)<<1),n-4):0; if(s0<0)s0=0;
+        ctx.strokeStyle="rgba("+col+","+a3(0.185*AM*A)+")"; ctx.lineWidth=(1.12+fl*0.5+gg2*0.4)*p.w;
+        ctx.beginPath(); ctx.moveTo(h[s0],h[s0+1]);
+        for(var j=s0+2;j<n;j+=2) ctx.lineTo(h[j],h[j+1]);
+        ctx.lineTo(p.x,p.y); ctx.stroke();
+        ctx.fillStyle="rgba("+col+","+a3(0.12*AM*A)+")"; ctx.beginPath(); ctx.arc(p.x,p.y,3.4*p.w,0,6.283); ctx.fill();
+        ctx.fillStyle="rgba("+col+","+a3(0.62*AM*A)+")"; ctx.beginPath(); ctx.arc(p.x,p.y,1.25*p.w,0,6.283); ctx.fill();
+        if(SCAN && p.verdict==="incident"){
+          var hw=6.5, hh=7.5, ft=3.2;                                   // foot length matched to the logo bracket
+          ctx.strokeStyle="rgba("+RED[0]+","+RED[1]+","+RED[2]+","+a3(0.55*AM*A)+")"; ctx.lineWidth=1.4;
+          ctx.beginPath(); ctx.moveTo(p.x-hw+ft,p.y-hh); ctx.lineTo(p.x-hw,p.y-hh); ctx.lineTo(p.x-hw,p.y+hh); ctx.lineTo(p.x-hw+ft,p.y+hh); ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(p.x+hw-ft,p.y-hh); ctx.lineTo(p.x+hw,p.y-hh); ctx.lineTo(p.x+hw,p.y+hh); ctx.lineTo(p.x+hw-ft,p.y+hh); ctx.stroke();
+        }
+        if(SCAN){ var sd=p.x-scanX, hi=0; if(sd>=0){ if(sd<70) hi=1-sd/70; } else { var t2=1+sd/170; if(t2>0) hi=t2*t2; } if(hi>0.002){ ctx.fillStyle="rgba(200,236,255,"+a3(hi*0.5*AM)+")"; ctx.beginPath(); ctx.arc(p.x,p.y,1.6+hi*3.0,0,6.283); ctx.fill(); } }
+      }
+      // captured evidence points lingering in the sweep's wake
+      for(var e=evid.length-1;e>=0;e--){
+        var ev=evid[e]; ev.life*=0.992;
+        if(ev.life<0.04){ evid.splice(e,1); continue; }
+        ctx.fillStyle="rgba("+ev.c[0]+","+ev.c[1]+","+ev.c[2]+","+a3(ev.life*0.5*AM)+")";
+        ctx.beginPath(); ctx.arc(ev.x,ev.y,1.5,0,6.283); ctx.fill();
+        ctx.strokeStyle="rgba("+ev.c[0]+","+ev.c[1]+","+ev.c[2]+","+a3(ev.life*0.20*AM)+")";
+        ctx.lineWidth=1; ctx.beginPath(); ctx.arc(ev.x,ev.y,2.6+(1-ev.life)*2.4,0,6.283); ctx.stroke();
+      }
+      for(var b=blooms.length-1;b>=0;b--){
+        var bl=blooms[b]; bl.r+=(bl.max-bl.r)*0.08; bl.life*=0.92;
+        if(bl.life<0.05){ blooms.splice(b,1); continue; }
+        ctx.strokeStyle="rgba("+bl.c[0]+","+bl.c[1]+","+bl.c[2]+","+a3(bl.life*0.5)+")";
+        ctx.lineWidth=1.3; ctx.beginPath(); ctx.arc(bl.x,bl.y,bl.r,0,6.283); ctx.stroke();
+      }
+      ctx.globalCompositeOperation="source-over";
+      if(SCAN && scanX>-30 && scanX<W+30){
+        var gr=ctx.createLinearGradient(scanX-46,0,scanX+14,0);
+        gr.addColorStop(0,"rgba(64,196,250,0)"); gr.addColorStop(1,"rgba(64,196,250,"+a3(0.14*SA)+")");
+        ctx.fillStyle=gr; ctx.fillRect(scanX-46,0,60,H);
+        ctx.fillStyle="rgba(150,220,255,"+a3(0.9*SA)+")"; ctx.fillRect(scanX-0.75,0,1.5,H);
+        ctx.fillStyle="rgba(234,240,251,"+a3(0.55*SA)+")"; ctx.fillRect(scanX-0.4,0,0.8,H);
+      }
     }
-  }
-  measure();
-  window.addEventListener('resize', ()=>{ applyResponsive(); measure(); });
-  window.addEventListener('scroll', measure, { passive:true });
-  if(document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
 
-  function smoothstep(e0,e1,x){ const t=Math.min(1,Math.max(0,(x-e0)/(e1-e0))); return t*t*(3-2*t); }
-
-  /* ---- proportional recolor: blend base -> white by how far under the cloud ---- */
-  function updateChars(cx, cy){
-    const asp=canvas.width/canvas.height;
-    const lo=view.radius-view.feather, hi=view.radius;
-    for(const ch of chars){
-      const dx=(ch.uvx-cx)*asp, dy=ch.uvy-cy;
-      const d=Math.sqrt(dx*dx+dy*dy);
-      const cover=1-smoothstep(lo,hi,d);          // 0 = clear, 1 = deep under cloud
-      const cq=Math.round(cover*64);              // quantise to skip redundant writes
-      if(cq===ch.cq) continue;
-      ch.cq=cq;
-      const c=cq/64, e=c*c*(3-2*c);               // eased coverage
-      // base dark tone -> dark violet tint; both ends read on the pale cloud
-      const r =Math.round(ch.rgb[0]+(TINT[0]-ch.rgb[0])*e);
-      const g =Math.round(ch.rgb[1]+(TINT[1]-ch.rgb[1])*e);
-      const bl=Math.round(ch.rgb[2]+(TINT[2]-ch.rgb[2])*e);
-      ch.el.style.color=`rgb(${r},${g},${bl})`;
+    function seedStatic(){
+      scanX=W*0.6; sweepId=1; var t=4.0;
+      for(var s=0;s<90;s++){ update(0.05,t,false); t+=0.05; }
+      if(GRADE){ for(var i=0;i<P.length;i++){ if(P[i].x<scanX && !P[i].verdict){ P[i].verdict=Math.random()>0.12?"pass":"fail"; } } }
+      draw();
     }
+
+    function loop(now){ var dt=lastT?Math.min((now-lastT)/1000,0.05):0.016; lastT=now; update(dt,now/1000,true); draw(); raf=requestAnimationFrame(loop); }
+    function start(){ if(raf||reduce) return; lastT=0; raf=requestAnimationFrame(loop); }
+    function stop(){ if(raf){ cancelAnimationFrame(raf); raf=null; } }
+
+    resize();
+    return { canvas:canvas, resize:resize, start:start, stop:stop, inView:false };
   }
 
-  function draw(ms){
-    resize(); applyResponsive();
-    const t=ms*0.001;
-    measure();
-    const rawCx=cloudCenter.x+CONFIG.driftX*Math.sin(t*CONFIG.driftXHz);
-    const cx=Math.min(view.maxX, rawCx);
-    const cy=cloudCenter.y+CONFIG.driftY*Math.sin(t*CONFIG.driftYHz);
-    gl.uniform2f(u_center, cx, cy);
-    gl.clearColor(0,0,0,0); gl.clear(gl.COLOR_BUFFER_BIT);
-    gl.uniform1f(u_time, t);
-    gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
-    updateChars(cx, cy);
-  }
+  // ---- instantiate: bold hero + faint closing echo ----
+  var fields=[];
+  fields.push(createField(document.getElementById("field"),
+    {density:2800,min:180,max:400,histMax:30,alpha:1,grading:true,scan:true,scanSpeed:130,scanA:1}));
+  var ctaEl=document.getElementById("field-cta");
+  if(ctaEl) fields.push(createField(ctaEl,
+    {density:6000,min:70,max:180,histMax:26,alpha:0.75,grading:false,scan:false}));
 
-  if(reduceMotion){
-    resize(); applyResponsive(); measure(); draw(0);
-    window.addEventListener('resize',()=>{ applyResponsive(); measure(); draw(0); });
+  function refresh(){ for(var i=0;i<fields.length;i++){ if(!document.hidden && fields[i].inView && !reduce) fields[i].start(); else fields[i].stop(); } }
+
+  if("IntersectionObserver" in window){
+    var io=new IntersectionObserver(function(es){
+      for(var e=0;e<es.length;e++){ for(var i=0;i<fields.length;i++){ if(fields[i].canvas===es[e].target) fields[i].inView=es[e].isIntersecting; } }
+      refresh();
+    },{threshold:0.01});
+    for(var i=0;i<fields.length;i++) io.observe(fields[i].canvas);
   } else {
-    let running=true,raf;
-    const loop=ms=>{ if(running){ draw(ms); raf=requestAnimationFrame(loop); } };
-    raf=requestAnimationFrame(loop);
-    if('IntersectionObserver'in window){
-      new IntersectionObserver(([e])=>{
-        if(e.isIntersecting&&!running){ running=true; raf=requestAnimationFrame(loop); }
-        else if(!e.isIntersecting){ running=false; cancelAnimationFrame(raf); }
-      },{threshold:0}).observe(canvas);
-    }
-    document.addEventListener('visibilitychange',()=>{
-      if(document.hidden){ running=false; cancelAnimationFrame(raf); }
-      else if(!running){ running=true; raf=requestAnimationFrame(loop); }
-    });
+    for(var i=0;i<fields.length;i++) fields[i].inView=true;
+    refresh();
   }
-}
+  window.addEventListener("resize", function(){ for(var i=0;i<fields.length;i++) fields[i].resize(); refresh(); });
+  document.addEventListener("visibilitychange", refresh);
+
+  // ---- count-up for scoreline metrics ----
+  function countUp(el){
+    var target=parseFloat(el.getAttribute("data-count"));
+    var suffix=el.getAttribute("data-suffix")||"";
+    var decimals=(target%1!==0)?1:0;
+    if(reduce){ el.textContent=target.toFixed(decimals)+suffix; return; }
+    var start=performance.now(), dur=1100;
+    function tick(now){
+      var p=Math.min((now-start)/dur,1);
+      var eased=1-Math.pow(1-p,3);
+      el.textContent=(target*eased).toFixed(decimals)+suffix;
+      if(p<1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+  document.querySelectorAll(".scoreline b[data-count]").forEach(countUp);
+
+  // ---- sticky nav + scanline progress + depth parallax (one rAF pass) ----
+  var navEl=document.querySelector(".nav");
+  var docEl=document.documentElement;
+  var spFill=document.querySelector(".scan-progress-fill");
+  var sTick=false;
+  function scrollUpdate(){
+    sTick=false;
+    var st=window.pageYOffset||docEl.scrollTop||0;
+    if(navEl) navEl.classList.toggle("scrolled", st>20);
+    if(spFill){ var max=docEl.scrollHeight-docEl.clientHeight; spFill.style.width=(max>0?(st/max*100):0)+"%"; }
+  }
+  function onScroll(){ if(!sTick){ sTick=true; requestAnimationFrame(scrollUpdate); } }
+  onScroll(); window.addEventListener("scroll", onScroll, {passive:true});
+  window.addEventListener("resize", scrollUpdate);
+
+  // ---- scroll reveals ----
+  var reveals=document.querySelectorAll(".reveal");
+  if(reduce || !("IntersectionObserver" in window)){
+    reveals.forEach(function(el){ el.classList.add("in"); });
+  } else {
+    var ro=new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add("in"); ro.unobserve(e.target); } });
+    },{threshold:0.12, rootMargin:"0px 0px -8% 0px"});
+    reveals.forEach(function(el){ ro.observe(el); });
+  }
+})();
 </script>
 </body>
 </html>
