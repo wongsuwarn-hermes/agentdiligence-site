@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Evaluation Threads — Nebius Mesh — AgentDiligence</title>
+  <meta name="description" content="AgentDiligence runs pre-procurement AI agent evaluations on real workflows before deployment.">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;500;600&family=Source+Code+Pro:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --purple: #533afd;
+      --purple-hover: #4434d4;
+      --purple-deep: #2e2b8c;
+      --navy: #061b31;
+      --brand-dark: #1c1e54;
+      --dark: #0d253d;
+      --body: #64748d;
+      --label: #273951;
+      --border: #e5edf5;
+      --soft-purple: #d6d9fc;
+      --magenta: #f96bee;
+      --ruby: #ea2261;
+      --green: #15be53;
+      --cyan: #03c7e8;
+      --white: #fff;
+      --shadow: 0 20px 40px rgba(50,50,93,.25), 0 8px 20px rgba(0,0,0,.10);
+      --soft-shadow: 0 6px 18px rgba(50,50,93,.12), 0 2px 8px rgba(0,0,0,.08);
+      --sans: 'Source Sans 3', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      --mono: 'Source Code Pro', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: var(--sans); color: var(--body); background: #fff; font-weight: 300; -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    .wrap { width: min(1080px, calc(100% - 40px)); margin: 0 auto; }
+
+    .hero-shell { position: relative; overflow: hidden; min-height: 780px; background: #fff; }
+    .hero__canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      pointer-events: none;
+      background: radial-gradient(52% 68% at 76% 42%, rgba(172,219,64,.22), rgba(3,199,232,.10) 42%, rgba(83,58,253,.10) 66%, transparent 82%);
+      z-index: 0;
+    }
+    .diagonal { display: none; }
+    nav { position: relative; z-index: 3; padding: 24px 0; color: var(--navy); }
+    .nav-inner { display: flex; align-items:center; justify-content:space-between; }
+    .brand { display:flex; align-items:center; gap:10px; font-weight: 600; letter-spacing:-.02em; font-size: 20px; }
+    .brand-mark { width: 36px; height: 36px; display:block; flex:0 0 auto; }
+    .brand-mark path { stroke: var(--purple); fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .nav-links { display:flex; gap:28px; align-items:center; font-size: 15px; font-weight:400; }
+    .nav-pill { background:rgba(83,58,253,.08); border:1px solid rgba(83,58,253,.18); color: var(--purple); padding:8px 13px; border-radius:999px; }
+
+    .hero { position: relative; z-index: 2; padding: 86px 0 90px; display:grid; grid-template-columns: .93fr 1.07fr; gap: 48px; align-items:center; overflow:hidden; background:transparent; }
+    .hero__content { position: relative; z-index: 1; max-width: 600px; }
+    .eyebrow { color: var(--purple); font-weight:600; font-size:16px; margin-bottom:20px; }
+    h1 { margin:0; color: var(--navy); font-size: clamp(52px, 7vw, 82px); line-height: .96; letter-spacing: -2.1px; font-weight: 300; max-width: 600px; }
+    .subhead { margin: 24px 0 28px; font-size: 21px; line-height: 1.45; color: #425466; max-width: 560px; }
+    .ch { transition: color .15s linear; }
+    .actions { display:flex; gap: 13px; align-items:center; flex-wrap:wrap; }
+    .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; padding: 10px 17px; border-radius: 999px; font-size:16px; font-weight:500; transition:.18s ease; }
+    .btn-primary { color:#fff; background: var(--purple); box-shadow: var(--soft-shadow); }
+    .btn-primary:hover { background: var(--purple-hover); transform: translateY(-1px); }
+    .btn-link { color: var(--purple); }
+
+    .section { padding: 96px 0; }
+    .section.alt { background:#f6f9fc; }
+    .section-head { display:grid; grid-template-columns:.8fr 1fr; gap:48px; margin-bottom:44px; align-items:start; }
+    .kicker { color:var(--purple); font-size:15px; font-weight:600; margin-bottom:10px; }
+    h2 { margin:0; color:var(--navy); font-weight:300; font-size:48px; line-height:1.06; letter-spacing:-1px; }
+    .section-head p { margin:0; color:#425466; font-size:19px; line-height:1.5; }
+    .three { display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
+    .feature { background:#fff; border:1px solid var(--border); border-radius:8px; padding:26px; box-shadow:0 4px 12px rgba(23,23,23,.04); }
+    .icon { width:36px; height:36px; border-radius:8px; background:linear-gradient(135deg,var(--purple),var(--magenta)); margin-bottom:26px; box-shadow:0 8px 16px rgba(83,58,253,.2); }
+    .feature h3 { color:var(--navy); margin:0 0 10px; font-size:24px; font-weight:300; letter-spacing:-.3px; }
+    .feature p { margin:0; line-height:1.5; }
+
+    .dark { background: var(--brand-dark); color:#fff; position:relative; overflow:hidden; }
+    .dark::before { content:""; position:absolute; inset:0; background: radial-gradient(circle at 80% 20%, rgba(249,107,238,.22), transparent 28rem), radial-gradient(circle at 20% 80%, rgba(83,58,253,.28), transparent 30rem); }
+    .dark .wrap { position:relative; z-index:1; }
+    .dark h2 { color:#fff; }
+    .dark .section-head p { color:#c9d2ff; }
+    .report-preview { display:grid; grid-template-columns:1fr 1fr; gap:22px; }
+    .report { position:relative; overflow:hidden; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.14); border-radius:8px; padding:24px; box-shadow:0 20px 40px rgba(3,3,39,.25); }
+    .report__mark { position:absolute; top:19px; right:20px; width:42px; height:42px; opacity:.22; }
+    .report__mark path { stroke:#d6d9fc; fill:none; stroke-linecap:round; stroke-linejoin:round; }
+    .report h3 { position:relative; margin:0 0 12px; padding-right:54px; font-weight:400; font-size:24px; }
+    .report p { position:relative; color:#d6d9fc; line-height:1.5; }
+    .rows { position:relative; margin-top:20px; border-top:1px solid rgba(255,255,255,.12); }
+    .rows div { display:flex; justify-content:space-between; border-bottom:1px solid rgba(255,255,255,.12); padding:13px 0; font-family:var(--mono); font-size:13px; }
+    .final { position:relative; overflow:hidden; padding: 92px 0; text-align:center; background:#fff; }
+    .final .wrap { position:relative; z-index:1; }
+    .final-mark { position:absolute; left:50%; top:50%; width:min(620px, 86vw); height:auto; transform:translate(-50%, -50%); opacity:.045; pointer-events:none; }
+    .final-mark path { stroke:var(--purple); fill:none; stroke-linecap:round; stroke-linejoin:round; }
+    .final h2 { max-width:780px; margin:0 auto 18px; }
+    .final p { max-width:640px; margin:0 auto 25px; font-size:20px; line-height:1.45; color:#425466; }
+    footer { padding:34px 0; color:var(--body); border-top:1px solid var(--border); font-size:14px; }
+    footer .wrap { display:flex; justify-content:space-between; gap:20px; flex-wrap:wrap; }
+
+    @media (max-width: 950px) {
+      .hero, .section-head, .report-preview { grid-template-columns:1fr; }
+      .hero { padding-top:48px; }
+      .three { grid-template-columns:1fr; }
+      .nav-links { display:none; }
+      h1 { font-size:56px; }
+      h2 { font-size:38px; }
+    }
+    @media (max-width:700px){
+      .hero-shell { min-height: 86svh; }
+      .hero { align-items:flex-end; padding: 48px 0 9svh; }
+      .hero__content { max-width:320px; width:100%; }
+      h1 { max-width:100%; font-size:clamp(2rem,.85rem + 4.6vw,2.55rem); line-height:1.04; letter-spacing:-.025em; }
+      .subhead { max-width:100%; font-size:1.05rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="hero-shell">
+    <canvas class="hero__canvas" id="heroCanvas" aria-hidden="true"></canvas>
+    <div class="diagonal" aria-hidden="true"></div>
+    <nav>
+      <div class="wrap nav-inner">
+        <a class="brand" href="#" aria-label="AgentDiligence home"><svg class="brand-mark" viewBox="0 0 96 96" aria-hidden="true"><path d="M18 74L56 22" stroke-width="7"/><path d="M32 55H56" stroke-width="7"/><path d="M56 22V74H69C84 74 94 63 94 48S84 22 69 22H56" stroke-width="7"/></svg><span>AgentDiligence</span></a>
+        <div class="nav-links"><a href="#method">Method</a><a href="#evidence">Evidence</a><a href="#buyers">Teams</a><a class="nav-pill" href="mailto:simon@agentdiligence.io">Run comparison</a></div>
+      </div>
+    </nav>
+
+    <section class="wrap hero">
+      <div class="hero__content">
+        <div class="eyebrow">Pre-procurement agent evaluation</div>
+        <h1 id="heroTitle">Vendor benchmarks aren’t your benchmarks.</h1>
+        <p class="subhead" id="heroSub">AgentDiligence tests the agents you’re considering on your real workflows and tools, then gives your team an independent scorecard before you buy.</p>
+        <div class="actions"><a class="btn btn-primary" href="mailto:simon@agentdiligence.io?subject=Run%20an%20AgentDiligence%20comparison">Run a comparison →</a><a class="btn btn-link" href="#evidence">See the output →</a></div>
+      </div>
+
+    </section>
+  </div>
+
+  <section id="method" class="section">
+    <div class="wrap">
+      <div class="section-head"><div><div class="kicker">Method</div><h2>A procurement bake-off for AI agents.</h2></div><p>Instead of asking which demo looked best, test every candidate on tasks built from your business, policies, edge cases, and standards.</p></div>
+      <div class="three">
+        <div class="feature"><div class="icon"></div><h3>Define the real job.</h3><p>Use your actual workflow, policies, edge cases, and decision criteria — not a vendor’s happy-path script.</p></div>
+        <div class="feature"><div class="icon"></div><h3>Run the candidate field.</h3><p>Vendor agents and your current process face your scenario set under identical constraints.</p></div>
+        <div class="feature"><div class="icon"></div><h3>Defend the decision.</h3><p>Get a recommendation backed by transcripts, policy checks, final-state proof, and cost/latency tradeoffs.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="evidence" class="section dark">
+    <div class="wrap">
+      <div class="section-head"><div><div class="kicker">Evidence</div><h2>Decision output, not dashboard noise.</h2></div><p>AgentDiligence turns agent runs into a decision-ready report: what passed, what failed, where to constrain deployment, and which candidate is worth piloting.</p></div>
+      <div class="report-preview">
+        <div class="report"><svg class="report__mark" viewBox="0 0 96 96" aria-hidden="true"><path d="M18 74L56 22" stroke-width="7"/><path d="M32 55H56" stroke-width="7"/><path d="M56 22V74H69C84 74 94 63 94 48S84 22 69 22H56" stroke-width="7"/></svg><h3>Comparison report</h3><p>Side-by-side agent performance on your workflows.</p><div class="rows"><div><span>Task success</span><strong>49/50</strong></div><div><span>Policy violations</span><strong>0</strong></div><div><span>Avg latency</span><strong>8.1s</strong></div><div><span>Recommendation</span><strong>Pilot</strong></div></div></div>
+        <div class="report"><svg class="report__mark" viewBox="0 0 96 96" aria-hidden="true"><path d="M18 74L56 22" stroke-width="7"/><path d="M32 55H56" stroke-width="7"/><path d="M56 22V74H69C84 74 94 63 94 48S84 22 69 22H56" stroke-width="7"/></svg><h3>Clickable evidence</h3><p>Every headline number connects to the actual transcript, tool behavior, policy match, and final state.</p><div class="rows"><div><span>Transcript review</span><strong>Included</strong></div><div><span>Final-state proof</span><strong>L4</strong></div><div><span>Failure clusters</span><strong>3 found</strong></div><div><span>Deployment boundary</span><strong>Human-gate &gt; £250</strong></div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="buyers" class="section alt">
+    <div class="wrap">
+      <div class="section-head"><div><div class="kicker">For teams</div><h2>Know what you are buying before agents touch customers.</h2></div><p>Useful for procurement, platform, and operations teams deciding between packaged vendors, current workflows, and whether an agent is ready to deploy.</p></div>
+      <div class="three">
+        <div class="feature"><h3>Vendor selection</h3><p>Compare Zendesk, Freshworks, Gorgias, or another candidate against your actual service workflow.</p></div>
+        <div class="feature"><h3>Current process</h3><p>See whether a vendor agent is actually better than today’s workflow, and where each approach breaks.</p></div>
+        <div class="feature"><h3>Deployment boundaries</h3><p>Identify which tasks are ready to automate, assist, or keep behind human approval.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="final">
+    <svg class="final-mark" viewBox="0 0 96 96" aria-hidden="true"><path d="M18 74L56 22" stroke-width="5"/><path d="M32 55H56" stroke-width="5"/><path d="M56 22V74H69C84 74 94 63 94 48S84 22 69 22H56" stroke-width="5"/></svg>
+    <div class="wrap"><h2>Stop buying agents from slide decks.</h2><p>Run the workflow. Compare the field. Buy the agent that can prove it works.</p><a class="btn btn-primary" href="mailto:simon@agentdiligence.io?subject=Run%20an%20AgentDiligence%20comparison">Run a comparison →</a></div>
+  </section>
+
+  <footer><div class="wrap"><span>© 2026 AgentDiligence</span><span>Pre-procurement AI agent diligence</span><a href="mailto:simon@agentdiligence.io">simon@agentdiligence.io</a></div></footer>
+<script>
+(() => {
+  const canvas = document.getElementById('heroCanvas');
+  const ctx = canvas.getContext('2d', { alpha: true });
+  if (!ctx) return;
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let raf = 0;
+  let running = true;
+  canvas.style.background = 'transparent';
+
+  function resize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const w = Math.round(canvas.clientWidth * dpr);
+    const h = Math.round(canvas.clientHeight * dpr);
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width = w;
+      canvas.height = h;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+  }
+
+  function project(u, v, t, w, h, mobile) {
+    // Original, not Nebius code: a pseudo-3D evaluation tunnel/surface.
+    const cx = mobile ? w * .90 : w * .72;
+    const cy = mobile ? h * .42 : h * .38;
+    const length = mobile ? w * .60 : w * .86;
+    const ampY = mobile ? h * .19 : h * .25;
+    const ampZ = mobile ? 90 : 180;
+    const twist = u * Math.PI * 2.45 + t * .22;
+    const pinch = .62 + .38 * Math.sin((u - .18) * Math.PI);
+    const bulge = Math.sin(u * Math.PI);
+    const x = cx + (u - .50) * length + Math.cos(t * .16 + v * 2.0) * 10 * bulge;
+    const y = cy + Math.sin(v + twist) * ampY * pinch + Math.sin(u * 10 + t * .34) * (mobile ? 8 : 16);
+    const z = Math.cos(v + twist) * ampZ * pinch + Math.sin(u * 5.3 + v * 1.2 + t * .18) * 40;
+    const scale = 1 + z / 760;
+    return { x: cx + (x - cx) * scale, y: cy + (y - cy) * scale, z, scale };
+  }
+
+  function colorFor(v, z, alpha = 1) {
+    const palette = [
+      [83, 58, 253],   // AgentDiligence purple
+      [22, 200, 231],
+      [52, 217, 168],
+      [172, 219, 64],  // Nebius-like acid green, adapted
+      [255, 105, 185],
+      [255, 168, 82]
+    ];
+    const idx = Math.abs(Math.floor((v / (Math.PI * 2)) * palette.length)) % palette.length;
+    const c = palette[idx];
+    const depth = Math.max(0, Math.min(1, .58 + z / 420));
+    return `rgba(${Math.round(c[0] * depth + 255 * (1-depth) * .22)},${Math.round(c[1] * depth + 255 * (1-depth) * .22)},${Math.round(c[2] * depth + 255 * (1-depth) * .22)},${alpha})`;
+  }
+
+  function pathLine(points) {
+    ctx.beginPath();
+    ctx.moveTo(points[0].x, points[0].y);
+    for (let i = 1; i < points.length - 2; i++) {
+      const xc = (points[i].x + points[i + 1].x) * .5;
+      const yc = (points[i].y + points[i + 1].y) * .5;
+      ctx.quadraticCurveTo(points[i].x, points[i].y, xc, yc);
+    }
+    const p = points[points.length - 1];
+    ctx.quadraticCurveTo(points[points.length - 2].x, points[points.length - 2].y, p.x, p.y);
+  }
+
+  function drawStroke(points, stroke, width, alpha, blur = 0, highlight = false) {
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.shadowColor = stroke;
+    ctx.shadowBlur = blur;
+    ctx.strokeStyle = stroke;
+    ctx.lineWidth = width;
+    pathLine(points);
+    ctx.stroke();
+    if (highlight) {
+      ctx.globalAlpha = alpha * .55;
+      ctx.shadowBlur = 0;
+      ctx.strokeStyle = 'rgba(255,255,255,.86)';
+      ctx.lineWidth = Math.max(1, width * .12);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  function drawBackground(t, w, h, mobile) {
+    const cx = mobile ? w * .90 : w * .72;
+    const cy = mobile ? h * .42 : h * .39;
+    const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, mobile ? w*.54 : w*.48);
+    g.addColorStop(0, 'rgba(161,219,64,.26)');
+    g.addColorStop(.32, 'rgba(22,200,231,.17)');
+    g.addColorStop(.62, 'rgba(83,58,253,.14)');
+    g.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, w, h);
+
+    const wash = ctx.createLinearGradient(mobile ? w*.64 : w*.45, 0, w, 0);
+    wash.addColorStop(0, 'rgba(255,255,255,0)');
+    wash.addColorStop(.38, 'rgba(209,255,99,.08)');
+    wash.addColorStop(.72, 'rgba(83,58,253,.10)');
+    wash.addColorStop(1, 'rgba(255,105,185,.10)');
+    ctx.fillStyle = wash;
+    ctx.fillRect(0, 0, w, mobile ? h*.70 : h*.66);
+  }
+
+  function drawMesh(t, w, h, mobile) {
+    const rings = mobile ? 22 : 34;
+    const lanes = mobile ? 48 : 72;
+
+    // Cross-section rings: this is what gives the electron-microscope / 3D volume feel.
+    for (let ri = 0; ri < rings; ri++) {
+      const u = ri / (rings - 1);
+      const pts = [];
+      for (let j = 0; j <= lanes; j++) {
+        const v = (j / lanes) * Math.PI * 2;
+        pts.push(project(u, v, t, w, h, mobile));
+      }
+      const mid = project(u, Math.PI * .35, t, w, h, mobile);
+      const alpha = .08 + Math.max(0, mid.z + 140) / 900;
+      const stroke = colorFor(u * Math.PI * 3, mid.z, 1);
+      drawStroke(pts, stroke, mobile ? .8 : 1.15, Math.min(.24, alpha), 0, false);
+    }
+
+    // Longitudinal strands, dense and bright.
+    for (let li = 0; li < lanes; li++) {
+      const v = (li / lanes) * Math.PI * 2;
+      const pts = [];
+      let zsum = 0;
+      for (let j = 0; j < 58; j++) {
+        const u = j / 57;
+        const p = project(u, v + Math.sin(u*4 + t*.2)*.08, t, w, h, mobile);
+        zsum += p.z;
+        pts.push(p);
+      }
+      const z = zsum / pts.length;
+      if (z < -125 && li % 2) continue;
+      const alpha = z > 0 ? .64 : .23;
+      const width = (z > 0 ? (mobile ? 2.8 : 4.4) : (mobile ? 1.0 : 1.55)) + (li % 5 === 0 ? 1.0 : 0);
+      const stroke = colorFor(v, z, 1);
+      drawStroke(pts, stroke, width + (z > 0 ? 20 : 8), alpha * .10, 28, false);
+      drawStroke(pts, stroke, width + (z > 0 ? 8 : 3), alpha * .30, 16, false);
+      drawStroke(pts, stroke, width, alpha, z > 0 ? 9 : 3, z > 60);
+    }
+  }
+
+  function drawDotField(t, w, h, mobile) {
+    // Dotted sampling field, like measurements taken across the evaluation surface.
+    const left = mobile ? w*.68 : w*.46;
+    const right = w*.98;
+    const top = mobile ? h*.19 : h*.15;
+    const bottom = mobile ? h*.63 : h*.58;
+    ctx.save();
+    for (let i = 0; i < 380; i++) {
+      const a = Math.sin(i * 12.9898) * 43758.5453;
+      const b = Math.sin(i * 78.233) * 12345.678;
+      const fx = a - Math.floor(a);
+      const fy = b - Math.floor(b);
+      const x = left + (right - left) * fx + Math.sin(t*.18 + i)*2.5;
+      const y = top + (bottom - top) * fy + Math.cos(t*.15 + i*.7)*2.5;
+      const dx = (x - (mobile?w*.90:w*.72))/(mobile?w*.32:w*.40);
+      const dy = (y - (mobile?h*.42:h*.39))/(mobile?h*.24:h*.30);
+      const inside = Math.max(0, 1 - Math.sqrt(dx*dx + dy*dy));
+      if (inside <= 0) continue;
+      ctx.fillStyle = i % 7 === 0 ? `rgba(255,105,185,${inside*.18})` : i % 5 === 0 ? `rgba(22,200,231,${inside*.20})` : `rgba(83,58,253,${inside*.13})`;
+      ctx.beginPath();
+      ctx.arc(x, y, mobile ? .55 : .75, 0, Math.PI*2);
+      ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  function drawHotCores(t, w, h, mobile) {
+    // A few very bold foreground signal bands so the hero jumps out immediately.
+    const cores = [0.18, 0.35, 0.52, 0.71, 0.88];
+    for (const k of cores) {
+      const pts = [];
+      let zsum = 0;
+      const v = k * Math.PI * 2 + Math.sin(t*.15+k)*.2;
+      for (let j=0; j<64; j++) {
+        const u = j/63;
+        const p = project(u, v + Math.sin(u*8 + t*.3)*.12, t, w, h, mobile);
+        zsum += p.z;
+        pts.push(p);
+      }
+      const z = zsum / pts.length;
+      const stroke = colorFor(v, z+90, 1);
+      drawStroke(pts, stroke, mobile ? 30 : 46, .10, 42, false);
+      drawStroke(pts, stroke, mobile ? 17 : 27, .30, 28, false);
+      drawStroke(pts, stroke, mobile ? 7 : 11, .82, 12, true);
+    }
+  }
+
+  function maskForText(w, h, mobile) {
+    // Unlike Nebius, AD has a quieter editorial layout. Keep the visual huge but protect the copy.
+    const x0 = mobile ? w*.46 : w*.39;
+    const x1 = mobile ? w*.83 : w*.57;
+    const g = ctx.createLinearGradient(x0, 0, x1, 0);
+    g.addColorStop(0, 'rgba(255,255,255,1)');
+    g.addColorStop(.36, 'rgba(255,255,255,.96)');
+    g.addColorStop(.78, 'rgba(255,255,255,.36)');
+    g.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = g;
+    ctx.fillRect(x0, 0, x1-x0, h);
+    const bottom = ctx.createLinearGradient(0, h*.62, 0, h*.98);
+    bottom.addColorStop(0, 'rgba(255,255,255,0)');
+    bottom.addColorStop(1, 'rgba(255,255,255,.98)');
+    ctx.fillStyle = bottom;
+    ctx.fillRect(0, h*.58, w, h*.42);
+  }
+
+  function draw(ms = 0) {
+    resize();
+    const w = canvas.clientWidth;
+    const h = canvas.clientHeight;
+    const mobile = w <= 700;
+    const t = reduceMotion ? 7.5 : ms * .001;
+    ctx.clearRect(0, 0, w, h);
+    drawBackground(t, w, h, mobile);
+    drawDotField(t, w, h, mobile);
+    drawMesh(t, w, h, mobile);
+    drawHotCores(t, w, h, mobile);
+    maskForText(w, h, mobile);
+  }
+
+  function loop(ms) {
+    if (!running) return;
+    draw(ms);
+    raf = requestAnimationFrame(loop);
+  }
+
+  window.addEventListener('resize', () => draw(performance.now()));
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => draw(performance.now()));
+
+  if (reduceMotion) draw(0);
+  else {
+    raf = requestAnimationFrame(loop);
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting && !running) { running = true; raf = requestAnimationFrame(loop); }
+        if (!entry.isIntersecting) { running = false; cancelAnimationFrame(raf); }
+      }, { threshold: 0 }).observe(canvas);
+    }
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) { running = false; cancelAnimationFrame(raf); }
+      else if (!running) { running = true; raf = requestAnimationFrame(loop); }
+    });
+  }
+})();
+</script>
+</body>
+</html>
