@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AgentDiligence · Visual opportunity mockups</title>
+<meta name="robots" content="noindex,nofollow" />
+<style>
+  :root{
+    --ink:#080d1d;--ink2:#0b1020;--panel:#0f172f;--panel2:#0a1a2f;
+    --line:rgba(125,160,210,.16);--line-strong:rgba(125,160,210,.34);
+    --text:#edf3ff;--muted:#aebbd1;--faint:#718099;
+    --cyan:#38bdf8;--mint:#34e0a1;--amber:#f5a524;--red:#ff8585;--indigo:#635bff;
+    --wrap:1120px;--ease:cubic-bezier(.2,.8,.2,1);
+  }
+  *{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;background:var(--ink);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-2;background:radial-gradient(900px 680px at 82% 8%,rgba(99,91,255,.22),transparent 68%),radial-gradient(760px 540px at 84% 24%,rgba(56,189,248,.14),transparent 64%),linear-gradient(180deg,#080d1d,#09101f 44%,#080d1d);}
+  body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opacity:.24;background-image:linear-gradient(rgba(125,160,210,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(125,160,210,.035) 1px,transparent 1px);background-size:64px 64px;mask-image:linear-gradient(to bottom,#000 0%,transparent 88%);}
+  .wrap{max-width:var(--wrap);margin:0 auto;padding:0 38px}.nav{position:sticky;top:0;z-index:10;background:rgba(8,13,29,.78);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}.nav-inner{height:72px;display:flex;align-items:center;justify-content:space-between}.brand{font-weight:800;letter-spacing:-.02em}.brand span{color:var(--cyan);font-family:"IBM Plex Mono",monospace;margin-right:8px}.nav a{color:var(--muted);text-decoration:none;font-size:14px;margin-left:24px}.nav a:hover{color:var(--text)}
+  header{padding:88px 0 64px}.eyebrow{font-family:"IBM Plex Mono",ui-monospace,monospace;text-transform:uppercase;letter-spacing:.24em;color:var(--cyan);font-size:12px;margin:0 0 18px}h1,h2,h3{font-family:"Space Grotesk",Inter,sans-serif;letter-spacing:-.025em}h1{font-size:clamp(44px,6vw,76px);line-height:.98;margin:0;max-width:12ch}h1 em{font-style:normal;color:var(--cyan)}.lede{font-size:19px;line-height:1.65;color:var(--muted);max-width:780px;margin:24px 0 0}.intro-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:30px;align-items:end}.meta-panel{border:1px solid var(--line);border-radius:18px;background:linear-gradient(180deg,rgba(15,23,48,.58),rgba(8,13,29,.74));padding:22px}.meta-panel b{color:var(--text)}.meta-panel p{color:var(--muted);line-height:1.5;margin:0}.toc{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}.toc a{font-family:"IBM Plex Mono",monospace;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:7px 10px;background:rgba(125,160,210,.045)}
+  section{padding:72px 0;border-top:1px solid rgba(56,189,248,.24)}.section-head{max-width:720px;margin-bottom:30px}.section-head h2{font-size:clamp(30px,4.4vw,48px);line-height:1.04;margin:0}.section-head p{color:var(--muted);font-size:17px;line-height:1.6;margin:16px 0 0}.mock-shell{position:relative;border:1px solid var(--line);border-radius:22px;background:linear-gradient(145deg,rgba(15,23,48,.62),rgba(8,13,29,.52));box-shadow:0 34px 80px -58px rgba(0,0,0,.9);padding:22px;overflow:hidden}.mock-shell::before{content:"";position:absolute;inset:0;background:radial-gradient(520px 260px at 80% 0%,rgba(56,189,248,.09),transparent 70%);pointer-events:none}.mock-shell>*{position:relative}.label{font-family:"IBM Plex Mono",monospace;text-transform:uppercase;letter-spacing:.14em;font-size:11px;color:var(--cyan)}.chip{display:inline-flex;align-items:center;gap:6px;font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;border:1px solid rgba(125,160,210,.22);border-radius:999px;padding:3px 8px;color:var(--muted);background:rgba(125,160,210,.06);white-space:nowrap}.chip.good{color:var(--mint);border-color:rgba(52,224,161,.3);background:rgba(52,224,161,.08)}.chip.warn{color:var(--amber);border-color:rgba(245,165,36,.3);background:rgba(245,165,36,.08)}.chip.bad{color:var(--red);border-color:rgba(255,133,133,.28);background:rgba(255,133,133,.08)}
+
+  /* 1 Evidence Packet anatomy */
+  .evidence-anatomy{display:grid;grid-template-columns:1.03fr .97fr;gap:18px}.mini-report{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#0a1226}.report-row{display:grid;grid-template-columns:1.2fr .58fr .58fr .78fr;gap:12px;padding:14px 16px;border-top:1px solid rgba(125,160,210,.12);font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--muted)}.report-row:first-child{border-top:0;color:var(--faint);text-transform:uppercase;letter-spacing:.08em;font-size:10px}.report-row.selected{background:linear-gradient(90deg,rgba(56,189,248,.12),rgba(52,224,161,.06));box-shadow:inset 3px 0 0 var(--mint);color:var(--text)}.packet-panel{border:1px solid rgba(56,189,248,.28);border-radius:16px;background:linear-gradient(180deg,rgba(10,26,47,.82),rgba(6,11,24,.9));padding:18px}.packet-top{display:flex;justify-content:space-between;gap:12px;align-items:start;margin-bottom:16px}.packet-title h3{font-size:22px;margin:7px 0 0}.packet-stack{display:grid;gap:10px}.packet-item{display:grid;grid-template-columns:56px 1fr auto;gap:12px;align-items:center;border:1px solid rgba(125,160,210,.14);border-radius:12px;padding:12px;background:rgba(8,13,29,.5)}.packet-item b{font-size:14px}.packet-item p{margin:3px 0 0;color:var(--muted);font-size:12.5px;line-height:1.35}.packet-code{font-family:"IBM Plex Mono",monospace;color:var(--cyan);font-size:12px}.proof-line{height:1px;background:linear-gradient(90deg,var(--cyan),transparent);margin:14px 0}.impact{border:1px solid rgba(52,224,161,.28);border-radius:12px;padding:12px;background:rgba(52,224,161,.06);color:var(--muted);font-size:13.5px;line-height:1.45}.impact b{color:var(--mint)}
+
+  /* 2 Gap comparison */
+  .gap-visual{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.compare-card{position:relative;border:1px solid var(--line);border-radius:16px;padding:18px;background:rgba(10,18,38,.72);min-height:260px;overflow:hidden}.compare-card::after{content:"";position:absolute;left:18px;right:18px;bottom:42px;height:1px;background:linear-gradient(90deg,transparent,rgba(125,160,210,.28),transparent)}.compare-card.is-win{border-color:rgba(52,224,161,.42);box-shadow:0 0 0 1px rgba(52,224,161,.1),0 24px 48px -36px rgba(52,224,161,.5)}.compare-card h3{font-size:20px;margin:10px 0 14px}.question-list{display:grid;gap:9px}.q-row{display:flex;justify-content:space-between;gap:12px;border:1px solid rgba(125,160,210,.12);border-radius:10px;padding:9px;color:var(--muted);font-size:13px}.q-row strong{color:var(--text);font-weight:600}.q-row .x{color:var(--faint)}.q-row .yes{color:var(--mint)}.bottom-answer{position:absolute;left:18px;right:18px;bottom:14px;color:var(--faint);font-family:"IBM Plex Mono",monospace;font-size:10.5px;text-transform:uppercase;letter-spacing:.08em}.is-win .bottom-answer{color:var(--mint)}
+
+  /* 3 Scope ladder */
+  .scope-ladder{display:grid;grid-template-columns:270px 1fr;gap:24px}.ladder-rail{position:relative;padding:4px 0}.ladder-rail::before{content:"";position:absolute;left:24px;top:28px;bottom:28px;width:1px;background:linear-gradient(var(--cyan),var(--mint))}.rung{position:relative;display:grid;grid-template-columns:48px 1fr;gap:12px;margin-bottom:24px}.rung:last-child{margin-bottom:0}.rung-node{width:48px;height:48px;border-radius:14px;border:1px solid rgba(56,189,248,.38);background:#0b1730;display:grid;place-items:center;font-family:"IBM Plex Mono",monospace;color:var(--cyan);box-shadow:0 0 0 6px var(--ink)}.rung h3{font-size:17px;margin:2px 0 5px}.rung p{margin:0;color:var(--muted);font-size:13px}.ladder-detail{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.scope-card{border:1px solid var(--line);border-radius:14px;background:rgba(10,18,38,.72);padding:16px}.scope-card h4{margin:8px 0 12px;font-size:16px}.scope-metrics{display:grid;gap:8px}.scope-metrics span{display:flex;justify-content:space-between;gap:10px;color:var(--muted);font-size:13px;border-top:1px solid rgba(125,160,210,.1);padding-top:8px}.scope-metrics b{color:var(--text);font-family:"IBM Plex Mono",monospace;font-weight:500}
+
+  /* 4 Task Spec */
+  .task-spec-board{display:grid;grid-template-columns:1.05fr .95fr;gap:16px}.spec-sheet{border:1px solid rgba(56,189,248,.26);border-radius:18px;background:linear-gradient(180deg,rgba(10,26,47,.82),rgba(6,11,24,.92));padding:18px}.spec-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.spec-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.spec-cell{border:1px solid rgba(125,160,210,.14);border-radius:12px;padding:12px;background:rgba(8,13,29,.54)}.spec-cell span{font-family:"IBM Plex Mono",monospace;color:var(--faint);text-transform:uppercase;letter-spacing:.08em;font-size:10px}.spec-cell b{display:block;margin-top:6px;font-size:14px}.spec-side{display:grid;gap:12px}.primitive-card{border:1px solid var(--line);border-radius:14px;background:rgba(10,18,38,.7);padding:16px}.primitive-card h4{margin:6px 0 8px}.primitive-card p{margin:0;color:var(--muted);line-height:1.45;font-size:14px}.failure-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+
+  /* 5 Trigger cards */
+  .trigger-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}.trigger-card{min-height:190px;border:1px solid var(--line);border-radius:16px;padding:16px;background:linear-gradient(180deg,rgba(15,23,48,.64),rgba(10,18,38,.72));display:flex;flex-direction:column}.trigger-icon{width:36px;height:36px;border-radius:12px;display:grid;place-items:center;background:rgba(56,189,248,.1);border:1px solid rgba(56,189,248,.22);color:var(--cyan);font-family:"IBM Plex Mono",monospace;margin-bottom:18px}.trigger-card h3{font-size:17px;margin:0 0 8px}.trigger-card p{margin:0;color:var(--muted);font-size:13.5px;line-height:1.45}.trigger-card .chip{margin-top:auto;align-self:flex-start}
+
+  /* 6 Replay timeline */
+  .replay-board{display:grid;grid-template-columns:1fr 360px;gap:18px}.timeline{position:relative;border:1px solid var(--line);border-radius:18px;background:rgba(10,18,38,.72);padding:20px}.timeline::before{content:"";position:absolute;left:72px;top:38px;bottom:38px;width:1px;background:linear-gradient(var(--cyan),rgba(99,91,255,.22))}.event{position:relative;display:grid;grid-template-columns:82px 1fr auto;gap:14px;padding:0 0 18px}.event:last-child{padding-bottom:0}.time{font-family:"IBM Plex Mono",monospace;color:var(--cyan);font-size:12px}.event-copy{border:1px solid rgba(125,160,210,.12);border-radius:12px;background:rgba(8,13,29,.54);padding:12px}.event-copy b{display:block;font-size:14px}.event-copy span{display:block;color:var(--muted);font-size:13px;margin-top:4px}.incident-panel{border:1px solid rgba(255,133,133,.28);border-radius:18px;background:linear-gradient(180deg,rgba(42,16,26,.48),rgba(8,13,29,.86));padding:18px}.incident-panel h3{font-size:22px;margin:8px 0 10px}.incident-panel p{color:var(--muted);line-height:1.5;margin:0}.decision-box{margin-top:16px;border:1px solid rgba(52,224,161,.26);border-radius:12px;padding:12px;background:rgba(52,224,161,.06)}.decision-box b{color:var(--mint)}.decision-box span{display:block;color:var(--muted);font-size:13px;margin-top:4px}
+
+  @media (max-width:900px){.intro-grid,.evidence-anatomy,.scope-ladder,.task-spec-board,.replay-board{grid-template-columns:1fr}.gap-visual{grid-template-columns:1fr}.trigger-grid{grid-template-columns:repeat(2,1fr)}.ladder-detail{grid-template-columns:1fr}.report-row{grid-template-columns:1fr 1fr}.packet-item{grid-template-columns:46px 1fr}.packet-item .chip{grid-column:2;justify-self:start}.event{grid-template-columns:60px 1fr}.event .chip{grid-column:2;justify-self:start}.timeline::before{left:58px}.spec-grid{grid-template-columns:1fr}}
+  @media (max-width:560px){.wrap{padding:0 28px}header{padding-top:60px}.trigger-grid{grid-template-columns:1fr}.mock-shell{padding:14px}.nav a{display:none}.evidence-anatomy{gap:14px}.packet-top{display:block}.scope-ladder{gap:14px}}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="wrap nav-inner"><div class="brand"><span>▣</span>AgentDiligence</div><div><a href="#packet">Packet</a><a href="#gap">Gap</a><a href="#ladder">Ladder</a><a href="#replay">Replay</a></div></div></nav>
+<header class="wrap">
+  <div class="intro-grid">
+    <div>
+      <p class="eyebrow">Visual opportunity mockups</p>
+      <h1>Six ways to make evidence <em>visible.</em></h1>
+      <p class="lede">Local mockups for the next visual layer of the AgentDiligence page. Each one is meant to explain the buyer-side proof mechanism, not add generic AI decoration.</p>
+    </div>
+    <aside class="meta-panel">
+      <p><b>Design rule:</b> stay evidence-native — Task Specs, packets, replay, verdicts, incident chips, and routing cards. Avoid dashboard noise, folders, stamps, legal clichés, or abstract AI décor.</p>
+      <div class="toc"><a href="#packet">1 Packet anatomy</a><a href="#gap">2 Gap comparison</a><a href="#ladder">3 Scope ladder</a><a href="#spec">4 Task Spec</a><a href="#triggers">5 Triggers</a><a href="#replay">6 Replay</a></div>
+    </aside>
+  </div>
+</header>
+
+<section id="packet"><div class="wrap">
+  <div class="section-head"><p class="eyebrow">01 · Evidence section</p><h2>Evidence Packet anatomy.</h2><p>Turn the sample report from a table into an inspectable proof object. A selected result reveals the artifacts behind the verdict.</p></div>
+  <div class="mock-shell evidence-anatomy">
+    <div class="mini-report" aria-label="Sample report with selected row">
+      <div class="report-row"><span>Arm</span><span>Resolved</span><span>Incidents</span><span>Verdict</span></div>
+      <div class="report-row selected"><span>Premium vendor agent</span><span>47 / 60</span><span>0</span><span><i class="chip good">Pilot</i></span></div>
+      <div class="report-row"><span>Challenger agent</span><span>41 / 60</span><span>3</span><span><i class="chip bad">Avoid · refunds</i></span></div>
+      <div class="report-row"><span>Reference agent</span><span>44 / 60</span><span>1</span><span><i class="chip warn">Assist</i></span></div>
+      <div class="report-row"><span>Current process</span><span>52 / 60</span><span>0</span><span><i class="chip">Baseline</i></span></div>
+    </div>
+    <div class="packet-panel">
+      <div class="packet-top"><div class="packet-title"><span class="label">Selected run</span><h3>Refund exception · Run 03</h3></div><span class="chip good">Evidence L4</span></div>
+      <div class="packet-stack">
+        <div class="packet-item"><span class="packet-code">L2</span><div><b>Transcript captured</b><p>Customer-facing answer and screenshots preserved verbatim.</p></div><span class="chip good">Complete</span></div>
+        <div class="packet-item"><span class="packet-code">L3</span><div><b>Policy source checked</b><p>Agent cited the correct refund policy and order state.</p></div><span class="chip good">Verified</span></div>
+        <div class="packet-item"><span class="packet-code">L4</span><div><b>Final-state proof</b><p>Backend confirms no out-of-policy refund was issued.</p></div><span class="chip good">Passed</span></div>
+      </div>
+      <div class="proof-line"></div><div class="impact"><b>Recommendation impact:</b> raises confidence for low-risk refunds; keep high-value exceptions human-gated.</div>
+    </div>
+  </div>
+</div></section>
+
+<section id="gap"><div class="wrap">
+  <div class="section-head"><p class="eyebrow">02 · The gap</p><h2>Make the positioning contrast visual.</h2><p>Show that demos and benchmarks answer weaker questions. AgentDiligence is the only column that reaches local, defensible deployment proof.</p></div>
+  <div class="mock-shell gap-visual">
+    <article class="compare-card"><span class="label">Vendor demo</span><h3>Can they show a happy path?</h3><div class="question-list"><div class="q-row"><strong>Your policies</strong><span class="x">Not tested</span></div><div class="q-row"><strong>Edge cases</strong><span class="x">Avoided</span></div><div class="q-row"><strong>Final state</strong><span class="x">Claimed</span></div></div><div class="bottom-answer">Good theatre · weak evidence</div></article>
+    <article class="compare-card"><span class="label">Public benchmark</span><h3>Which model wins generic tasks?</h3><div class="question-list"><div class="q-row"><strong>Your workflow</strong><span class="x">Missing</span></div><div class="q-row"><strong>Your tools</strong><span class="x">Missing</span></div><div class="q-row"><strong>Your bar</strong><span class="x">Missing</span></div></div><div class="bottom-answer">Useful signal · wrong context</div></article>
+    <article class="compare-card is-win"><span class="label">AgentDiligence</span><h3>Can this agent safely do your work?</h3><div class="question-list"><div class="q-row"><strong>Your policies</strong><span class="yes">Locked</span></div><div class="q-row"><strong>Your edge cases</strong><span class="yes">Replayable</span></div><div class="q-row"><strong>Your decision</strong><span class="yes">Recommended</span></div></div><div class="bottom-answer">Same tasks · same bar · evidence</div></article>
+  </div>
+</div></section>
+
+<section id="ladder"><div class="wrap">
+  <div class="section-head"><p class="eyebrow">03 · Engagements</p><h2>A scope ladder for “where do we start?”</h2><p>Replace some package-card reading with a progression that makes scale, evidence depth, and decision type obvious.</p></div>
+  <div class="mock-shell scope-ladder">
+    <div class="ladder-rail">
+      <div class="rung"><div class="rung-node">01</div><div><h3>Snapshot</h3><p>First readiness map</p></div></div>
+      <div class="rung"><div class="rung-node">02</div><div><h3>Decision Report</h3><p>Most teams start here</p></div></div>
+      <div class="rung"><div class="rung-node">03</div><div><h3>Enterprise</h3><p>Multiple workflows</p></div></div>
+      <div class="rung"><div class="rung-node">04</div><div><h3>Assurance</h3><p>Retest after deploy</p></div></div>
+    </div>
+    <div class="ladder-detail">
+      <div class="scope-card"><span class="label">Snapshot</span><h4>Work-Trace Snapshot</h4><div class="scope-metrics"><span>Workflows <b>1</b></span><span>Vendors <b>0–1</b></span><span>Output <b>Readiness map</b></span></div></div>
+      <div class="scope-card"><span class="label">Decision</span><h4>Vendor Decision Report</h4><div class="scope-metrics"><span>Vendors <b>2–4</b></span><span>Specs <b>50–150</b></span><span>Output <b>Buy / pilot / avoid</b></span></div></div>
+      <div class="scope-card"><span class="label">Enterprise</span><h4>Enterprise Evaluation</h4><div class="scope-metrics"><span>Markets <b>Multi</b></span><span>Evidence <b>L3–L4</b></span><span>Output <b>Board-ready</b></span></div></div>
+      <div class="scope-card"><span class="label">Ongoing</span><h4>Regression & Assurance</h4><div class="scope-metrics"><span>Cadence <b>Quarterly</b></span><span>Risk <b>Drift / incidents</b></span><span>Output <b>Renewal proof</b></span></div></div>
+    </div>
+  </div>
+</div></section>
+
+<section id="spec"><div class="wrap">
+  <div class="section-head"><p class="eyebrow">04 · Primitive</p><h2>Make the Task Spec feel proprietary.</h2><p>A compact primitive visual can make AgentDiligence feel like a repeatable methodology rather than a consulting exercise.</p></div>
+  <div class="mock-shell task-spec-board">
+    <div class="spec-sheet"><div class="spec-head"><span class="label">Task Spec</span><span class="chip good">Locked before run</span></div><div class="spec-grid"><div class="spec-cell"><span>Scenario</span><b>Delayed partial shipment refund</b></div><div class="spec-cell"><span>Hidden state</span><b>Order split across two parcels</b></div><div class="spec-cell"><span>Allowed tools</span><b>CRM · order status · policy base</b></div><div class="spec-cell"><span>Success bar</span><b>Resolve or escalate safely</b></div><div class="spec-cell"><span>Evidence bar</span><b>L3 source + final-state proof</b></div><div class="spec-cell"><span>Fail if</span><b>Invents policy or refunds above limit</b></div></div></div>
+    <div class="spec-side"><div class="primitive-card"><span class="label">Why it matters</span><h4>Same scenario, same constraints.</h4><p>The Task Spec is the locked exam. Every candidate faces the same hidden state and allowed actions, so the comparison is fair.</p></div><div class="primitive-card"><span class="label">Failure modes</span><div class="failure-tags"><span class="chip bad">Wrong refund</span><span class="chip bad">Invented policy</span><span class="chip warn">Poor tone</span><span class="chip warn">No final proof</span></div></div></div>
+  </div>
+</div></section>
+
+<section id="triggers"><div class="wrap">
+  <div class="section-head"><p class="eyebrow">05 · Who it’s for</p><h2>Trigger cards for buyer recognition.</h2><p>Show the moments where a buyer suddenly needs independent proof. This can replace some list density with “that’s us” recognition.</p></div>
+  <div class="mock-shell trigger-grid">
+    <article class="trigger-card"><div class="trigger-icon">↻</div><h3>Renewal coming up</h3><p>You need evidence before recommitting to an AI agent contract.</p><span class="chip">Decision deadline</span></article>
+    <article class="trigger-card"><div class="trigger-icon">≡</div><h3>Vendor shortlist</h3><p>Multiple polished demos, no neutral comparison on your work.</p><span class="chip good">Compare fairly</span></article>
+    <article class="trigger-card"><div class="trigger-icon">⇄</div><h3>Helpdesk migration</h3><p>Changing systems and agents at once raises operational risk.</p><span class="chip warn">Transition risk</span></article>
+    <article class="trigger-card"><div class="trigger-icon">!</div><h3>Bot rollout burned you</h3><p>Leadership needs proof that incidents won’t repeat.</p><span class="chip bad">Trust repair</span></article>
+    <article class="trigger-card"><div class="trigger-icon">£</div><h3>Support quality is revenue</h3><p>Automation risk touches retention, refunds, chargebacks, or trust.</p><span class="chip">High stakes</span></article>
+  </div>
+</div></section>
+
+<section id="replay"><div class="wrap">
+  <div class="section-head"><p class="eyebrow">06 · Evidence detail</p><h2>A replay timeline where risk becomes obvious.</h2><p>This belongs in the Evidence section, not as a separate customer job. It shows how a serious incident is caught and routed.</p></div>
+  <div class="mock-shell replay-board">
+    <div class="timeline">
+      <div class="event"><span class="time">00:00</span><div class="event-copy"><b>Customer asks for refund</b><span>Delayed partial shipment, frustrated tone.</span></div><span class="chip">Input</span></div>
+      <div class="event"><span class="time">00:14</span><div class="event-copy"><b>Agent checks order status</b><span>Correctly finds split delivery state.</span></div><span class="chip good">L3 source</span></div>
+      <div class="event"><span class="time">00:31</span><div class="event-copy"><b>Policy cited</b><span>Correct policy, wrong threshold interpretation.</span></div><span class="chip warn">Edge</span></div>
+      <div class="event"><span class="time">00:46</span><div class="event-copy"><b>Refund promised above limit</b><span>Customer-facing commitment exceeds policy authority.</span></div><span class="chip bad">Incident</span></div>
+      <div class="event"><span class="time">01:10</span><div class="event-copy"><b>Final-state check</b><span>Backend proves whether action was completed or blocked.</span></div><span class="chip good">L4 proof</span></div>
+    </div>
+    <aside class="incident-panel"><span class="label">Serious-incident cluster</span><h3>Policy concession risk</h3><p>The agent sounds helpful but creates an expensive promise the business did not authorize.</p><div class="decision-box"><b>Route recommendation</b><span>Human-gate refunds above £250 until the policy edge is fixed and retested.</span></div></aside>
+  </div>
+</div></section>
+
+<footer class="wrap" style="padding:48px 38px 80px;color:var(--faint);font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;">Local design mockups · not deployed</footer>
+</body>
+</html>
