@@ -307,18 +307,48 @@
   .card.is-answer .qa-label{color:var(--mint);}
   .card.is-answer .qa-q{color:var(--text);}
 
-  /* steps pipeline */
-  .steps{margin-top:48px;}
-  .step{display:grid;grid-template-columns:auto 1fr;gap:22px;padding-bottom:34px;position:relative;}
-  .step:last-child{padding-bottom:0;}
-  .step::before{content:"";position:absolute;left:18px;top:42px;bottom:-2px;width:1px;background:linear-gradient(to bottom,var(--line-strong),var(--line));}
-  .step:last-child::before{display:none;}
-  .step-num{width:37px;height:37px;border-radius:10px;display:grid;place-items:center;font-family:"IBM Plex Mono",monospace;font-size:14px;color:var(--cyan);background:rgba(56,189,248,.08);border:1px solid var(--line-strong);position:relative;z-index:1;}
-  .step-body h3{font-family:"Space Grotesk";font-weight:600;font-size:19px;letter-spacing:-.01em;margin:6px 0 8px;}
-  .step-body h3 .tag{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--mint);margin-left:9px;vertical-align:middle;opacity:.92;}
-  .step-body h3 .tag::before{content:"[";margin-right:4px;}
-  .step-body h3 .tag::after{content:"]";margin-left:4px;}
-  .step-body p{color:var(--muted);font-size:15.5px;margin:0;max-width:62ch;}
+  /* visual how-it-works mockup */
+  .how-visual{position:relative;overflow:hidden;}
+  .how-visual .reveal{opacity:1;transform:none;}
+  .how-visual::before{content:"";position:absolute;inset:8% -12% auto auto;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(56,189,248,.14),transparent 68%);filter:blur(26px);pointer-events:none;}
+  .how-map{margin-top:50px;position:relative;display:grid;gap:18px;}
+  .how-map::before{display:none;}
+  .how-step{position:relative;display:grid;grid-template-columns:48px minmax(0,.74fr) minmax(280px,1fr);gap:22px;align-items:stretch;padding:18px;border:1px solid rgba(125,160,210,.12);border-radius:18px;background:linear-gradient(135deg,rgba(15,23,48,.62),rgba(8,13,28,.42));box-shadow:0 28px 60px -48px rgba(3,10,30,.95);min-width:0;overflow:visible;z-index:1;}
+  .how-step:nth-child(1){z-index:6;}.how-step:nth-child(2){z-index:5;}.how-step:nth-child(3){z-index:4;}.how-step:nth-child(4){z-index:3;}.how-step:nth-child(5){z-index:2;}
+  .how-step:not(:last-child)::before{content:"";position:absolute;left:42px;top:72px;height:calc(100% - 42px);width:1px;background:linear-gradient(to bottom,rgba(56,189,248,.56),rgba(99,91,255,.22));box-shadow:0 0 12px rgba(56,189,248,.16);z-index:6;pointer-events:none;}
+  .how-step::after{content:"";position:absolute;inset:0;border-radius:18px;background:linear-gradient(90deg,rgba(56,189,248,.07),transparent 24%,transparent 74%,rgba(52,224,161,.05));opacity:0;transition:opacity .25s ease;pointer-events:none;}
+  .how-step:hover{border-color:rgba(125,160,210,.24);}
+  .how-step:hover::after{opacity:1;}
+  .how-node{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--cyan);background:linear-gradient(180deg,rgba(56,189,248,.14),rgba(99,91,255,.08));border:1px solid rgba(125,160,210,.28);box-shadow:0 0 0 5px rgba(11,16,32,.92),0 0 18px rgba(56,189,248,.18);position:relative;z-index:7;}
+  .how-copy{padding:5px 0;position:relative;z-index:1;min-width:0;}
+  .how-copy h3{font-family:"Space Grotesk";font-weight:600;font-size:20px;letter-spacing:-.015em;margin:0 0 8px;}
+  .how-copy p{color:var(--muted);font-size:15.5px;line-height:1.55;margin:0;max-width:44ch;}
+  .how-artifact{position:relative;z-index:1;min-height:154px;border:1px solid rgba(125,160,210,.16);border-radius:14px;background:linear-gradient(180deg,rgba(10,26,47,.72),rgba(6,11,24,.84));overflow:hidden;padding:16px;min-width:0;}
+  .how-artifact::before{content:"";position:absolute;inset:0;background:linear-gradient(rgba(125,160,210,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(125,160,210,.03) 1px,transparent 1px);background-size:28px 28px;mask-image:linear-gradient(to bottom,#000,transparent 95%);opacity:.7;pointer-events:none;}
+  .artifact-label{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);display:flex;align-items:center;justify-content:space-between;gap:8px 12px;margin-bottom:12px;position:relative;z-index:1;flex-wrap:wrap;}
+  .artifact-label b{color:var(--cyan);font-weight:500;}
+  .chip{display:inline-flex;align-items:center;gap:6px;font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;border:1px solid rgba(125,160,210,.22);border-radius:999px;padding:3px 8px;color:var(--muted);background:rgba(125,160,210,.06);white-space:nowrap;}
+  .chip.good{color:var(--mint);border-color:rgba(52,224,161,.28);background:rgba(52,224,161,.08);}.chip.warn{color:var(--amber);border-color:rgba(245,165,36,.28);background:rgba(245,165,36,.08);}.chip.bad{color:#ff8c8c;border-color:rgba(255,140,140,.25);background:rgba(255,140,140,.08);}
+  .trace-card{position:relative;z-index:1;border:1px solid rgba(125,160,210,.15);border-radius:12px;background:rgba(8,13,28,.72);padding:13px;}
+  .trace-title{font-family:"Space Grotesk";font-weight:600;font-size:15px;margin-bottom:8px;color:var(--text);}.trace-meta{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}.trace-meta span{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--faint);border-top:1px solid rgba(125,160,210,.12);padding-top:7px;}.trace-meta b{display:block;color:var(--muted);font-weight:500;margin-top:2px;}
+  .spec-grid{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:8px;}.spec-grid span{border:1px solid rgba(125,160,210,.14);border-radius:9px;padding:8px 9px;font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--faint);background:rgba(8,13,28,.58);}.spec-grid b{display:block;color:var(--text);font-weight:500;font-family:"Inter";font-size:12px;letter-spacing:0;text-transform:none;margin-top:2px;}
+  .lane-list{position:relative;z-index:1;display:grid;gap:9px;}.lane{display:grid;grid-template-columns:1fr 96px 86px;gap:10px;align-items:center;font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--muted);}.lane-bar{height:6px;border-radius:999px;background:rgba(125,160,210,.12);overflow:hidden;}.lane-bar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--indigo),var(--cyan));}.lane.good .lane-bar i{background:linear-gradient(90deg,var(--cyan),var(--mint));}.lane.warn .lane-bar i{background:linear-gradient(90deg,var(--indigo),var(--amber));}.lane.bad .lane-bar i{background:linear-gradient(90deg,var(--amber),#ff7777);}.lane b{font-weight:500;color:var(--text);}
+  .replay-list{position:relative;z-index:1;display:grid;gap:8px;}.replay-row{display:grid;grid-template-columns:48px 1fr auto;gap:10px;align-items:center;font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--muted);padding-bottom:8px;border-bottom:1px solid rgba(125,160,210,.10);}.replay-row:last-child{border-bottom:0;padding-bottom:0;}.replay-row b{font-weight:500;color:var(--text);}.time{color:var(--cyan);}.verdict-grid{position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}.route{border:1px solid rgba(125,160,210,.14);border-radius:10px;padding:10px;background:rgba(8,13,28,.56);}.route strong{display:block;font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;}.route.good strong{color:var(--mint);}.route.warn strong{color:var(--amber);}.route.bad strong{color:#ff8c8c;}.route span{display:block;color:var(--muted);font-size:12px;line-height:1.35;}
+
+  @media (max-width:980px){
+    .how-step{grid-template-columns:48px 1fr;}
+    .how-artifact{grid-column:2;}
+  }
+  @media (max-width:600px){
+    .how-visual .wrap{padding-left:28px;padding-right:28px;}
+    .how-step:not(:last-child)::before{left:32px;top:56px;height:calc(100% - 30px);}
+    .how-step{grid-template-columns:36px minmax(0,1fr);gap:14px;padding:14px;}
+    .how-node{width:36px;height:36px;border-radius:11px;font-size:11px;}
+    .how-artifact{grid-column:1 / -1;min-height:auto;padding:13px;}
+    .trace-meta,.spec-grid,.verdict-grid{grid-template-columns:1fr;}
+    .lane{grid-template-columns:1fr;gap:6px;}
+    .replay-row{grid-template-columns:42px 1fr;}.replay-row .chip{grid-column:2;justify-self:start;}
+  }
 
   /* evidence levels */
   .levels{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:30px;}
@@ -498,49 +528,98 @@
 <div class="wrap"><hr class="divider" /></div>
 
 <!-- ================= HOW ================= -->
-<section id="how">
+<section id="how" class="how-visual">
   <div class="wrap">
     <div class="sec-head reveal">
       <p class="eyebrow">How it works</p>
-      <h2>Your support history is the exam.</h2>
-      <p>We don't hand you a generic test set. We replay the work your team already did — the tickets, timelines, and actions behind it — and turn it into proof.</p>
+      <h2>From work trace to buying decision.</h2>
+      <p>A controlled path from your real support history to replayable tests, inspected evidence, and a recommendation your team can defend.</p>
     </div>
-    <div class="steps">
-      <div class="step reveal">
-        <div class="step-num">01</div>
-        <div class="step-body">
-          <h3>Ingest your work traces</h3>
-          <p>Tickets, timelines, status and assignee changes, internal notes, backend actions, and outcomes — exported, read-only, and handled privately. No prior eval set required.</p>
+
+    <div class="how-map" aria-label="AgentDiligence evaluation flow">
+      <article class="how-step reveal d1">
+        <div class="how-node">01</div>
+        <div class="how-copy">
+          <h3>Capture the work trace</h3>
+          <p>We start with the tickets, internal notes, status changes, tool actions, and outcomes behind work your team already handled.</p>
         </div>
-      </div>
-      <div class="step reveal">
-        <div class="step-num">02</div>
-        <div class="step-body">
-          <h3>Build Task Specs <span class="tag">primitive</span></h3>
-          <p>Each trace becomes a replayable AgentDiligence Task Spec: the situation, the hidden business state, your policies, the allowed and forbidden actions, the expected final state, and the evidence bar it has to clear.</p>
+        <div class="how-artifact" aria-label="Sample incoming case">
+          <div class="artifact-label"><b>Incoming case</b><span class="chip">synthetic sample</span></div>
+          <div class="trace-card">
+            <div class="trace-title">Refund request after delayed partial shipment</div>
+            <div class="trace-meta">
+              <span>Tone<b>Frustrated</b></span>
+              <span>Policy edge<b>Partial shipment</b></span>
+              <span>Current route<b>Human escalation</b></span>
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="step reveal">
-        <div class="step-num">03</div>
-        <div class="step-body">
-          <h3>Run the candidate field</h3>
-          <p>Packaged vendors, a cheaper challenger, a reference agent, and your current process all face the same specs under identical constraints, with repeated runs where consistency matters. We test the agents — we never sit between you and your vendors.</p>
+      </article>
+
+      <article class="how-step reveal d2">
+        <div class="how-node">02</div>
+        <div class="how-copy">
+          <h3>Lock the Task Spec</h3>
+          <p>Each trace becomes a replayable spec: situation, hidden business state, allowed tools, policy constraints, final state, and failure modes.</p>
         </div>
-      </div>
-      <div class="step reveal">
-        <div class="step-num">04</div>
-        <div class="step-body">
-          <h3>Capture Evidence Packets <span class="tag">primitive</span></h3>
-          <p>Every run produces an Evidence Packet — transcript, vendor source and handoff records, and independent backend final-state proof — scored from Level 2 to Level 4.</p>
+        <div class="how-artifact" aria-label="Sample task spec">
+          <div class="artifact-label"><b>Task Spec</b><span class="chip good">locked</span></div>
+          <div class="spec-grid">
+            <span>Scenario<b>Refund exception</b></span>
+            <span>Tools allowed<b>CRM · order status · policy base</b></span>
+            <span>Success bar<b>Resolve or escalate safely</b></span>
+            <span>Failure modes<b>Wrong refund · invented policy · poor tone</b></span>
+          </div>
         </div>
-      </div>
-      <div class="step reveal">
-        <div class="step-num">05</div>
-        <div class="step-body">
-          <h3>Decide</h3>
-          <p>A plain-English recommendation: which categories are safe to automate, assist, human-gate, or avoid — and which agent, if any, is worth buying or piloting.</p>
+      </article>
+
+      <article class="how-step reveal d3">
+        <div class="how-node">03</div>
+        <div class="how-copy">
+          <h3>Run every candidate under the same constraints</h3>
+          <p>Vendors, reference agents, and your current process face the same scenario set, scoring bar, and evidence format.</p>
         </div>
-      </div>
+        <div class="how-artifact" aria-label="Candidate comparison lanes">
+          <div class="artifact-label"><b>Candidate field</b><span class="chip">same spec · same bar</span></div>
+          <div class="lane-list">
+            <div class="lane good"><b>Premium vendor</b><span class="lane-bar"><i style="width:82%"></i></span><span class="chip good">pass</span></div>
+            <div class="lane bad"><b>Challenger</b><span class="lane-bar"><i style="width:46%"></i></span><span class="chip bad">incident</span></div>
+            <div class="lane"><b>Current process</b><span class="lane-bar"><i style="width:76%"></i></span><span class="chip">baseline</span></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="how-step reveal d4">
+        <div class="how-node">04</div>
+        <div class="how-copy">
+          <h3>Score what matters</h3>
+          <p>We score each candidate on resolution, policy fit, tone, tool use, final-state proof, and serious-incident risk.</p>
+        </div>
+        <div class="how-artifact" aria-label="Evidence packet scoring card">
+          <div class="artifact-label"><b>Evidence Packet</b><span class="chip warn">reviewed</span></div>
+          <div class="replay-list">
+            <div class="replay-row"><span class="time">L2</span><b>Transcript and screenshots captured</b><span class="chip good">complete</span></div>
+            <div class="replay-row"><span class="time">L3</span><b>Tool use and policy source checked</b><span class="chip good">verified</span></div>
+            <div class="replay-row"><span class="time">Risk</span><b>Refund promised above policy limit</b><span class="chip bad">serious incident</span></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="how-step reveal d4">
+        <div class="how-node">05</div>
+        <div class="how-copy">
+          <h3>Recommend the route</h3>
+          <p>You get a plain-English decision: what to automate, what needs human-in-the-loop, what not to deploy, and which agent is worth buying.</p>
+        </div>
+        <div class="how-artifact" aria-label="Deployment recommendation card">
+          <div class="artifact-label"><b>Deployment recommendation</b><span class="chip good">decision-ready</span></div>
+          <div class="verdict-grid">
+            <div class="route good"><strong>Automate</strong><span>Order status<br />Password reset</span></div>
+            <div class="route warn"><strong>Human gate</strong><span>Refund exceptions<br />Complaints</span></div>
+            <div class="route bad"><strong>Do not deploy</strong><span>Account closure<br />Policy concessions</span></div>
+          </div>
+        </div>
+      </article>
     </div>
   </div>
 </section>
