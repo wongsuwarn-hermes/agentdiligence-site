@@ -215,11 +215,17 @@
   .trust{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:rgba(15,23,48,.32);}
   .trust-inner{display:flex;align-items:center;gap:18px 40px;flex-wrap:wrap;justify-content:space-between;padding-top:20px;padding-bottom:20px;}
   .trust-label{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);}
-  .trust-logos{display:flex;align-items:center;gap:28px;flex-wrap:wrap;}
-  .trust-logos span{font-family:"Space Grotesk";font-weight:500;font-size:16px;color:var(--muted);opacity:.6;transition:opacity .2s ease,color .2s ease;}
-  .trust-logos span:hover{opacity:1;color:var(--text);}
-  .trust-logos .trust-lead{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);opacity:1;}
-  .trust-logos .trust-lead:hover{color:var(--faint);}
+  .trust-vendors{display:flex;align-items:center;gap:28px;flex-wrap:wrap;}
+  .trust-vendors .vendor-wordmark{display:inline-flex;align-items:center;line-height:1;font-size:16px;color:var(--muted);opacity:.68;transition:opacity .2s ease,color .2s ease,transform .2s ease;}
+  .trust-vendors .vendor-wordmark:hover{opacity:1;color:var(--text);transform:translateY(-1px);}
+  .trust-vendors .trust-lead{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);opacity:1;}
+  .trust-vendors .trust-lead:hover{color:var(--faint);transform:none;}
+  .vendor-intercom{font-family:"Inter",system-ui,sans-serif;font-weight:650;letter-spacing:-.045em;}
+  .vendor-zendesk{font-family:"Inter",system-ui,sans-serif;font-weight:620;letter-spacing:-.06em;}
+  .vendor-gorgias{font-family:"Space Grotesk",system-ui,sans-serif;font-weight:600;letter-spacing:-.02em;}
+  .vendor-freshworks{font-family:"Inter",system-ui,sans-serif;font-weight:620;letter-spacing:-.035em;}
+  .vendor-ada{font-family:"Space Grotesk",system-ui,sans-serif;font-weight:700;letter-spacing:.01em;}
+  .vendor-decagon{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:13.5px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;}
 
   /* report artifact — the product shot */
   .report{margin-top:44px;position:relative;border:1px solid var(--line-strong);border-radius:18px;
@@ -483,8 +489,9 @@
     section{padding:62px 0;}
     .hero-content{padding-top:94px;padding-bottom:46px;}
     .scoreline{font-size:11.5px;gap:7px 14px;margin-top:34px;padding-top:18px;}
-    .trust-logos{gap:14px 22px;}
-    .trust-logos span{font-size:15px;}
+    .trust-vendors{gap:14px 22px;}
+    .trust-vendors .vendor-wordmark{font-size:15px;}
+    .trust-vendors .vendor-decagon{font-size:12.5px;}
     /* report → stacked cards */
     .report-scroll{overflow-x:visible;}
     .report-table{min-width:0;}
@@ -554,9 +561,14 @@
 <div class="trust">
   <div class="wrap trust-inner">
     <span class="trust-label">Independent &amp; vendor-neutral — paid by buyers to assess agents, not by vendors to sell them</span>
-    <div class="trust-logos">
+    <div class="trust-vendors" aria-label="Typical vendor shortlist, shown as text names rather than logos">
       <span class="trust-lead">Typical shortlist</span>
-      <span>Intercom Fin</span><span>Zendesk AI</span><span>Gorgias AI</span><span>Freshworks</span><span>Ada</span><span>Decagon</span>
+      <span class="vendor-wordmark vendor-intercom">Intercom Fin</span>
+      <span class="vendor-wordmark vendor-zendesk">Zendesk AI</span>
+      <span class="vendor-wordmark vendor-gorgias">Gorgias AI</span>
+      <span class="vendor-wordmark vendor-freshworks">Freshworks</span>
+      <span class="vendor-wordmark vendor-ada">Ada</span>
+      <span class="vendor-wordmark vendor-decagon">Decagon</span>
     </div>
   </div>
 </div>
