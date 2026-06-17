@@ -241,6 +241,55 @@
   .report-links a{color:var(--cyan);}
   .report-links a:hover{text-decoration:underline;}
   .report-cap{margin:14px 2px 0;font-size:13px;color:var(--faint);}
+  .proof-dashboard{margin-top:44px;display:grid;grid-template-columns:minmax(0,1.06fr) minmax(340px,.94fr);gap:18px;align-items:stretch;}
+  .proof-report{position:relative;border:1px solid var(--line-strong);border-radius:18px;background:linear-gradient(180deg,#101a36,#0b1428);box-shadow:rgba(3,10,30,.5) 0 40px 60px -36px,rgba(56,189,248,.08) 0 1px 0 0 inset;overflow:hidden;min-width:0;}
+  .proof-report .report{margin-top:0;border:0;border-radius:0;box-shadow:none;background:transparent;}
+  .packet-panel{position:relative;border:1px solid rgba(56,189,248,.28);border-radius:18px;background:linear-gradient(180deg,rgba(10,26,47,.82),rgba(6,11,24,.92));padding:20px;overflow:hidden;}
+  .packet-panel::before{content:"";position:absolute;inset:0;background:radial-gradient(340px 190px at 86% 0%,rgba(52,224,161,.10),transparent 72%),linear-gradient(rgba(125,160,210,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(125,160,210,.03) 1px,transparent 1px);background-size:auto,28px 28px,28px 28px;opacity:.9;pointer-events:none;}
+  .packet-panel>*{position:relative;}
+  .packet-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:16px;}
+  .packet-title h3{font-family:"Space Grotesk";font-weight:600;font-size:22px;letter-spacing:-.02em;margin:6px 0 0;}
+  .packet-sub{font-size:13.5px;color:var(--muted);line-height:1.45;margin:7px 0 0;}
+  .packet-stack{display:grid;gap:10px;}
+  .packet-item{display:grid;grid-template-columns:46px 1fr auto;gap:12px;align-items:center;border:1px solid rgba(125,160,210,.14);border-radius:12px;padding:12px;background:rgba(8,13,28,.62);}
+  .packet-code{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--cyan);}
+  .packet-item b{font-size:14px;color:var(--text);}
+  .packet-item p{margin:3px 0 0;color:var(--muted);font-size:12.5px;line-height:1.35;}
+  .packet-impact{margin-top:14px;border:1px solid rgba(52,224,161,.28);border-radius:12px;padding:12px;background:rgba(52,224,161,.07);font-size:13.5px;line-height:1.45;color:var(--muted);}
+  .packet-impact b{color:var(--mint);}
+  .packet-rule{height:1px;background:linear-gradient(90deg,var(--cyan),rgba(56,189,248,0));margin:14px 0;}
+  .replay-module{margin-top:18px;border:1px solid rgba(125,160,210,.16);border-radius:18px;background:linear-gradient(145deg,rgba(15,23,48,.58),rgba(8,13,28,.68));padding:20px;display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:18px;overflow:hidden;}
+  .replay-timeline{position:relative;border:1px solid rgba(125,160,210,.14);border-radius:14px;background:rgba(8,13,28,.58);padding:18px;}
+  .replay-timeline::before{content:"";position:absolute;left:72px;top:38px;bottom:38px;width:1px;background:linear-gradient(var(--cyan),rgba(99,91,255,.22));box-shadow:0 0 12px rgba(56,189,248,.12);}
+  .replay-event{position:relative;display:grid;grid-template-columns:74px minmax(0,1fr) auto;gap:12px;align-items:start;padding:0 0 14px;}
+  .replay-event:last-child{padding-bottom:0;}
+  .replay-time{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--cyan);padding-top:8px;}
+  .replay-copy{border:1px solid rgba(125,160,210,.12);border-radius:12px;background:rgba(10,18,38,.64);padding:10px 12px;}
+  .replay-copy b{display:block;font-size:14px;color:var(--text);}
+  .replay-copy span{display:block;color:var(--muted);font-size:12.8px;line-height:1.4;margin-top:3px;}
+  .incident-card{border:1px solid rgba(255,140,140,.28);border-radius:14px;background:linear-gradient(180deg,rgba(42,16,26,.48),rgba(8,13,28,.88));padding:18px;}
+  .incident-card h3{font-family:"Space Grotesk";font-weight:600;font-size:22px;letter-spacing:-.02em;margin:8px 0 10px;}
+  .incident-card p{color:var(--muted);line-height:1.5;margin:0;font-size:14.5px;}
+  .decision-box{margin-top:16px;border:1px solid rgba(52,224,161,.26);border-radius:12px;padding:12px;background:rgba(52,224,161,.07);}
+  .decision-box b{display:block;color:var(--mint);font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px;}
+  .decision-box span{display:block;color:var(--muted);font-size:13px;line-height:1.4;}
+  .selected-caption{margin:16px 2px 0;color:var(--faint);font-size:13px;line-height:1.5;}
+
+  @media (max-width:980px){
+    .proof-dashboard,.replay-module{grid-template-columns:1fr;}
+    .packet-panel{min-height:auto;}
+  }
+  @media (max-width:600px){
+    .packet-top{display:block;}
+    .packet-top .chip{margin-top:10px;}
+    .packet-item{grid-template-columns:40px 1fr;}
+    .packet-item .chip{grid-column:2;justify-self:start;}
+    .replay-module{padding:14px;}
+    .replay-timeline{padding:14px;}
+    .replay-timeline::before{left:55px;}
+    .replay-event{grid-template-columns:52px 1fr;gap:10px;}
+    .replay-event .chip{grid-column:2;justify-self:start;}
+  }
 
   /* evidence facets */
   .facets{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:30px;}
@@ -627,56 +676,97 @@
   <div class="wrap">
     <div class="sec-head reveal">
       <p class="eyebrow">Evidence</p>
-      <h2>Decision output, not dashboard noise.</h2>
-      <p>Every run becomes a decision-ready report: what passed, what failed, what's safe to automate, and how to route the rest. Every figure links to the evidence behind it.</p>
+      <h2>The report is a doorway into proof.</h2>
+      <p>Start with the buying recommendation, then drill down into the packet behind any score: transcript, source check, final-state proof, and the replay that explains serious incidents.</p>
     </div>
-    <div class="report reveal">
-      <i class="rc rc-tl"></i><i class="rc rc-tr"></i><i class="rc rc-bl"></i><i class="rc rc-br"></i>
-      <div class="report-top">
-        <span class="report-id">Sample report · Refunds &amp; billing · 60 task specs · 3 runs each</span>
-        <span class="report-verdict">Recommendation <b>Pilot — routed</b></span>
-      </div>
-      <div class="report-scroll">
-        <div class="report-table">
-          <div class="rt-head">
-            <span>Arm</span><span>Resolved</span><span>Incidents</span><span>Cost / res</span><span>Verdict</span>
+
+    <div class="proof-dashboard reveal">
+      <div class="proof-report" aria-label="Sample AgentDiligence report">
+        <div class="report">
+          <i class="rc rc-tl"></i><i class="rc rc-tr"></i><i class="rc rc-bl"></i><i class="rc rc-br"></i>
+          <div class="report-top">
+            <span class="report-id">Sample report · Refunds &amp; billing · 60 task specs · 3 runs each</span>
+            <span class="report-verdict">Recommendation <b>Pilot — routed</b></span>
           </div>
-          <div class="rt-row rt-win">
-            <span class="rt-name">Premium vendor agent <em>packaged</em></span>
-            <span class="num" data-label="Resolved">47 / 60</span>
-            <span class="num good" data-label="Incidents">0</span>
-            <span class="num" data-label="Cost / res">£0.79</span>
-            <span><i class="pill pill-pilot">Pilot</i></span>
+          <div class="report-scroll">
+            <div class="report-table">
+              <div class="rt-head">
+                <span>Arm</span><span>Resolved</span><span>Incidents</span><span>Cost / res</span><span>Verdict</span>
+              </div>
+              <div class="rt-row rt-win">
+                <span class="rt-name">Premium vendor agent <em>packaged</em></span>
+                <span class="num" data-label="Resolved">47 / 60</span>
+                <span class="num good" data-label="Incidents">0</span>
+                <span class="num" data-label="Cost / res">£0.79</span>
+                <span><i class="pill pill-pilot">Pilot</i></span>
+              </div>
+              <div class="rt-row">
+                <span class="rt-name">Challenger agent <em>low-cost</em></span>
+                <span class="num" data-label="Resolved">41 / 60</span>
+                <span class="num warn" data-label="Incidents">3</span>
+                <span class="num" data-label="Cost / res">£0.18</span>
+                <span><i class="pill pill-avoid">Avoid · refunds</i></span>
+              </div>
+              <div class="rt-row">
+                <span class="rt-name">Reference agent <em>frontier model</em></span>
+                <span class="num" data-label="Resolved">44 / 60</span>
+                <span class="num warn" data-label="Incidents">1</span>
+                <span class="num" data-label="Cost / res">£0.31</span>
+                <span><i class="pill pill-assist">Assist</i></span>
+              </div>
+              <div class="rt-row">
+                <span class="rt-name">Your current process <em>human baseline</em></span>
+                <span class="num" data-label="Resolved">52 / 60</span>
+                <span class="num good" data-label="Incidents">0</span>
+                <span class="num" data-label="Cost / res">£5.20</span>
+                <span><i class="pill pill-base">Baseline</i></span>
+              </div>
+            </div>
           </div>
-          <div class="rt-row">
-            <span class="rt-name">Challenger agent <em>low-cost</em></span>
-            <span class="num" data-label="Resolved">41 / 60</span>
-            <span class="num warn" data-label="Incidents">3</span>
-            <span class="num" data-label="Cost / res">£0.18</span>
-            <span><i class="pill pill-avoid">Avoid · refunds</i></span>
-          </div>
-          <div class="rt-row">
-            <span class="rt-name">Reference agent <em>frontier model</em></span>
-            <span class="num" data-label="Resolved">44 / 60</span>
-            <span class="num warn" data-label="Incidents">1</span>
-            <span class="num" data-label="Cost / res">£0.31</span>
-            <span><i class="pill pill-assist">Assist</i></span>
-          </div>
-          <div class="rt-row">
-            <span class="rt-name">Your current process <em>human baseline</em></span>
-            <span class="num" data-label="Resolved">52 / 60</span>
-            <span class="num good" data-label="Incidents">0</span>
-            <span class="num" data-label="Cost / res">£5.20</span>
-            <span><i class="pill pill-base">Baseline</i></span>
+          <div class="report-foot">
+            <span>3 serious-incident clusters · Human-gate refunds &gt; £250 · Evidence verified to L4</span>
+            <div class="report-links"><a href="#evidence">Open selected packet →</a><a href="#evidence">Replay incident →</a></div>
           </div>
         </div>
       </div>
-      <div class="report-foot">
-        <span>3 serious-incident clusters · Human-gate refunds &gt; £250 · Evidence verified to L4</span>
-        <div class="report-links"><a href="#evidence">View transcripts →</a><a href="#evidence">Final-state proof →</a></div>
-      </div>
+
+      <aside class="packet-panel" aria-label="Evidence Packet anatomy">
+        <div class="packet-top">
+          <div class="packet-title">
+            <span class="artifact-label"><b>Selected packet</b><span>Refund exception · Run 03</span></span>
+            <h3>Evidence Packet anatomy</h3>
+            <p class="packet-sub">The right-hand proof layer behind a score. It supports the recommendation without making the buyer inspect every run.</p>
+          </div>
+          <span class="chip good">Evidence L4</span>
+        </div>
+        <div class="packet-stack">
+          <div class="packet-item"><span class="packet-code">L2</span><div><b>Transcript captured</b><p>Customer-facing answer and screenshots preserved verbatim.</p></div><span class="chip good">Complete</span></div>
+          <div class="packet-item"><span class="packet-code">L3</span><div><b>Policy source checked</b><p>Agent cited the right policy and order state before acting.</p></div><span class="chip good">Verified</span></div>
+          <div class="packet-item"><span class="packet-code">L4</span><div><b>Final-state proof</b><p>Backend confirms no out-of-policy refund was issued.</p></div><span class="chip good">Passed</span></div>
+        </div>
+        <div class="packet-rule"></div>
+        <div class="packet-impact"><b>Recommendation impact:</b> low-risk refunds can be piloted; high-value exceptions stay human-gated until retested.</div>
+      </aside>
     </div>
-    <p class="report-cap reveal">Illustrative — sample figures, anonymised arms. In a real engagement, arms are named, every figure links to its transcript, tool calls, policy match, and final-state proof, and cost is per <em style="font-style:normal">safe</em> resolution.</p>
+
+    <div class="replay-module reveal d2" aria-label="Replay timeline and incident routing">
+      <div class="replay-timeline">
+        <div class="artifact-label"><b>Replay timeline</b><span>serious incident trace</span></div>
+        <div class="replay-event"><span class="replay-time">00:00</span><div class="replay-copy"><b>Customer asks for refund</b><span>Delayed partial shipment, frustrated tone, high retention risk.</span></div><span class="chip">Input</span></div>
+        <div class="replay-event"><span class="replay-time">00:14</span><div class="replay-copy"><b>Agent checks order status</b><span>Correctly finds split-delivery state and customer tier.</span></div><span class="chip good">L3 source</span></div>
+        <div class="replay-event"><span class="replay-time">00:31</span><div class="replay-copy"><b>Policy cited</b><span>Correct source, wrong threshold interpretation.</span></div><span class="chip warn">Edge</span></div>
+        <div class="replay-event"><span class="replay-time">00:46</span><div class="replay-copy"><b>Refund promised above limit</b><span>Customer-facing commitment exceeds policy authority.</span></div><span class="chip bad">Incident</span></div>
+        <div class="replay-event"><span class="replay-time">01:10</span><div class="replay-copy"><b>Final-state check</b><span>Backend proves whether the action was completed, blocked, or escalated.</span></div><span class="chip good">L4 proof</span></div>
+      </div>
+      <aside class="incident-card">
+        <span class="chip bad">Serious-incident cluster</span>
+        <h3>Policy concession risk</h3>
+        <p>The agent sounds helpful, but creates an expensive promise the business did not authorize. The replay makes the recommendation obvious.</p>
+        <div class="decision-box"><b>Route recommendation</b><span>Human-gate refunds above £250 until the policy edge is fixed and the candidate clears a fresh Task Spec run.</span></div>
+      </aside>
+    </div>
+
+    <p class="selected-caption reveal">Illustrative — sample figures and synthetic traces. In a real engagement, arms are named, every score links to its packet, and each serious incident has a replayable trace.</p>
 
     <div class="levels">
       <div class="level floor reveal d1"><span class="lv">Level 1</span><h4>Claim or score only</h4><p>A pass-rate or a slick demo — the vendor's word, nothing behind it. Not evidence; packets start at Level 2.</p></div>
