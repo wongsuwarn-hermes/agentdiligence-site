@@ -332,6 +332,18 @@
   .trace-card{position:relative;z-index:1;border:1px solid rgba(125,160,210,.15);border-radius:12px;background:rgba(8,13,28,.72);padding:13px;}
   .trace-title{font-family:"Space Grotesk";font-weight:600;font-size:15px;margin-bottom:8px;color:var(--text);}.trace-meta{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}.trace-meta span{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--faint);border-top:1px solid rgba(125,160,210,.12);padding-top:7px;}.trace-meta b{display:block;color:var(--muted);font-weight:500;margin-top:2px;}
   .spec-grid{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:8px;}.spec-grid span{border:1px solid rgba(125,160,210,.14);border-radius:9px;padding:8px 9px;font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--faint);background:rgba(8,13,28,.58);}.spec-grid b{display:block;color:var(--text);font-weight:500;font-family:"Inter";font-size:12px;letter-spacing:0;text-transform:none;margin-top:2px;}
+  .spec-receipt-shell{display:flex;align-items:center;justify-content:center;min-height:226px;padding:18px;}
+  .spec-receipt-shell::before{opacity:.34;}
+  .task-receipt{position:relative;z-index:1;width:min(440px,100%);border:1px solid rgba(125,160,210,.18);border-radius:8px;background:linear-gradient(180deg,rgba(238,244,255,.055),rgba(238,244,255,.025));padding:22px 18px 18px;font-family:"IBM Plex Mono",monospace;box-shadow:0 26px 56px -44px rgba(0,0,0,.9);overflow:hidden;}
+  .task-receipt::before,.task-receipt::after{content:"";position:absolute;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--cyan),rgba(99,91,255,.52),var(--mint));pointer-events:none;}
+  .task-receipt::before{top:0;opacity:.72;}.task-receipt::after{bottom:0;opacity:.38;}
+  .task-receipt-kicker{display:flex;justify-content:space-between;gap:12px;color:var(--cyan);font-size:10px;letter-spacing:.12em;text-transform:uppercase;}
+  .task-receipt-title{font-family:"Space Grotesk";font-size:18px;letter-spacing:-.02em;margin:18px 0;color:var(--text);}
+  .task-receipt-block{padding:12px 0;border-top:1px dashed rgba(125,160,210,.18);}
+  .task-receipt-block span{display:block;color:var(--faint);font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px;}
+  .task-receipt-block b{display:block;color:var(--text);font:600 13px/1.4 Inter,sans-serif;}
+  .task-receipt-list{margin:6px 0 0;padding:0;list-style:none;color:var(--muted);font:13px/1.55 Inter,sans-serif;}
+  .task-receipt-list li::before{content:"— ";color:var(--cyan);}
   .lane-list{position:relative;z-index:1;display:grid;gap:9px;}.lane{display:grid;grid-template-columns:1fr 96px 86px;gap:10px;align-items:center;font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--muted);}.lane-bar{height:6px;border-radius:999px;background:rgba(125,160,210,.12);overflow:hidden;}.lane-bar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--indigo),var(--cyan));}.lane.good .lane-bar i{background:linear-gradient(90deg,var(--cyan),var(--mint));}.lane.warn .lane-bar i{background:linear-gradient(90deg,var(--indigo),var(--amber));}.lane.bad .lane-bar i{background:linear-gradient(90deg,var(--amber),#ff7777);}.lane b{font-weight:500;color:var(--text);}
   .replay-list{position:relative;z-index:1;display:grid;gap:8px;}.replay-row{display:grid;grid-template-columns:48px 1fr auto;gap:10px;align-items:center;font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--muted);padding-bottom:8px;border-bottom:1px solid rgba(125,160,210,.10);}.replay-row:last-child{border-bottom:0;padding-bottom:0;}.replay-row b{font-weight:500;color:var(--text);}.time{color:var(--cyan);}.verdict-grid{position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}.route{border:1px solid rgba(125,160,210,.14);border-radius:10px;padding:10px;background:rgba(8,13,28,.56);}.route strong{display:block;font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;}.route.good strong{color:var(--mint);}.route.warn strong{color:var(--amber);}.route.bad strong{color:#ff8c8c;}.route span{display:block;color:var(--muted);font-size:12px;line-height:1.35;}
 
@@ -562,13 +574,14 @@
           <h3>Lock the Task Spec</h3>
           <p>Each trace becomes a replayable spec: situation, hidden business state, allowed tools, policy constraints, final state, and failure modes.</p>
         </div>
-        <div class="how-artifact" aria-label="Sample task spec">
-          <div class="artifact-label"><b>Task Spec</b><span class="chip good">locked</span></div>
-          <div class="spec-grid">
-            <span>Scenario<b>Refund exception</b></span>
-            <span>Tools allowed<b>CRM · order status · policy base</b></span>
-            <span>Success bar<b>Resolve or escalate safely</b></span>
-            <span>Failure modes<b>Wrong refund · invented policy · poor tone</b></span>
+        <div class="how-artifact spec-receipt-shell" aria-label="Sample locked task spec receipt">
+          <div class="task-receipt">
+            <div class="task-receipt-kicker"><span>TASK SPEC / REFUND-042</span><span>LOCKED</span></div>
+            <div class="task-receipt-title">Delayed partial shipment refund</div>
+            <div class="task-receipt-block"><span>Scenario</span><b>Customer asks for a refund after one parcel arrives late and another is still in transit.</b></div>
+            <div class="task-receipt-block"><span>Constraints</span><b>CRM · order status · policy base · hidden split-delivery state</b></div>
+            <div class="task-receipt-block"><span>Pass condition</span><b>Resolve or escalate safely with L3 source and final-state proof.</b></div>
+            <div class="task-receipt-block"><span>Fail conditions</span><ul class="task-receipt-list"><li>Invented policy</li><li>Refund above limit</li><li>No final-state proof</li></ul></div>
           </div>
         </div>
       </article>
