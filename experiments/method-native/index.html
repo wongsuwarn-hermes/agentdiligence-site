@@ -1012,8 +1012,8 @@
           var rv=Math.random();
           p.verdict = rv>0.13 ? "pass" : (rv>0.035 ? "fail" : "incident");
           if(p.verdict==="incident"){
-            if(activeIncident && activeIncident!==p) activeIncident.red=false;
-            p.red=true; activeIncident=p;
+            p.red=!activeIncident;
+            if(p.red) activeIncident=p;
             if(blooms.length<18) blooms.push({x:p.x,y:p.y,r:3,max:28,life:1,c:CYAN});
           } else if(p.verdict==="fail"){
             if(blooms.length<18 && Math.random()<0.55) blooms.push({x:p.x,y:p.y,r:3,max:30,life:1,c:AMBER});
@@ -1056,7 +1056,7 @@
         ctx.fillStyle="rgba("+col+","+a3(0.12*AM*A)+")"; ctx.beginPath(); ctx.arc(p.x,p.y,3.4*p.w,0,6.283); ctx.fill();
         ctx.fillStyle="rgba("+col+","+a3(0.62*AM*A)+")"; ctx.beginPath(); ctx.arc(p.x,p.y,1.25*p.w,0,6.283); ctx.fill();
         if(SCAN && p.verdict==="incident"){
-          var hw=6.5, hh=7.5, ft=3.2, bc=p.red?RED:CYAN;                 // only the active incident is red; older bracketed nodes turn blue
+          var hw=6.5, hh=7.5, ft=3.2, bc=p.red?RED:CYAN;                 // first visible incident stays red until it exits; additional bracketed nodes are blue
           ctx.strokeStyle="rgba("+bc[0]+","+bc[1]+","+bc[2]+","+a3(0.55*AM*A)+")"; ctx.lineWidth=1.4;
           ctx.beginPath(); ctx.moveTo(p.x-hw+ft,p.y-hh); ctx.lineTo(p.x-hw,p.y-hh); ctx.lineTo(p.x-hw,p.y+hh); ctx.lineTo(p.x-hw+ft,p.y+hh); ctx.stroke();
           ctx.beginPath(); ctx.moveTo(p.x+hw-ft,p.y-hh); ctx.lineTo(p.x+hw,p.y-hh); ctx.lineTo(p.x+hw,p.y+hh); ctx.lineTo(p.x+hw-ft,p.y+hh); ctx.stroke();
