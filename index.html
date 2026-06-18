@@ -973,11 +973,11 @@
   // ---- reusable field instance ----
   function createField(canvas, o){
     var ctx=canvas.getContext("2d");
-    var W=0,H=0,DPR=1,P=[],blooms=[],evid=[],scanX=0,sweepId=0,lastT=0,raf=null,_v=[0,0];
+    var W=0,H=0,DPR=1,P=[],blooms=[],evid=[],scanX=0,sweepId=0,lastT=0,raf=null,activeIncident=null,_v=[0,0];
     var AM=o.alpha, SA=(o.scanA==null?1:o.scanA), GRADE=o.grading, SCAN=o.scan, SSP=o.scanSpeed||130, HM=o.histMax;
 
-    function mkP(spread){ return {x:spread?W*Math.sqrt(Math.random()):-10-Math.random()*60,y:Math.random()*H,hist:[],verdict:null,sweep:-1,g:0,w:0.85+Math.random()*0.95}; }
-    function build(){ var c=clamp(Math.round(W*H/o.density),o.min||120,o.max||400); P=[]; for(var i=0;i<c;i++)P.push(mkP(true)); }
+    function mkP(spread){ return {x:spread?W*Math.sqrt(Math.random()):-10-Math.random()*60,y:Math.random()*H,hist:[],verdict:null,sweep:-1,g:0,w:0.85+Math.random()*0.95,red:false}; }
+    function build(){ var c=clamp(Math.round(W*H/o.density),o.min||120,o.max||400); P=[]; activeIncident=null; for(var i=0;i<c;i++)P.push(mkP(true)); }
 
     function resize(){
       var r=canvas.getBoundingClientRect();
@@ -1012,13 +1012,15 @@
           var rv=Math.random();
           p.verdict = rv>0.13 ? "pass" : (rv>0.035 ? "fail" : "incident");
           if(p.verdict==="incident"){
-            if(blooms.length<18) blooms.push({x:p.x,y:p.y,r:3,max:28,life:1,c:RED});
+            if(activeIncident && activeIncident!==p) activeIncident.red=false;
+            p.red=true; activeIncident=p;
+            if(blooms.length<18) blooms.push({x:p.x,y:p.y,r:3,max:28,life:1,c:CYAN});
           } else if(p.verdict==="fail"){
             if(blooms.length<18 && Math.random()<0.55) blooms.push({x:p.x,y:p.y,r:3,max:30,life:1,c:AMBER});
           } else if(blooms.length<18 && Math.random()<0.03){ blooms.push({x:p.x,y:p.y,r:3,max:22,life:1,c:MINT}); }
           if(evid.length<44 && Math.random()<0.07) evid.push({x:p.x,y:p.y,life:1,c:p.verdict==="pass"?MINT:AMBER});
         }
-        if(p.x>W+16 || p.y<-60 || p.y>H+60){ p.x=-10-Math.random()*50; p.y=Math.random()*H; p.hist.length=0; p.verdict=null; p.sweep=-1; p.g=0; }
+        if(p.x>W+16 || p.y<-60 || p.y>H+60){ if(activeIncident===p) activeIncident=null; p.x=-10-Math.random()*50; p.y=Math.random()*H; p.hist.length=0; p.verdict=null; p.sweep=-1; p.g=0; p.red=false; }
       }
       if(SCAN && moveScan){ scanX+=SSP*dt; if(scanX>W+30){ scanX=-30; sweepId++; } }
     }
@@ -1028,7 +1030,7 @@
         var f=clamp(p.x/W,0,1);
         return (lerp(INDIGO[0],CYAN[0],f)|0)+","+(lerp(INDIGO[1],CYAN[1],f)|0)+","+(lerp(INDIGO[2],CYAN[2],f)|0);
       }
-      var g=p.g||0, vt=p.verdict==="incident"?RED:(p.verdict==="fail"?AMBER:MINT);
+      var g=p.g||0, vt=p.verdict==="incident"?(p.red?RED:CYAN):(p.verdict==="fail"?AMBER:MINT);
       var r=lerp(RAW[0],vt[0],g), gg=lerp(RAW[1],vt[1],g), b=lerp(RAW[2],vt[2],g);
       var fl=p.fl||0;          // measurement beat, tied to the physical line (no re-flash on reset)
       if(fl>0.001){ r=lerp(r,214,fl*0.55); gg=lerp(gg,240,fl*0.55); b=lerp(b,255,fl*0.55); }
@@ -1054,8 +1056,8 @@
         ctx.fillStyle="rgba("+col+","+a3(0.12*AM*A)+")"; ctx.beginPath(); ctx.arc(p.x,p.y,3.4*p.w,0,6.283); ctx.fill();
         ctx.fillStyle="rgba("+col+","+a3(0.62*AM*A)+")"; ctx.beginPath(); ctx.arc(p.x,p.y,1.25*p.w,0,6.283); ctx.fill();
         if(SCAN && p.verdict==="incident"){
-          var hw=6.5, hh=7.5, ft=3.2;                                   // foot length matched to the logo bracket
-          ctx.strokeStyle="rgba("+RED[0]+","+RED[1]+","+RED[2]+","+a3(0.55*AM*A)+")"; ctx.lineWidth=1.4;
+          var hw=6.5, hh=7.5, ft=3.2, bc=p.red?RED:CYAN;                 // only the active incident is red; older bracketed nodes turn blue
+          ctx.strokeStyle="rgba("+bc[0]+","+bc[1]+","+bc[2]+","+a3(0.55*AM*A)+")"; ctx.lineWidth=1.4;
           ctx.beginPath(); ctx.moveTo(p.x-hw+ft,p.y-hh); ctx.lineTo(p.x-hw,p.y-hh); ctx.lineTo(p.x-hw,p.y+hh); ctx.lineTo(p.x-hw+ft,p.y+hh); ctx.stroke();
           ctx.beginPath(); ctx.moveTo(p.x+hw-ft,p.y-hh); ctx.lineTo(p.x+hw,p.y-hh); ctx.lineTo(p.x+hw,p.y+hh); ctx.lineTo(p.x+hw-ft,p.y+hh); ctx.stroke();
         }
@@ -1089,7 +1091,7 @@
     function seedStatic(){
       scanX=W*0.6; sweepId=1; var t=4.0;
       for(var s=0;s<90;s++){ update(0.05,t,false); t+=0.05; }
-      if(GRADE){ for(var i=0;i<P.length;i++){ if(P[i].x<scanX && !P[i].verdict){ P[i].verdict=Math.random()>0.12?"pass":"fail"; } } }
+      if(GRADE){ for(var i=0;i<P.length;i++){ if(P[i].x<scanX && !P[i].verdict){ P[i].verdict=Math.random()>0.12?"pass":"fail"; P[i].red=false; } } }
       draw();
     }
 
@@ -1104,10 +1106,10 @@
   // ---- instantiate: bold hero + faint closing echo ----
   var fields=[];
   fields.push(createField(document.getElementById("field"),
-    {density:2800,min:180,max:400,histMax:30,alpha:1,grading:true,scan:true,scanSpeed:130,scanA:1}));
+    {density:5600,min:90,max:200,histMax:30,alpha:1,grading:true,scan:true,scanSpeed:130,scanA:1}));
   var ctaEl=document.getElementById("field-cta");
   if(ctaEl) fields.push(createField(ctaEl,
-    {density:6000,min:70,max:180,histMax:26,alpha:0.75,grading:false,scan:false}));
+    {density:12000,min:35,max:90,histMax:26,alpha:0.75,grading:false,scan:false}));
 
   function refresh(){ for(var i=0;i<fields.length;i++){ if(!document.hidden && fields[i].inView && !reduce) fields[i].start(); else fields[i].stop(); } }
 
