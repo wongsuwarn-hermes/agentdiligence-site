@@ -431,8 +431,8 @@
   /* callout */
   .callout{text-align:center;}
   .callout .wrap{max-width:760px;}
-  .callout q{display:block;font-family:"Space Grotesk";font-weight:600;font-size:clamp(24px,3.4vw,34px);line-height:1.16;letter-spacing:-.02em;color:var(--text);quotes:none;}
-  .callout p{color:var(--muted);margin:18px auto 0;font-size:17px;max-width:56ch;}
+  .callout h2{font-family:"Space Grotesk";font-weight:600;font-size:clamp(24px,3.4vw,34px);line-height:1.16;letter-spacing:-.02em;color:var(--text);margin:12px auto 0;}
+  .callout p:not(.eyebrow){color:var(--muted);margin:18px auto 0;font-size:17px;max-width:56ch;}
 
   /* packages */
   .pkg-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:44px;}
@@ -486,7 +486,7 @@
     .btn{max-width:100%;justify-content:center;}
     .sec-head p{font-size:16px;}
     .closing h2{font-size:30px;}
-    .callout q{font-size:23px;}
+    .callout h2{font-size:23px;}
     section{padding:62px 0;}
     .hero-content{padding-top:94px;padding-bottom:46px;}
     .scoreline{font-size:11.5px;gap:7px 14px;margin-top:34px;padding-top:18px;}
@@ -807,8 +807,9 @@
 <!-- ================= CALLOUT ================= -->
 <section class="callout">
   <div class="wrap reveal">
-    <q>“Vendor demos show the happy path. Your rollout finds the edge cases.”</q>
-    <p>AgentDiligence gives you a controlled way to find those edge cases before customers do.</p>
+    <p class="eyebrow">Why it matters</p>
+    <h2>Demos are useful. They are not deployment evidence.</h2>
+    <p>AgentDiligence gives you a controlled way to test edge cases before agents touch customers.</p>
   </div>
 </section>
 
