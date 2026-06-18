@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2032%2032%22%20fill%3D%22none%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%230B1020%22/%3E%3Cg%20transform%3D%22translate%284%2C4%29%22%3E%3Cpath%20d%3D%22M8.5%204%20H5%20V20%20H8.5%22%20stroke%3D%22%235C7CA6%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22/%3E%3Cpath%20d%3D%22M15.5%204%20H19%20V20%20H15.5%22%20stroke%3D%22%235C7CA6%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22/%3E%3Crect%20x%3D%229.4%22%20y%3D%229.4%22%20width%3D%225.2%22%20height%3D%225.2%22%20rx%3D%221.5%22%20fill%3D%22%2338BDF8%22/%3E%3Cline%20x1%3D%2212%22%20y1%3D%223.5%22%20x2%3D%2212%22%20y2%3D%2220.5%22%20stroke%3D%22%23CDEBFF%22%20stroke-width%3D%221.15%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.68%22/%3E%3C/g%3E%3C/svg%3E" />
-<title>AgentDiligence — Pre-procurement AI agent evaluation</title>
+<title>AgentDiligence | Proof your AI agent can handle real work</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -210,7 +210,7 @@
   .vendor-ada{font-family:"Space Grotesk",system-ui,sans-serif;font-weight:700;letter-spacing:.01em;}
   .vendor-decagon{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:13.5px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;}
 
-  /* report artifact — the product shot */
+  /* report artifact: the product shot */
   .report{margin-top:44px;position:relative;border:1px solid var(--line-strong);border-radius:18px;
     background:linear-gradient(180deg,#101a36,#0b1428);
     box-shadow:rgba(3,10,30,.5) 0 40px 60px -36px, rgba(56,189,248,.08) 0 1px 0 0 inset;overflow:hidden;}
@@ -308,7 +308,7 @@
   @media (max-width:560px){ .facets{grid-template-columns:1fr;} }
   @media (prefers-reduced-motion:reduce){ .reveal{opacity:1;transform:none;transition:none;} }
 
-  /* graded hairline divider — a quiet inflow→verdict echo between sections */
+  /* graded hairline divider: a quiet inflow to verdict echo between sections */
   .divider{position:relative;height:1px;margin:0;border:0;
     background:linear-gradient(90deg, rgba(110,104,255,0), rgba(110,104,255,.20) 20%, rgba(64,196,250,.28) 60%, rgba(52,224,161,.32) 100%);}
   .divider::after{content:"";position:absolute;right:0;top:50%;width:5px;height:5px;margin-top:-2.5px;border-radius:50%;
@@ -381,7 +381,7 @@
   .task-receipt-block span{display:block;color:var(--faint);font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px;}
   .task-receipt-block b{display:block;color:var(--text);font:600 13px/1.4 Inter,sans-serif;}
   .task-receipt-list{margin:6px 0 0;padding:0;list-style:none;color:var(--muted);font:13px/1.55 Inter,sans-serif;}
-  .task-receipt-list li::before{content:"— ";color:var(--cyan);}
+  .task-receipt-list li::before{content:"- ";color:var(--cyan);}
   .lane-list{position:relative;z-index:1;display:grid;gap:9px;}.lane{display:grid;grid-template-columns:1fr 96px 86px;gap:10px;align-items:center;font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--muted);}.lane-bar{height:6px;border-radius:999px;background:rgba(125,160,210,.12);overflow:hidden;}.lane-bar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--indigo),var(--cyan));}.lane.good .lane-bar i{background:linear-gradient(90deg,var(--cyan),var(--mint));}.lane.warn .lane-bar i{background:linear-gradient(90deg,var(--indigo),var(--amber));}.lane.bad .lane-bar i{background:linear-gradient(90deg,var(--amber),#ff7777);}.lane b{font-weight:500;color:var(--text);}
   .replay-list{position:relative;z-index:1;display:grid;gap:8px;}.replay-row{display:grid;grid-template-columns:48px 1fr auto;gap:10px;align-items:center;font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--muted);padding-bottom:8px;border-bottom:1px solid rgba(125,160,210,.10);}.replay-row:last-child{border-bottom:0;padding-bottom:0;}.replay-row b{font-weight:500;color:var(--text);}.time{color:var(--cyan);}.verdict-grid{position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}.route{border:1px solid rgba(125,160,210,.14);border-radius:10px;padding:10px;background:rgba(8,13,28,.56);}.route strong{display:block;font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;}.route.good strong{color:var(--mint);}.route.warn strong{color:var(--amber);}.route.bad strong{color:#ff8c8c;}.route span{display:block;color:var(--muted);font-size:12px;line-height:1.35;}
 
@@ -475,7 +475,7 @@
     .trust-vendors{gap:14px 22px;}
     .trust-vendors .vendor-wordmark{font-size:15px;}
     .trust-vendors .vendor-decagon{font-size:12.5px;}
-    /* report → stacked cards */
+    /* report to stacked cards */
     .report-scroll{overflow-x:visible;}
     .report-table{min-width:0;}
     .rt-head{display:none;}
@@ -515,18 +515,18 @@
         <a href="#how">How it works</a>
         <a href="#evidence">Evidence</a>
         <a href="#pricing">Packages</a>
-        <a class="nav-cta" href="mailto:hello@agentdiligence.io?subject=Run%20an%20AgentDiligence%20comparison">Run comparison</a>
+        <a class="nav-cta" href="mailto:hello@agentdiligence.io?subject=AgentDiligence%20Snapshot">Get Snapshot</a>
       </div>
     </div>
   </nav>
 
   <div class="wrap hero-content" id="top">
     <p class="eyebrow">Independent AI-agent evaluation · Support &amp; service</p>
-    <h1><span class="ln">Don't buy the demo.</span> <em>Prove the agent.</em></h1>
-    <p class="sub">AgentDiligence turns your real support workflows into replayable, evidence-backed tests. We independently compare the agents you’re considering and show what’s safe to automate before you make a buying decision.</p>
+    <h1><span class="ln">You don't need another AI agent demo.</span> <em>You need proof it can handle your real work.</em></h1>
+    <p class="sub">AgentDiligence tests AI support agents on your real workflows before they reach customers. See what works, what breaks, and what should stay under human control.</p>
     <div class="cta-row">
-      <a class="btn btn-primary" href="mailto:hello@agentdiligence.io?subject=Run%20an%20AgentDiligence%20comparison">Run a comparison →</a>
-      <a class="btn btn-ghost" href="#evidence">See a sample report →</a>
+      <a class="btn btn-primary" href="mailto:hello@agentdiligence.io?subject=AgentDiligence%20Snapshot">Get a Snapshot before you buy or deploy</a>
+      <a class="btn btn-ghost" href="#evidence">See a sample report</a>
     </div>
 
     <div class="scoreline" aria-label="What an AgentDiligence evaluation measures">
@@ -543,7 +543,7 @@
 <!-- ================= TRUST ================= -->
 <div class="trust">
   <div class="wrap trust-inner">
-    <span class="trust-label">Independent &amp; vendor-neutral — paid by buyers to assess agents, not by vendors to sell them</span>
+    <span class="trust-label">Independent and vendor-neutral. Paid by buyers to assess agents, not by vendors to sell them</span>
     <div class="trust-vendors" aria-label="Typical vendor shortlist, shown as text names rather than logos">
       <span class="trust-lead">Typical shortlist</span>
       <span class="vendor-wordmark vendor-intercom">Intercom Fin</span>
@@ -698,7 +698,7 @@
           <i class="rc rc-tl"></i><i class="rc rc-tr"></i><i class="rc rc-bl"></i><i class="rc rc-br"></i>
           <div class="report-top">
             <span class="report-id">Sample report · Refunds &amp; billing · 60 task specs · 3 runs each</span>
-            <span class="report-verdict">Recommendation <b>Pilot — routed</b></span>
+            <span class="report-verdict">Recommendation <b>Pilot: routed</b></span>
           </div>
           <div class="report-scroll">
             <div class="report-table">
@@ -737,7 +737,7 @@
           </div>
           <div class="report-foot">
             <span>3 serious-incident clusters · Human-gate refunds &gt; £250 · Evidence verified to L4</span>
-            <div class="report-links"><a href="#evidence">Open selected packet →</a><a href="#evidence">Replay incident →</a></div>
+            <div class="report-links"><a href="#evidence">Open selected packet</a><a href="#evidence">Replay incident</a></div>
           </div>
         </div>
       </div>
@@ -778,10 +778,10 @@
       </aside>
     </div>
 
-    <p class="selected-caption reveal">Illustrative — sample figures and synthetic traces. In a real engagement, arms are named, every score links to its packet, and each serious incident has a replayable trace.</p>
+    <p class="selected-caption reveal">Illustrative: sample figures and synthetic traces. In a real engagement, arms are named, every score links to its packet, and each serious incident has a replayable trace.</p>
 
     <div class="levels">
-      <div class="level floor reveal d1"><span class="lv">Level 1</span><h4>Claim or score only</h4><p>A pass-rate or a slick demo — the vendor's word, nothing behind it. Not evidence; packets start at Level 2.</p></div>
+      <div class="level floor reveal d1"><span class="lv">Level 1</span><h4>Claim or score only</h4><p>A pass-rate or a slick demo. The vendor's word, nothing behind it. Not evidence; packets start at Level 2.</p></div>
       <div class="level reveal d2"><span class="lv">Level 2</span><h4>Transcript &amp; screenshots</h4><p>What the agent said and showed the customer, captured verbatim.</p></div>
       <div class="level reveal d3"><span class="lv">Level 3</span><h4>Source, ticket &amp; handoff records</h4><p>Vendor-side evidence: where answers came from, what was logged, how it escalated.</p></div>
       <div class="level reveal d4"><span class="lv">Level 4</span><h4>Independent final-state proof</h4><p>We check the backend itself: was the refund actually issued, the case actually resolved?</p></div>
@@ -795,7 +795,7 @@
 <section class="callout">
   <div class="wrap reveal">
     <q>“Vendor PoCs are free. Choosing wrong isn't.”</q>
-    <p>Every vendor runs its own proof-of-concept — on its own tickets, scored its own way. AgentDiligence turns them into one fair decision: same tasks, same bar, same evidence format.</p>
+    <p>Every vendor runs its own proof-of-concept on its own tickets, scored its own way. AgentDiligence turns them into one fair decision: same tasks, same bar, same evidence format.</p>
   </div>
 </section>
 
@@ -814,9 +814,9 @@
         <ul>
           <li>A sample of your support history, normalized into Task Specs</li>
           <li>An automation-readiness map across ticket categories</li>
-          <li>Where the evidence is strong — and where it's missing</li>
+          <li>Where the evidence is strong and where it's missing</li>
         </ul>
-        <a class="btn btn-ghost btn-sm pkg-cta" href="mailto:hello@agentdiligence.io?subject=AgentDiligence%20Work-Trace%20Snapshot">Start here →</a>
+        <a class="btn btn-ghost btn-sm pkg-cta" href="mailto:hello@agentdiligence.io?subject=AgentDiligence%20Work-Trace%20Snapshot">Start here</a>
       </div>
       <div class="pkg is-lead reveal d2">
         <span class="pkg-tag">Most teams start here</span>
@@ -826,9 +826,9 @@
           <li>2–4 vendor, reference, and baseline arms, head to head</li>
           <li>50–150 Task Specs built from your own work</li>
           <li>Serious-incident table and quality-adjusted cost</li>
-          <li>Buy · pilot · constrain · avoid — with the evidence</li>
+          <li>Buy · pilot · constrain · avoid, with the evidence</li>
         </ul>
-        <a class="btn btn-primary btn-sm pkg-cta" href="mailto:hello@agentdiligence.io?subject=AgentDiligence%20Vendor%20Decision%20Report">Run a comparison →</a>
+        <a class="btn btn-primary btn-sm pkg-cta" href="mailto:hello@agentdiligence.io?subject=AgentDiligence%20Vendor%20Decision%20Report">Run a comparison</a>
       </div>
       <div class="pkg reveal d1">
         <h3 class="pkg-name">Enterprise Evaluation</h3>
@@ -838,7 +838,7 @@
           <li>Deeper Level 4 evidence and blind review</li>
           <li>Board- and procurement-ready synthesis</li>
         </ul>
-        <a class="btn btn-ghost btn-sm pkg-cta" href="mailto:hello@agentdiligence.io?subject=AgentDiligence%20Enterprise%20Evaluation">Talk to us →</a>
+        <a class="btn btn-ghost btn-sm pkg-cta" href="mailto:hello@agentdiligence.io?subject=AgentDiligence%20Enterprise%20Evaluation">Talk to us</a>
       </div>
       <div class="pkg reveal d2">
         <h3 class="pkg-name">Regression &amp; Assurance <span class="pkg-soon">ongoing</span></h3>
@@ -848,10 +848,10 @@
           <li>Renewal and expansion evidence on demand</li>
           <li>Incident monitoring against your Task Spec library</li>
         </ul>
-        <a class="btn btn-ghost btn-sm pkg-cta" href="mailto:hello@agentdiligence.io?subject=AgentDiligence%20Regression%20and%20Assurance">Talk to us →</a>
+        <a class="btn btn-ghost btn-sm pkg-cta" href="mailto:hello@agentdiligence.io?subject=AgentDiligence%20Regression%20and%20Assurance">Talk to us</a>
       </div>
     </div>
-    <p class="pkg-foot reveal">Engagements are priced to the decision — typically a small fraction of the first-year agent spend. Ask for a scope.</p>
+    <p class="pkg-foot reveal">Engagements are priced to the decision, typically a small fraction of the first-year agent spend. Ask for a scope.</p>
   </div>
 </section>
 
@@ -863,14 +863,14 @@
     <div class="sec-head reveal">
       <p class="eyebrow">Who it's for</p>
       <h2>Built for the team that owns the support decision.</h2>
-      <p>Support and service leaders at scaleups choosing — or second-guessing — an AI agent on customer-facing work.</p>
+      <p>Support and service leaders at scaleups choosing or second-guessing an AI agent on customer-facing work.</p>
     </div>
     <div class="who-grid">
       <div class="who-card reveal d1">
         <h3>You're a fit if</h3>
         <ul>
           <li>You handle 500–5,000+ tickets a month, with history worth replaying</li>
-          <li>You run a mainstream helpdesk — Zendesk, Intercom, Gorgias, Freshdesk, Front, Jira Service Management, ServiceNow</li>
+          <li>You run a mainstream helpdesk: Zendesk, Intercom, Gorgias, Freshdesk, Front, Jira Service Management, ServiceNow</li>
           <li>You're considering, piloting, renewing, or replacing an AI support agent</li>
           <li>Service quality is tied to revenue, retention, and trust</li>
         </ul>
@@ -885,7 +885,7 @@
         </ul>
       </div>
     </div>
-    <p class="who-note reveal">Support is the first proving ground. The same Task Spec → Evidence Packet engine applies anywhere humans leave a work trail — finance ops, claims handling, contract review.</p>
+    <p class="who-note reveal">Support is the first proving ground. The same Task Spec to Evidence Packet engine applies anywhere humans leave a work trail: finance ops, claims handling, contract review.</p>
   </div>
 </section>
 
@@ -894,10 +894,10 @@
   <canvas id="field-cta" aria-hidden="true"></canvas>
   <div class="closing-veil" aria-hidden="true"></div>
   <div class="wrap">
-    <h2>Prove it on your own work — before you sign.</h2>
+    <h2>Prove it on your own work before you sign.</h2>
     <p>Send us a slice of your support history. We'll show you what's safe to automate, and what isn't.</p>
     <div class="cta-row">
-      <a class="btn btn-primary" href="mailto:hello@agentdiligence.io?subject=Run%20an%20AgentDiligence%20comparison">Run a comparison →</a>
+      <a class="btn btn-primary" href="mailto:hello@agentdiligence.io?subject=AgentDiligence%20Snapshot">Get a Snapshot before you buy or deploy</a>
     </div>
   </div>
 </section>
@@ -924,7 +924,7 @@
   function lerp(a,b,t){return a+(b-a)*t;}
   function a3(x){return x.toFixed(3);}
 
-  // ---- Perlin noise (improved, seeded) — shared by all fields ----
+  // Perlin noise (improved, seeded): shared by all fields
   var perm=new Uint8Array(512);
   (function(){
     var p=new Uint8Array(256),i,seed=20260616;
