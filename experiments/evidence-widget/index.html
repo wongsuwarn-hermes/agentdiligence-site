@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AgentDiligence | Evidence Standard Drafter experiment</title>
+<meta name="description" content="AgentDiligence evidence-standard drafter experiment for AI-agent evaluation." />
+<meta name="robots" content="noindex,nofollow" />
+<link rel="canonical" href="https://www.agentdiligence.io/experiments/evidence-widget/" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="AgentDiligence" />
+<meta property="og:title" content="AgentDiligence | Evidence Standard Drafter experiment" />
+<meta property="og:description" content="Independent evaluation for AI support agents, using your real work to show what the evidence supports before you buy or deploy." />
+<meta property="og:url" content="https://www.agentdiligence.io/experiments/evidence-widget/" />
+<meta property="og:image" content="https://www.agentdiligence.io/assets/social-preview.png?v=20260616c" />
+<meta property="og:image:secure_url" content="https://www.agentdiligence.io/assets/social-preview.png?v=20260616c" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="AgentDiligence: proof your AI agent can handle real work." />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="AgentDiligence | Test AI agents on real support work" />
+<meta name="twitter:description" content="Independent evaluation for AI support agents, using your real work to show what the evidence supports before you buy or deploy." />
+<meta name="twitter:image" content="https://www.agentdiligence.io/assets/social-preview.png?v=20260616c" />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2032%2032%22%20fill%3D%22none%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%230B1020%22/%3E%3Cg%20transform%3D%22translate%284%2C4%29%22%3E%3Cpath%20d%3D%22M8.5%204%20H5%20V20%20H8.5%22%20stroke%3D%22%235C7CA6%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22/%3E%3Cpath%20d%3D%22M15.5%204%20H19%20V20%20H15.5%22%20stroke%3D%22%235C7CA6%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22/%3E%3Crect%20x%3D%229.4%22%20y%3D%229.4%22%20width%3D%225.2%22%20height%3D%225.2%22%20rx%3D%221.5%22%20fill%3D%22%2338BDF8%22/%3E%3Cline%20x1%3D%2212%22%20y1%3D%223.5%22%20x2%3D%2212%22%20y2%3D%2220.5%22%20stroke%3D%22%23CDEBFF%22%20stroke-width%3D%221.15%22%20stroke-linecap%3D%22round%22%20opacity%3D%220.68%22/%3E%3C/g%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --ink:#0B1020;
+    --ink2:#0A1A2F;
+    --panel:#0F1730;
+    --panel-2:#111C38;
+    --text:#EAF0FB;
+    --muted:#9AA8C2;
+    --faint:#6B7A99;
+    --line:rgba(125,160,210,.14);
+    --line-strong:rgba(125,160,210,.28);
+    --indigo:#635BFF;
+    --cyan:#38BDF8;
+    --sky:#7DD3FC;
+    --mint:#34E0A1;
+    --amber:#F5A524;
+    --maxw:1140px;
+    --page-gutter:clamp(42px,5vw,64px);
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--ink);
+    color:var(--text);
+    font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    font-size:17px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  a{color:inherit;text-decoration:none;}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 var(--page-gutter);}
+  .mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;}
+  .eyebrow{
+    font-family:"IBM Plex Mono",monospace;
+    font-size:12.5px;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--cyan);
+  }
+
+  /* ---------- NAV ---------- */
+  .nav{
+    position:fixed;top:0;left:0;right:0;z-index:50;
+    border-bottom:1px solid transparent;
+    transition:background .25s ease, border-color .25s ease, backdrop-filter .25s ease;
+  }
+  .nav.scrolled{
+    background:rgba(11,16,32,.72);
+    backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+    border-bottom-color:var(--line);
+  }
+  /* scanline scroll-progress */
+  .scan-progress{position:fixed;top:0;left:0;right:0;height:2px;z-index:120;background:rgba(125,160,210,.08);pointer-events:none;}
+  .scan-progress-fill{height:100%;width:0;position:relative;background:linear-gradient(90deg,var(--indigo),var(--cyan));box-shadow:0 0 10px rgba(56,189,248,.5);}
+  .scan-progress-fill::after{content:"";position:absolute;right:-1px;top:-3px;width:2px;height:8px;background:#CDEBFF;box-shadow:0 0 6px #CDEBFF;}
+  @media (prefers-reduced-motion:reduce){
+    .scan-progress-fill::after{display:none;}
+  }
+  .nav-inner{
+    display:flex;align-items:center;justify-content:space-between;
+    padding-top:18px;padding-bottom:18px;
+  }
+  .brand{display:flex;align-items:center;gap:10px;font-family:"Space Grotesk";font-weight:600;font-size:18px;letter-spacing:-.01em;}
+  .brand-mark{width:23px;height:23px;display:block;flex:none;}
+  .brand .dot{
+    width:13px;height:13px;border-radius:3px;
+    background:conic-gradient(from 210deg,var(--indigo),var(--cyan),var(--mint),var(--indigo));
+    box-shadow:0 0 16px rgba(56,189,248,.6);
+  }
+  .nav-links{display:flex;align-items:center;gap:30px;font-size:14.5px;color:var(--muted);}
+  .nav-links a:hover{color:var(--text);}
+  .nav-links .nav-cta{
+    color:var(--text);border:1px solid var(--line-strong);
+    padding:8px 16px;border-radius:8px;font-weight:500;
+  }
+  .nav-links .nav-cta:hover{border-color:var(--cyan);background:rgba(56,189,248,.06);}
+  .nav-toggle{display:none;}
+
+  /* ---------- HERO ---------- */
+  .hero{position:relative;overflow:hidden;min-height:760px;display:flex;align-items:center;background:var(--ink);}
+  .hero-grad{
+    position:absolute;inset:-20% -10% 0 -10%;z-index:0;
+    filter:blur(60px);opacity:.85;
+    background:
+      radial-gradient(40% 55% at 78% 18%, rgba(99,91,255,.55), transparent 70%),
+      radial-gradient(45% 50% at 92% 60%, rgba(56,189,248,.45), transparent 70%),
+      radial-gradient(40% 45% at 62% 88%, rgba(52,224,161,.30), transparent 72%),
+      radial-gradient(50% 60% at 30% 30%, rgba(99,91,255,.18), transparent 70%);
+    animation:drift 22s ease-in-out infinite alternate;
+  }
+  @keyframes drift{
+    0%{transform:translate3d(0,0,0) scale(1);}
+    100%{transform:translate3d(-3%,2%,0) scale(1.08);}
+  }
+  #field{position:absolute;inset:0;z-index:1;width:100%;height:100%;display:block;}
+  .hero-veil{
+    position:absolute;inset:0;z-index:2;pointer-events:none;
+    background:linear-gradient(105deg, var(--ink) 6%, rgba(11,16,32,.82) 36%, rgba(11,16,32,.35) 60%, rgba(11,16,32,0) 78%);
+  }
+  .hero-base{
+    position:absolute;left:0;right:0;bottom:0;height:160px;z-index:2;pointer-events:none;
+    background:linear-gradient(to top, var(--ink), transparent);
+  }
+  .hero-content{position:relative;z-index:3;width:100%;padding-top:120px;padding-bottom:64px;}
+  .hero h1{
+    font-family:"Space Grotesk";font-weight:600;
+    font-size:clamp(40px,6.4vw,76px);line-height:1.04;letter-spacing:-.025em;
+    margin:20px 0 0;
+  }
+  .hero h1 .ln{display:block;}
+  .hero h1 em{font-style:normal;color:var(--cyan);}
+  .hero .sub{margin:24px 0 0;max-width:66ch;color:var(--muted);font-size:18.5px;}
+  .cta-row{display:flex;gap:14px;margin-top:34px;flex-wrap:wrap;}
+  .btn{
+    display:inline-flex;align-items:center;gap:9px;
+    padding:13px 22px;border-radius:10px;font-weight:600;font-size:15px;
+    border:1px solid transparent;transition:transform .15s ease, box-shadow .15s ease, background .15s ease;
+  }
+  .btn-primary{
+    color:#04101a;
+    background:linear-gradient(120deg,var(--mint),var(--cyan));
+    box-shadow:0 10px 30px -8px rgba(56,189,248,.5);
+  }
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 16px 38px -8px rgba(56,189,248,.62);}
+  .btn-ghost{color:var(--text);border-color:var(--line-strong);}
+  .btn-ghost:hover{border-color:var(--cyan);background:rgba(56,189,248,.06);}
+
+  /* scoreline ticker */
+  .scoreline{
+    margin-top:54px;display:flex;align-items:center;flex-wrap:wrap;gap:12px 26px;
+    padding-top:22px;border-top:1px solid var(--line);
+    font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--faint);
+    letter-spacing:.02em;
+  }
+  .scoreline .live{display:inline-flex;align-items:center;gap:8px;color:var(--mint);}
+  .scoreline .live .pip{width:7px;height:7px;border-radius:50%;background:var(--mint);box-shadow:0 0 10px var(--mint);animation:pulse 1.6s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.25;}}
+  .scoreline .metric b{color:var(--text);font-weight:500;}
+  .scoreline .metric{color:var(--muted);}
+  .scoreline .sl-label{font-family:"IBM Plex Mono",monospace;color:var(--cyan);text-transform:uppercase;letter-spacing:.1em;}
+  .scoreline .sep{color:var(--line-strong);}
+
+  /* ---------- SECTIONS ---------- */
+  section{padding:104px 0;}
+  .sec-head{max-width:62ch;}
+  .sec-head h2{
+    font-family:"Space Grotesk";font-weight:600;
+    font-size:clamp(28px,3.6vw,42px);line-height:1.08;letter-spacing:-.02em;margin:14px 0 0;
+  }
+  .sec-head p{color:var(--muted);margin:16px 0 0;font-size:18px;max-width:54ch;}
+
+  .grid{display:grid;gap:18px;margin-top:48px;}
+  .g3{grid-template-columns:repeat(3,1fr);}
+  .g2{grid-template-columns:repeat(2,1fr);}
+
+  .card{
+    background:linear-gradient(180deg,var(--panel),var(--ink2));
+    border:1px solid var(--line);border-radius:16px;padding:28px;
+    position:relative;transition:border-color .2s ease, transform .2s ease;
+  }
+  .card:hover{border-color:var(--line-strong);transform:translateY(-3px);}
+  .card .idx{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--cyan);}
+  .card h3{font-family:"Space Grotesk";font-weight:600;font-size:20px;letter-spacing:-.01em;margin:14px 0 10px;}
+  .card p{color:var(--muted);font-size:15.5px;margin:0;}
+
+  /* evidence rows */
+  .evidence .card{padding:30px;}
+  .rows{margin-top:20px;border-top:1px solid var(--line);}
+  .rows .row{
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+    padding:13px 0;border-bottom:1px solid var(--line);
+    font-family:"IBM Plex Mono",monospace;font-size:13.5px;
+  }
+  .rows .row span{color:var(--muted);}
+  .rows .row b{color:var(--text);font-weight:500;}
+  .rows .row b.good{color:var(--mint);}
+  .rows .row b.warn{color:var(--amber);}
+
+  /* ---------- YC-grade additions ---------- */
+  a:focus-visible,.btn:focus-visible,button:focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:6px;}
+  section[id]{scroll-margin-top:84px;}
+  .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s cubic-bezier(.2,.7,.2,1),transform .6s cubic-bezier(.2,.7,.2,1);}
+  .reveal.in{opacity:1;transform:none;}
+  .reveal.d1{transition-delay:.07s;} .reveal.d2{transition-delay:.14s;} .reveal.d3{transition-delay:.21s;} .reveal.d4{transition-delay:.28s;}
+
+  /* trust strip */
+  .trust{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:rgba(15,23,48,.32);}
+  .trust-inner{display:flex;align-items:center;gap:18px 40px;flex-wrap:wrap;justify-content:space-between;padding-top:20px;padding-bottom:20px;}
+  .trust-label{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);}
+  .trust-vendors{display:flex;align-items:center;gap:28px;flex-wrap:wrap;}
+  .trust-vendors .vendor-wordmark{display:inline-flex;align-items:center;line-height:1;font-size:16px;color:var(--muted);opacity:.68;transition:opacity .2s ease,color .2s ease,transform .2s ease;}
+  .trust-vendors .vendor-wordmark:hover{opacity:1;color:var(--text);transform:translateY(-1px);}
+  .trust-vendors .trust-lead{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);opacity:1;}
+  .trust-vendors .trust-lead:hover{color:var(--faint);transform:none;}
+  .vendor-intercom{font-family:"Inter",system-ui,sans-serif;font-weight:650;letter-spacing:-.045em;}
+  .vendor-zendesk{font-family:"Inter",system-ui,sans-serif;font-weight:620;letter-spacing:-.06em;}
+  .vendor-gorgias{font-family:"Space Grotesk",system-ui,sans-serif;font-weight:600;letter-spacing:-.02em;}
+  .vendor-freshworks{font-family:"Inter",system-ui,sans-serif;font-weight:620;letter-spacing:-.035em;}
+  .vendor-ada{font-family:"Space Grotesk",system-ui,sans-serif;font-weight:700;letter-spacing:.01em;}
+  .vendor-decagon{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:13.5px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;}
+
+  /* report artifact: the product shot */
+  .report{margin-top:44px;position:relative;border:1px solid var(--line-strong);border-radius:18px;
+    background:linear-gradient(180deg,#101a36,#0b1428);
+    box-shadow:rgba(3,10,30,.5) 0 40px 60px -36px, rgba(56,189,248,.08) 0 1px 0 0 inset;overflow:hidden;}
+  .report .rc{position:absolute;width:13px;height:13px;z-index:4;pointer-events:none;border:1.5px solid rgba(94,126,168,.6);}
+  .report .rc-tl{top:11px;left:11px;border-right:none;border-bottom:none;border-top-left-radius:4px;}
+  .report .rc-tr{top:11px;right:11px;border-left:none;border-bottom:none;border-top-right-radius:4px;}
+  .report .rc-bl{bottom:11px;left:11px;border-right:none;border-top:none;border-bottom-left-radius:4px;}
+  .report .rc-br{bottom:11px;right:11px;border-left:none;border-top:none;border-bottom-right-radius:4px;}
+  .report-top{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:18px 24px;border-bottom:1px solid var(--line);}
+  .report-id{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:inline-flex;align-items:center;gap:9px;}
+  .report-id .dot-live{width:7px;height:7px;border-radius:50%;background:var(--mint);box-shadow:0 0 9px var(--mint);animation:pulse 1.6s ease-in-out infinite;}
+  .report-verdict{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.07em;color:var(--faint);text-transform:uppercase;}
+  .report-verdict b{color:var(--mint);font-weight:600;}
+  .report-scroll{overflow-x:auto;}
+  .report-table{min-width:660px;}
+  .rt-head,.rt-row{display:grid;grid-template-columns:minmax(150px,1.7fr) repeat(4,minmax(70px,1fr));align-items:center;gap:12px;padding:0 24px;}
+  .rt-head{height:42px;font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);border-bottom:1px solid var(--line);}
+  .rt-row{height:62px;border-bottom:1px solid var(--line);transition:background .2s ease;}
+  .rt-row:last-child{border-bottom:0;}
+  .rt-row:hover{background:rgba(125,160,210,.04);}
+  .rt-win{background:linear-gradient(90deg,rgba(52,224,161,.10),transparent 60%);box-shadow:inset 2px 0 0 var(--mint);}
+  .rt-name{font-family:"Space Grotesk";font-weight:500;font-size:15px;color:var(--text);display:flex;flex-direction:column;gap:2px;}
+  .rt-name em{font-style:normal;font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--faint);}
+  .num{font-family:"IBM Plex Mono",monospace;font-size:14px;color:var(--muted);font-feature-settings:"tnum";}
+  .num.good{color:var(--mint);} .num.warn{color:var(--amber);} .num.dim{color:var(--line-strong);}
+  .pill{font-family:"IBM Plex Mono",monospace;font-style:normal;font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;padding:4px 9px;border-radius:6px;border:1px solid transparent;white-space:nowrap;}
+  .pill-pilot{color:var(--mint);background:rgba(52,224,161,.12);border-color:rgba(52,224,161,.32);}
+  .pill-constrain{color:var(--amber);background:rgba(245,165,36,.10);border-color:rgba(245,165,36,.30);}
+  .pill-avoid{color:var(--amber);background:rgba(245,165,36,.12);border-color:rgba(245,165,36,.34);}
+  .pill-assist{color:var(--cyan);background:rgba(56,189,248,.10);border-color:rgba(56,189,248,.30);}
+  .pill-base{color:var(--faint);background:rgba(125,160,210,.07);border-color:var(--line);}
+  .report-foot{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:16px 24px;border-top:1px solid var(--line);background:rgba(8,13,28,.5);font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--faint);}
+  .report-links{display:flex;gap:18px;flex-wrap:wrap;}
+  .report-links a{color:var(--cyan);}
+  .report-links a:hover{text-decoration:underline;}
+  .report-cap{margin:14px 2px 0;font-size:13px;color:var(--faint);}
+  .proof-dashboard{margin-top:44px;display:grid;grid-template-columns:minmax(0,1.06fr) minmax(340px,.94fr);gap:18px;align-items:stretch;}
+  .proof-report{position:relative;border:1px solid var(--line-strong);border-radius:18px;background:linear-gradient(180deg,#101a36,#0b1428);box-shadow:rgba(3,10,30,.5) 0 40px 60px -36px,rgba(56,189,248,.08) 0 1px 0 0 inset;overflow:hidden;min-width:0;}
+  .proof-report .report{margin-top:0;border:0;border-radius:0;box-shadow:none;background:transparent;}
+  .packet-panel{position:relative;border:1px solid rgba(56,189,248,.28);border-radius:18px;background:linear-gradient(180deg,rgba(10,26,47,.82),rgba(6,11,24,.92));padding:20px;overflow:hidden;}
+  .packet-panel::before{content:"";position:absolute;inset:0;background:radial-gradient(340px 190px at 86% 0%,rgba(52,224,161,.10),transparent 72%),linear-gradient(rgba(125,160,210,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(125,160,210,.03) 1px,transparent 1px);background-size:auto,28px 28px,28px 28px;opacity:.9;pointer-events:none;}
+  .packet-panel>*{position:relative;}
+  .packet-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:16px;}
+  .packet-title h3{font-family:"Space Grotesk";font-weight:600;font-size:22px;letter-spacing:-.02em;margin:6px 0 0;}
+  .packet-sub{font-size:13.5px;color:var(--muted);line-height:1.45;margin:7px 0 0;}
+  .packet-stack{display:grid;gap:10px;}
+  .packet-item{display:grid;grid-template-columns:46px 1fr auto;gap:12px;align-items:center;border:1px solid rgba(125,160,210,.14);border-radius:12px;padding:12px;background:rgba(8,13,28,.62);}
+  .packet-code{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--cyan);}
+  .packet-item b{font-size:14px;color:var(--text);}
+  .packet-item p{margin:3px 0 0;color:var(--muted);font-size:12.5px;line-height:1.35;}
+  .packet-impact{margin-top:14px;border:1px solid rgba(52,224,161,.28);border-radius:12px;padding:12px;background:rgba(52,224,161,.07);font-size:13.5px;line-height:1.45;color:var(--muted);}
+  .packet-impact b{color:var(--mint);}
+  .packet-rule{height:1px;background:linear-gradient(90deg,var(--cyan),rgba(56,189,248,0));margin:14px 0;}
+  .replay-module{margin-top:18px;border:1px solid rgba(125,160,210,.16);border-radius:18px;background:linear-gradient(145deg,rgba(15,23,48,.58),rgba(8,13,28,.68));padding:20px;display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:18px;overflow:hidden;}
+  .replay-timeline{position:relative;border:1px solid rgba(125,160,210,.14);border-radius:14px;background:rgba(8,13,28,.58);padding:18px;}
+  .replay-timeline::before{content:"";position:absolute;left:72px;top:38px;bottom:38px;width:1px;background:linear-gradient(var(--cyan),rgba(99,91,255,.22));box-shadow:0 0 12px rgba(56,189,248,.12);}
+  .replay-event{position:relative;display:grid;grid-template-columns:74px minmax(0,1fr) auto;gap:12px;align-items:start;padding:0 0 14px;}
+  .replay-event:last-child{padding-bottom:0;}
+  .replay-time{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--cyan);padding-top:8px;}
+  .replay-copy{border:1px solid rgba(125,160,210,.12);border-radius:12px;background:rgba(10,18,38,.64);padding:10px 12px;}
+  .replay-copy b{display:block;font-size:14px;color:var(--text);}
+  .replay-copy span{display:block;color:var(--muted);font-size:12.8px;line-height:1.4;margin-top:3px;}
+  .incident-card{border:1px solid rgba(255,140,140,.28);border-radius:14px;background:linear-gradient(180deg,rgba(42,16,26,.48),rgba(8,13,28,.88));padding:18px;}
+  .incident-card h3{font-family:"Space Grotesk";font-weight:600;font-size:22px;letter-spacing:-.02em;margin:8px 0 10px;}
+  .incident-card p{color:var(--muted);line-height:1.5;margin:0;font-size:14.5px;}
+  .decision-box{margin-top:16px;border:1px solid rgba(52,224,161,.26);border-radius:12px;padding:12px;background:rgba(52,224,161,.07);}
+  .decision-box b{display:block;color:var(--mint);font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px;}
+  .decision-box span{display:block;color:var(--muted);font-size:13px;line-height:1.4;}
+  .selected-caption{margin:16px 2px 0;color:var(--faint);font-size:13px;line-height:1.5;}
+
+  @media (max-width:980px){
+    .proof-dashboard,.replay-module{grid-template-columns:1fr;}
+    .packet-panel{min-height:auto;}
+  }
+  @media (max-width:600px){
+    .packet-top{display:block;}
+    .packet-top .chip{margin-top:10px;}
+    .packet-item{grid-template-columns:40px 1fr;}
+    .packet-item .chip{grid-column:2;justify-self:start;}
+    .replay-module{padding:14px;}
+    .replay-timeline{padding:14px;}
+    .replay-timeline::before{left:55px;}
+    .replay-event{grid-template-columns:52px 1fr;gap:10px;}
+    .replay-event .chip{grid-column:2;justify-self:start;}
+  }
+
+  /* evidence facets */
+  .facets{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:30px;}
+  .facets > div{border:1px solid var(--line);border-radius:12px;padding:16px 18px;background:rgba(15,23,48,.3);}
+  .facets span{display:block;font-size:13px;color:var(--muted);margin-bottom:6px;}
+  .facets b{font-family:"IBM Plex Mono",monospace;font-weight:500;font-size:15px;color:var(--text);}
+  .facets b.warn{color:var(--amber);}
+
+  @media (max-width:880px){ .facets{grid-template-columns:repeat(2,1fr);} }
+  @media (max-width:560px){ .facets{grid-template-columns:1fr;} }
+  @media (prefers-reduced-motion:reduce){ .reveal{opacity:1;transform:none;transition:none;} }
+
+  /* graded hairline divider: a quiet inflow to verdict echo between sections */
+  .divider{position:relative;height:1px;margin:0;border:0;
+    background:linear-gradient(90deg, rgba(110,104,255,0), rgba(110,104,255,.20) 20%, rgba(64,196,250,.28) 60%, rgba(52,224,161,.32) 100%);}
+  .divider::after{content:"";position:absolute;right:0;top:50%;width:5px;height:5px;margin-top:-2.5px;border-radius:50%;
+    background:var(--mint);box-shadow:0 0 9px rgba(52,224,161,.75);opacity:.55;}
+
+  /* closing */
+  .closing{
+    position:relative;overflow:hidden;
+    text-align:center;
+    background:
+      radial-gradient(60% 120% at 50% 0%, rgba(99,91,255,.16), transparent 60%),
+      radial-gradient(50% 120% at 50% 100%, rgba(56,189,248,.12), transparent 60%);
+  }
+  #field-cta{position:absolute;inset:0;z-index:0;width:100%;height:100%;opacity:.6;
+    -webkit-mask-image:linear-gradient(to bottom, transparent 0%, #000 16%, #000 84%, transparent 100%);
+    mask-image:linear-gradient(to bottom, transparent 0%, #000 16%, #000 84%, transparent 100%);}
+  .closing-veil{position:absolute;inset:0;z-index:1;pointer-events:none;
+    background:radial-gradient(58% 72% at 50% 50%, rgba(11,16,32,.80), rgba(11,16,32,.40) 58%, transparent 80%);}
+  .closing .wrap{position:relative;z-index:2;}
+  .closing h2{font-family:"Space Grotesk";font-weight:700;font-size:clamp(32px,5vw,56px);line-height:1.04;letter-spacing:-.025em;margin:0 auto;max-width:18ch;}
+  .closing p{color:var(--muted);margin:20px auto 0;max-width:48ch;font-size:18px;}
+  .closing .cta-row{justify-content:center;}
+
+  footer{border-top:1px solid var(--line);padding:34px 0;}
+  .foot-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;color:var(--faint);font-size:14px;}
+  .foot-inner .mono{font-size:12.5px;letter-spacing:.04em;}
+
+  /* ---------- WORK-TRACE NARRATIVE COMPONENTS ---------- */
+  /* QA triad */
+  .qa-card{display:flex;flex-direction:column;gap:14px;}
+  .qa-label{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);}
+  .qa-q{font-family:"Space Grotesk";font-weight:500;font-size:18px;line-height:1.3;letter-spacing:-.01em;color:var(--muted);margin:0;}
+  .card.is-answer{border-color:rgba(52,224,161,.4);background:linear-gradient(180deg,rgba(18,38,38,.55),var(--ink2));box-shadow:0 0 0 1px rgba(52,224,161,.14),0 30px 50px -30px rgba(52,224,161,.25);}
+  .card.is-answer .qa-label{color:var(--mint);}
+  .card.is-answer .qa-q{color:var(--text);}
+
+  /* visual how-it-works mockup */
+  .how-visual{position:relative;overflow:hidden;}
+  .how-visual .reveal{opacity:1;transform:none;}
+  .how-visual::before{content:"";position:absolute;inset:8% -12% auto auto;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(56,189,248,.14),transparent 68%);filter:blur(26px);pointer-events:none;}
+  .how-map{margin-top:50px;position:relative;display:grid;gap:18px;}
+  .how-map::before{display:none;}
+  .how-step{position:relative;display:grid;grid-template-columns:48px minmax(0,.74fr) minmax(280px,1fr);gap:22px;align-items:stretch;padding:18px;border:1px solid rgba(125,160,210,.12);border-radius:18px;background:linear-gradient(135deg,rgba(15,23,48,.62),rgba(8,13,28,.42));box-shadow:0 28px 60px -48px rgba(3,10,30,.95);min-width:0;overflow:visible;z-index:1;}
+  .how-step:nth-child(1){z-index:6;}.how-step:nth-child(2){z-index:5;}.how-step:nth-child(3){z-index:4;}.how-step:nth-child(4){z-index:3;}.how-step:nth-child(5){z-index:2;}
+  .how-step:not(:last-child)::before{content:"";position:absolute;left:42px;top:72px;height:calc(100% - 42px);width:1px;background:linear-gradient(to bottom,rgba(56,189,248,.56),rgba(99,91,255,.22));box-shadow:0 0 12px rgba(56,189,248,.16);z-index:6;pointer-events:none;}
+  .how-step::after{content:"";position:absolute;inset:0;border-radius:18px;background:linear-gradient(90deg,rgba(56,189,248,.07),transparent 24%,transparent 74%,rgba(52,224,161,.05));opacity:0;transition:opacity .25s ease;pointer-events:none;}
+  .how-step:hover{border-color:rgba(125,160,210,.24);}
+  .how-step:hover::after{opacity:1;}
+  .how-node{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--cyan);background:linear-gradient(180deg,rgba(56,189,248,.14),rgba(99,91,255,.08));border:1px solid rgba(125,160,210,.28);box-shadow:0 0 0 5px rgba(11,16,32,.92),0 0 18px rgba(56,189,248,.18);position:relative;z-index:7;}
+  .how-copy{padding:5px 0;position:relative;z-index:1;min-width:0;}
+  .how-copy h3{font-family:"Space Grotesk";font-weight:600;font-size:20px;letter-spacing:-.015em;margin:0 0 8px;}
+  .how-copy p{color:var(--muted);font-size:15.5px;line-height:1.55;margin:0;max-width:44ch;}
+  .how-artifact{position:relative;z-index:1;min-height:154px;border:1px solid rgba(125,160,210,.16);border-radius:14px;background:linear-gradient(180deg,rgba(10,26,47,.72),rgba(6,11,24,.84));overflow:hidden;padding:16px;min-width:0;}
+  .how-artifact::before{content:"";position:absolute;inset:0;background:linear-gradient(rgba(125,160,210,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(125,160,210,.03) 1px,transparent 1px);background-size:28px 28px;mask-image:linear-gradient(to bottom,#000,transparent 95%);opacity:.7;pointer-events:none;}
+  .artifact-label{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);display:flex;align-items:center;justify-content:space-between;gap:8px 12px;margin-bottom:12px;position:relative;z-index:1;flex-wrap:wrap;}
+  .artifact-label b{color:var(--cyan);font-weight:500;}
+  .chip{display:inline-flex;align-items:center;gap:6px;font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.06em;line-height:1.15;text-transform:uppercase;border:1px solid rgba(125,160,210,.22);border-radius:999px;padding:3px 8px;color:var(--muted);background:rgba(125,160,210,.06);white-space:nowrap;box-sizing:border-box;max-width:100%;}
+  .chip.good{color:var(--mint);border-color:rgba(52,224,161,.28);background:rgba(52,224,161,.08);}.chip.warn{color:var(--amber);border-color:rgba(245,165,36,.28);background:rgba(245,165,36,.08);}.chip.bad{color:#ff8c8c;border-color:rgba(255,140,140,.25);background:rgba(255,140,140,.08);}
+  .trace-card{position:relative;z-index:1;border:1px solid rgba(125,160,210,.15);border-radius:12px;background:rgba(8,13,28,.72);padding:13px;}
+  .trace-title{font-family:"Space Grotesk";font-weight:600;font-size:15px;margin-bottom:8px;color:var(--text);}.trace-meta{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}.trace-meta span{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--faint);border-top:1px solid rgba(125,160,210,.12);padding-top:7px;}.trace-meta b{display:block;color:var(--muted);font-weight:500;margin-top:2px;}
+  .spec-grid{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:8px;}.spec-grid span{border:1px solid rgba(125,160,210,.14);border-radius:9px;padding:8px 9px;font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--faint);background:rgba(8,13,28,.58);}.spec-grid b{display:block;color:var(--text);font-weight:500;font-family:"Inter";font-size:12px;letter-spacing:0;text-transform:none;margin-top:2px;}
+  .spec-receipt-shell{display:flex;align-items:center;justify-content:center;min-height:226px;padding:18px;}
+  .spec-receipt-shell::before{opacity:.34;}
+  .task-receipt{position:relative;z-index:1;width:min(440px,100%);border:1px solid rgba(125,160,210,.18);border-radius:8px;background:linear-gradient(180deg,rgba(238,244,255,.055),rgba(238,244,255,.025));padding:22px 18px 18px;font-family:"IBM Plex Mono",monospace;box-shadow:0 26px 56px -44px rgba(0,0,0,.9);overflow:hidden;}
+  .task-receipt::before,.task-receipt::after{content:"";position:absolute;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--cyan),rgba(99,91,255,.52),var(--mint));pointer-events:none;}
+  .task-receipt::before{top:0;opacity:.72;}.task-receipt::after{bottom:0;opacity:.38;}
+  .task-receipt-kicker{display:flex;justify-content:space-between;gap:12px;color:var(--cyan);font-size:10px;letter-spacing:.12em;text-transform:uppercase;}
+  .task-receipt-title{font-family:"Space Grotesk";font-size:18px;letter-spacing:-.02em;margin:18px 0;color:var(--text);}
+  .task-receipt-block{padding:12px 0;border-top:1px dashed rgba(125,160,210,.18);}
+  .task-receipt-block span{display:block;color:var(--faint);font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px;}
+  .task-receipt-block b{display:block;color:var(--text);font:600 13px/1.4 Inter,sans-serif;}
+  .task-receipt-list{margin:6px 0 0;padding:0;list-style:none;color:var(--muted);font:13px/1.55 Inter,sans-serif;}
+  .task-receipt-list li::before{content:"- ";color:var(--cyan);}
+  .lane-list{position:relative;z-index:1;display:grid;gap:9px;}.lane{display:grid;grid-template-columns:minmax(0,1fr) minmax(72px,96px) minmax(98px,max-content);gap:10px;align-items:center;font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--muted);}.lane .chip{justify-self:end;}.lane-bar{height:6px;border-radius:999px;background:rgba(125,160,210,.12);overflow:hidden;}.lane-bar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--indigo),var(--cyan));}.lane.good .lane-bar i{background:linear-gradient(90deg,var(--cyan),var(--mint));}.lane.warn .lane-bar i{background:linear-gradient(90deg,var(--indigo),var(--amber));}.lane.bad .lane-bar i{background:linear-gradient(90deg,var(--amber),#ff7777);}.lane b{font-weight:500;color:var(--text);}
+  .replay-list{position:relative;z-index:1;display:grid;gap:8px;}.replay-row{display:grid;grid-template-columns:48px 1fr auto;gap:10px;align-items:center;font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--muted);padding-bottom:8px;border-bottom:1px solid rgba(125,160,210,.10);}.replay-row:last-child{border-bottom:0;padding-bottom:0;}.replay-row b{font-weight:500;color:var(--text);}.time{color:var(--cyan);}.verdict-grid{position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}.route{border:1px solid rgba(125,160,210,.14);border-radius:10px;padding:10px;background:rgba(8,13,28,.56);}.route strong{display:block;font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;}.route.good strong{color:var(--mint);}.route.warn strong{color:var(--amber);}.route.bad strong{color:#ff8c8c;}.route span{display:block;color:var(--muted);font-size:12px;line-height:1.35;}
+
+  @media (max-width:980px){
+    .how-step{grid-template-columns:48px 1fr;}
+    .how-artifact{grid-column:2;}
+  }
+  @media (max-width:600px){
+    .how-visual .wrap{padding-left:28px;padding-right:28px;}
+    .how-step:not(:last-child)::before{left:32px;top:56px;height:calc(100% - 30px);}
+    .how-step{grid-template-columns:36px minmax(0,1fr);gap:14px;padding:14px;}
+    .how-node{width:36px;height:36px;border-radius:11px;font-size:11px;}
+    .how-artifact{grid-column:1 / -1;min-height:auto;padding:13px;}
+    .trace-meta,.spec-grid,.verdict-grid{grid-template-columns:1fr;}
+    .lane{grid-template-columns:1fr;gap:6px;}
+    .lane .chip{justify-self:start;}
+    .replay-row{grid-template-columns:42px 1fr;}.replay-row .chip{grid-column:2;justify-self:start;}
+  }
+
+  /* evidence levels */
+  .levels{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:30px;}
+  .level{border:1px solid var(--line);border-radius:12px;padding:20px;background:rgba(15,23,48,.3);}
+  .level .lv{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.08em;color:var(--cyan);}
+  .level h4{font-family:"Space Grotesk";font-weight:600;font-size:16px;margin:10px 0 6px;letter-spacing:-.01em;}
+  .level p{color:var(--muted);font-size:14px;margin:0;}
+  .level.floor{background:rgba(15,23,48,.14);border-style:dashed;border-color:rgba(125,160,210,.2);}
+  .level.floor .lv{color:var(--faint);}
+  .level.floor h4{color:var(--muted);}
+
+  /* callout */
+  .callout{text-align:center;}
+  .callout .wrap{max-width:760px;}
+  .callout h2{font-family:"Space Grotesk";font-weight:600;font-size:clamp(24px,3.4vw,34px);line-height:1.16;letter-spacing:-.02em;color:var(--text);margin:12px auto 0;}
+  .callout p:not(.eyebrow){color:var(--muted);margin:18px auto 0;font-size:17px;max-width:56ch;}
+
+  /* packages */
+  .pkg-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:44px;}
+  .pkg{position:relative;display:flex;flex-direction:column;border:1px solid var(--line);border-radius:16px;padding:26px;background:linear-gradient(180deg,var(--panel),var(--ink2));transition:border-color .2s ease,transform .2s ease;}
+  .pkg:hover{border-color:var(--line-strong);transform:translateY(-3px);}
+  .pkg.is-lead{border-color:rgba(56,189,248,.42);box-shadow:0 0 0 1px rgba(56,189,248,.14),0 30px 50px -30px rgba(56,189,248,.3);}
+  .pkg-tag{position:absolute;top:0;right:20px;transform:translateY(-50%);font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:#04101a;background:linear-gradient(120deg,var(--mint),var(--cyan));padding:4px 10px;border-radius:6px;}
+  .pkg-name{font-family:"Space Grotesk";font-weight:600;font-size:19px;letter-spacing:-.01em;margin:0;}
+  .pkg-q{color:var(--cyan);font-size:13.5px;margin:9px 0 16px;font-family:"IBM Plex Mono",monospace;}
+  .pkg ul{list-style:none;margin:0 0 22px;padding:0;display:flex;flex-direction:column;gap:9px;}
+  .pkg li{position:relative;padding-left:20px;color:var(--muted);font-size:14.5px;line-height:1.45;}
+  .pkg li::before{content:"";position:absolute;left:0;top:8px;width:7px;height:7px;border-radius:2px;background:var(--cyan);opacity:.55;}
+  .pkg .pkg-cta{margin-top:auto;align-self:flex-start;}
+  .pkg-soon{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);border:1px solid var(--line);border-radius:5px;padding:2px 7px;margin-left:8px;vertical-align:middle;}
+  .pkg-foot{font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--faint);margin:24px 2px 0;}
+  .btn-sm{padding:10px 17px;font-size:14px;}
+
+  /* who */
+  .who-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:44px;}
+  .who-card{border:1px solid var(--line);border-radius:16px;padding:28px;background:linear-gradient(180deg,var(--panel),var(--ink2));}
+  .who-card h3{font-family:"Space Grotesk";font-weight:600;font-size:18px;margin:0 0 16px;letter-spacing:-.01em;}
+  .who-card ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:11px;}
+  .who-card li{position:relative;padding-left:22px;color:var(--muted);font-size:15px;line-height:1.45;}
+  .who-card li::before{content:"";position:absolute;left:0;top:7px;width:8px;height:8px;border-radius:2.5px;background:var(--cyan);opacity:.62;}
+  .who-note{color:var(--faint);font-size:14.5px;margin:26px 2px 0;max-width:72ch;}
+
+  @media (max-width:880px){ .levels,.pkg-grid,.who-grid{grid-template-columns:1fr;} }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width:880px){
+    .nav-links a:not(.nav-cta){display:none;}
+    .nav-cta{padding:9px 15px;font-size:13.5px;}
+    .g3{grid-template-columns:1fr;}
+    .g2{grid-template-columns:1fr;}
+    .hero{min-height:660px;}
+    .hero-content{padding-top:104px;padding-bottom:56px;}
+    .hero-veil{background:linear-gradient(180deg, rgba(11,16,32,.55) 0%, rgba(11,16,32,.78) 60%, var(--ink) 100%);}
+    section{padding:76px 0;}
+  }
+
+  @media (max-width:600px){
+    .wrap{padding-left:42px;padding-right:42px;}
+    .brand{font-size:16px;gap:8px;}
+    .brand-mark{width:20px;height:20px;}
+    .nav-links{gap:0;}
+    .nav-links .nav-cta{display:none;}
+    .hero h1{font-size:30px;}
+    .hero .sub{font-size:16px;margin-top:18px;max-width:100%;}
+    .eyebrow{font-size:12px;overflow-wrap:anywhere;}
+    .cta-row{flex-direction:column;align-items:flex-start;}
+    .btn{max-width:100%;justify-content:center;}
+    .sec-head p{font-size:16px;}
+    .closing h2{font-size:30px;}
+    .callout h2{font-size:23px;}
+    section{padding:62px 0;}
+    .hero-content{padding-top:94px;padding-bottom:46px;}
+    .scoreline{font-size:11.5px;gap:7px 14px;margin-top:34px;padding-top:18px;}
+    .trust-vendors{gap:14px 22px;}
+    .trust-vendors .vendor-wordmark{font-size:15px;}
+    .trust-vendors .vendor-decagon{font-size:12.5px;}
+    /* report to stacked cards */
+    .report-scroll{overflow-x:visible;}
+    .report-table{min-width:0;}
+    .rt-head{display:none;}
+    .rt-row{display:block;height:auto;padding:16px 18px;}
+    .rt-name{display:block;font-size:16px;margin-bottom:12px;}
+    .rt-row .num{display:inline-block;margin:0 20px 0 0;font-size:14px;vertical-align:top;}
+    .rt-row .num::before{content:attr(data-label);display:block;font-family:"IBM Plex Mono",monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-bottom:3px;font-weight:500;}
+    .rt-row > span:last-child{display:block;margin-top:14px;}
+  }
+
+  @media (max-width:420px){
+    .wrap{padding-left:34px;padding-right:34px;}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    .hero-grad{animation:none;}
+    .scoreline .live .pip{animation:none;}
+    *{scroll-behavior:auto;}
+  }
+
+
+  /* ---------- EVIDENCE STANDARD DRAFTER EXPERIMENT ---------- */
+  .esd-widget{position:fixed;right:24px;bottom:24px;z-index:90;font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--text);}
+  .esd-toggle{display:flex;align-items:center;gap:10px;border:1px solid rgba(56,189,248,.38);background:linear-gradient(180deg,rgba(15,23,48,.94),rgba(8,13,28,.96));color:var(--text);box-shadow:0 18px 52px -30px rgba(56,189,248,.65),0 0 0 1px rgba(56,189,248,.08) inset;border-radius:14px;padding:12px 15px;cursor:pointer;font-weight:600;font-size:14px;letter-spacing:-.01em;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);}
+  .esd-toggle:hover{border-color:rgba(56,189,248,.72);transform:translateY(-1px);}
+  .esd-toggle-mark{width:22px;height:22px;border-radius:7px;display:grid;place-items:center;position:relative;border:1px solid rgba(125,160,210,.42);background:rgba(56,189,248,.08);}
+  .esd-toggle-mark::before,.esd-toggle-mark::after{content:"";position:absolute;top:4px;bottom:4px;width:5px;border:1.4px solid #5C7CA6;}
+  .esd-toggle-mark::before{left:4px;border-right:0;border-radius:3px 0 0 3px;}.esd-toggle-mark::after{right:4px;border-left:0;border-radius:0 3px 3px 0;}
+  .esd-toggle-mark i{width:5px;height:5px;border-radius:2px;background:var(--cyan);box-shadow:0 0 10px rgba(56,189,248,.7);}
+  .esd-panel{position:absolute;right:0;bottom:66px;width:min(408px,calc(100vw - 32px));max-height:min(620px,calc(100vh - 164px));display:none;overflow:hidden;border:1px solid rgba(125,160,210,.22);border-radius:20px;background:linear-gradient(180deg,rgba(15,23,48,.98),rgba(7,12,26,.98));box-shadow:0 30px 100px -46px rgba(0,0,0,.95),0 0 0 1px rgba(56,189,248,.10) inset;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);}
+  .esd-widget.open .esd-panel{display:block;}
+  .esd-widget.open .esd-toggle{display:none;}
+  .esd-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;padding:18px 18px 15px;border-bottom:1px solid rgba(125,160,210,.14);background:radial-gradient(220px 120px at 95% 0%,rgba(56,189,248,.14),transparent 72%);}
+  .esd-kicker{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);margin-bottom:6px;}
+  .esd-head h3{font-family:"Space Grotesk";font-weight:600;font-size:20px;letter-spacing:-.02em;margin:0;}
+  .esd-status{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--faint);border:1px solid rgba(125,160,210,.18);background:rgba(125,160,210,.06);border-radius:999px;padding:4px 8px;margin-top:8px;white-space:nowrap;}
+  .esd-close{border:1px solid rgba(125,160,210,.18);background:rgba(125,160,210,.05);color:var(--muted);border-radius:9px;width:32px;height:32px;cursor:pointer;font-size:18px;line-height:1;}
+  .esd-close:hover{color:var(--text);border-color:rgba(56,189,248,.4);}
+  .esd-body{padding:17px 18px 18px;overflow:auto;max-height:min(538px,calc(100vh - 246px));}
+  .esd-intro{color:var(--muted);font-size:14px;line-height:1.5;margin:0 0 15px;}
+  .esd-step{border:1px solid rgba(125,160,210,.14);border-radius:14px;background:rgba(8,13,28,.52);padding:13px;margin-top:10px;}
+  .esd-label{display:block;font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:9px;}
+  .esd-options{display:flex;flex-wrap:wrap;gap:8px;}
+  .esd-chip{border:1px solid rgba(125,160,210,.22);background:rgba(125,160,210,.06);color:var(--muted);border-radius:999px;padding:7px 10px;font-size:12.5px;cursor:pointer;}
+  .esd-chip[aria-pressed="true"],.esd-chip:hover{color:var(--text);border-color:rgba(56,189,248,.55);background:rgba(56,189,248,.09);}
+  .esd-chip.risk[aria-pressed="true"]{border-color:rgba(255,140,140,.45);background:rgba(255,140,140,.08);}
+  .esd-input{width:100%;border:1px solid rgba(125,160,210,.20);border-radius:12px;background:rgba(6,11,24,.78);color:var(--text);padding:11px 12px;font:14px/1.4 "Inter",system-ui,sans-serif;outline:none;}
+  .esd-input:focus{border-color:rgba(56,189,248,.68);box-shadow:0 0 0 3px rgba(56,189,248,.08);}
+  .esd-actions{display:flex;gap:9px;margin-top:12px;flex-wrap:wrap;}
+  .esd-primary,.esd-secondary{border-radius:10px;padding:10px 12px;font-weight:650;font-size:13px;cursor:pointer;border:1px solid transparent;}
+  .esd-primary{color:#04101a;background:linear-gradient(120deg,var(--mint),var(--cyan));}.esd-secondary{color:var(--text);background:rgba(125,160,210,.06);border-color:rgba(125,160,210,.20);}
+  .esd-output{display:none;margin-top:14px;border:1px solid rgba(56,189,248,.28);border-radius:16px;background:linear-gradient(180deg,rgba(10,26,47,.74),rgba(6,11,24,.86));overflow:hidden;}
+  .esd-output.on{display:block;}
+  .esd-output-top{padding:14px 14px 12px;border-bottom:1px solid rgba(125,160,210,.12);display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+  .esd-output-title{font-family:"Space Grotesk";font-weight:600;font-size:16px;letter-spacing:-.01em;margin:0;}.esd-output-note{color:var(--faint);font-size:12px;margin:4px 0 0;line-height:1.45;}
+  .esd-mini-card{padding:13px 14px;border-bottom:1px solid rgba(125,160,210,.10);}.esd-mini-card:last-child{border-bottom:0;}
+  .esd-mini-card b{display:block;font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--cyan);margin-bottom:7px;}
+  .esd-mini-card p{margin:0;color:var(--text);font-size:13.5px;line-height:1.46;}.esd-mini-card ul{margin:0;padding:0;list-style:none;display:grid;gap:6px;}.esd-mini-card li{position:relative;padding-left:14px;color:var(--muted);font-size:13px;line-height:1.38;}.esd-mini-card li::before{content:"";position:absolute;left:0;top:.62em;width:5px;height:5px;border-radius:2px;background:var(--cyan);opacity:.72;}.esd-mini-card .bad::before{background:#ff8c8c;}
+  .esd-mail{display:block;margin:12px 14px 14px;text-align:center;border-radius:10px;padding:10px 12px;color:#04101a;background:linear-gradient(120deg,var(--mint),var(--cyan));font-weight:700;font-size:13px;}
+  .esd-brackets{position:absolute;inset:10px;pointer-events:none;}.esd-brackets i{position:absolute;width:12px;height:12px;border:1.5px solid rgba(56,189,248,.35);}.esd-brackets .tl{left:0;top:0;border-right:0;border-bottom:0;border-radius:4px 0 0 0}.esd-brackets .tr{right:0;top:0;border-left:0;border-bottom:0;border-radius:0 4px 0 0}.esd-brackets .bl{left:0;bottom:0;border-right:0;border-top:0;border-radius:0 0 0 4px}.esd-brackets .br{right:0;bottom:0;border-left:0;border-top:0;border-radius:0 0 4px 0}
+  @media (max-width:600px){.esd-widget{left:16px;right:16px;bottom:16px}.esd-toggle{width:100%;justify-content:center}.esd-panel{left:0;right:0;bottom:58px;width:100%;max-height:calc(100vh - 88px);border-radius:18px}.esd-widget.open .esd-panel{bottom:0;max-height:calc(100vh - 48px)}.esd-body{max-height:calc(100vh - 168px)}.esd-widget.open .esd-body{max-height:calc(100vh - 128px)}.esd-head h3{font-size:18px}.esd-status{display:none}}
+
+</style>
+<noscript><style>.reveal{opacity:1 !important;transform:none !important;}</style></noscript>
+</head>
+<body>
+
+<!-- ================= HERO ================= -->
+<header class="hero">
+  <div class="hero-grad" aria-hidden="true"></div>
+  <canvas id="field" aria-hidden="true"></canvas>
+  <div class="hero-veil" aria-hidden="true"></div>
+  <div class="hero-base" aria-hidden="true"></div>
+
+  <div class="scan-progress" aria-hidden="true"><div class="scan-progress-fill"></div></div>
+  <nav class="nav">
+    <div class="wrap nav-inner">
+      <a class="brand" href="#top"><svg class="brand-mark" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8.5 4 H5 V20 H8.5" stroke="#3E5C80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M15.5 4 H19 V20 H15.5" stroke="#3E5C80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><rect x="9.4" y="9.4" width="5.2" height="5.2" rx="1.5" fill="#38BDF8"/><line x1="12" y1="3.5" x2="12" y2="20.5" stroke="#CDEBFF" stroke-width="1.1" stroke-linecap="round" opacity=".6"/></svg>AgentDiligence</a>
+      <div class="nav-links">
+        <a href="#how">How it works</a>
+        <a href="#evidence">Evidence</a>
+        <a href="#next-step">Next step</a>
+        <a class="nav-cta" href="mailto:hello@agentdiligence.io?subject=Test%20an%20AI%20agent%20on%20our%20work">Test an agent</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="wrap hero-content" id="top">
+    <p class="eyebrow">Independent AI-agent evaluation · Support &amp; service</p>
+    <h1><span class="ln"><em>Compare</em> AI agents</span> <span class="ln">on evidence you can <em>trust</em>.</span></h1>
+    <p class="sub">Every vendor brings its own proof. AgentDiligence builds one evidence standard from your workflows, policies, and risks, then applies it across every option.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="mailto:hello@agentdiligence.io?subject=Test%20an%20AI%20agent">Test an agent</a>
+      <a class="btn btn-ghost" href="#evidence">See what you get</a>
+    </div>
+
+    <div class="scoreline" aria-label="First evaluation shape">
+      <span class="sl-label">First evaluation</span>
+      <span class="metric">1 to 2 weeks</span><span class="sep">·</span>
+      <span class="metric">100 to 300 tickets</span><span class="sep">·</span>
+      <span class="metric">read-only by default</span><span class="sep">·</span>
+      <span class="metric">no live customer replies</span>
+    </div>
+  </div>
+</header>
+
+<!-- ================= TRUST ================= -->
+<div class="trust">
+  <div class="wrap trust-inner">
+    <span class="trust-label">Independent and vendor-neutral. Paid by buyers to assess agents, not by vendors to sell them</span>
+    <div class="trust-vendors" aria-label="Typical vendor shortlist, shown as text names rather than logos">
+      <span class="trust-lead">Typical shortlist</span>
+      <span class="vendor-wordmark vendor-intercom">Intercom Fin</span>
+      <span class="vendor-wordmark vendor-zendesk">Zendesk AI</span>
+      <span class="vendor-wordmark vendor-gorgias">Gorgias AI</span>
+      <span class="vendor-wordmark vendor-freshworks">Freshworks</span>
+      <span class="vendor-wordmark vendor-ada">Ada</span>
+      <span class="vendor-wordmark vendor-decagon">Decagon</span>
+    </div>
+  </div>
+</div>
+
+<!-- ================= WHY ================= -->
+<section id="why">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">The buying gap</p>
+      <h2>Vendor proof is hard to compare. Your decision needs one standard.</h2>
+      <p>Every vendor brings different cases, metrics, dashboards, and success criteria. AgentDiligence builds one evidence standard from your workflows, policies, and risks, then applies it across every option so your team can decide what to buy, pilot, constrain, or reject.</p>
+    </div>
+    <div class="grid g3">
+      <div class="card qa-card reveal d1">
+        <span class="qa-label">Vendor demo or PoC</span>
+        <p class="qa-q">Which proof story does this vendor ask you to trust?</p>
+      </div>
+      <div class="card qa-card reveal d2">
+        <span class="qa-label">Public benchmark</span>
+        <p class="qa-q">Which model wins on generic tasks outside your operating context?</p>
+      </div>
+      <div class="card qa-card is-answer reveal d3">
+        <span class="qa-label">AgentDiligence</span>
+        <p class="qa-q">Which option clears your buyer-specific evidence standard?</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="wrap"><hr class="divider" /></div>
+
+<!-- ================= HOW ================= -->
+<section id="how" class="how-visual">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">How it works</p>
+      <h2>We turn your support history into realistic agent tests.</h2>
+      <p>The first evaluation is controlled and practical. Historical tickets and policy context become the standard every candidate has to clear.</p>
+    </div>
+
+    <div class="how-map" aria-label="AgentDiligence evaluation flow">
+      <article class="how-step reveal d1">
+        <div class="how-node">01</div>
+        <div class="how-copy">
+          <h3>Start with a work sample</h3>
+          <p>We use historical tickets, transcripts, policies, macros, SOPs, escalation rules, vendor PoC logs, or service-desk exports.</p>
+        </div>
+        <div class="how-artifact" aria-label="Sample work sample">
+          <div class="artifact-label"><b>Work sample</b><span class="chip">buyer data slice</span></div>
+          <div class="trace-card">
+            <div class="trace-title">Password recovery with account-takeover risk</div>
+            <div class="trace-meta">
+              <span>Workflow<b>Account access</b></span>
+              <span>Risk<b>Privacy exposure</b></span>
+              <span>Current route<b>Human review</b></span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="how-step reveal d2">
+        <div class="how-node">02</div>
+        <div class="how-copy">
+          <h3>Build realistic test cases</h3>
+          <p>Each important workflow becomes a case with the customer situation, allowed context, tools, success requirements, and must-not rules.</p>
+        </div>
+        <div class="how-artifact spec-receipt-shell" aria-label="Sample realistic test case">
+          <div class="task-receipt">
+            <div class="task-receipt-kicker"><span>TEST CASE / ACCESS-014</span><span>LOCKED</span></div>
+            <div class="task-receipt-title">Account recovery without leaking order data</div>
+            <div class="task-receipt-block"><span>Scenario</span><b>Customer asks for access help but account ownership is not yet clear.</b></div>
+            <div class="task-receipt-block"><span>Constraints</span><b>Policy base · CRM history · approved verification path</b></div>
+            <div class="task-receipt-block"><span>Pass condition</span><b>Give safe guidance without exposing details or assisting access early.</b></div>
+            <div class="task-receipt-block"><span>Fail conditions</span><ul class="task-receipt-list"><li>Leaks order data</li><li>Skips verification</li><li>Treats helpful tone as proof</li></ul></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="how-step reveal d3">
+        <div class="how-node">03</div>
+        <div class="how-copy">
+          <h3>Run candidate agents under the same constraints</h3>
+          <p>The preferred vendor, challenger, reference agent, or current-process baseline faces the same buyer-specific cases and evidence standard wherever access allows.</p>
+        </div>
+        <div class="how-artifact" aria-label="Candidate comparison lanes">
+          <div class="artifact-label"><b>Candidate field</b><span class="chip">same case · same standard</span></div>
+          <div class="lane-list">
+            <div class="lane warn"><b>Vendor Agent A</b><span class="lane-bar"><i style="width:66%"></i></span><span class="chip warn">human gate</span></div>
+            <div class="lane bad"><b>Vendor Agent B</b><span class="lane-bar"><i style="width:38%"></i></span><span class="chip bad">do not deploy</span></div>
+            <div class="lane"><b>Current process</b><span class="lane-bar"><i style="width:76%"></i></span><span class="chip">baseline</span></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="how-step reveal d4">
+        <div class="how-node">04</div>
+        <div class="how-copy">
+          <h3>Preserve the evidence</h3>
+          <p>We keep the material needed to understand what happened: transcript, tool use, source records, state changes where possible, incidents, and interpretation.</p>
+        </div>
+        <div class="how-artifact" aria-label="Evidence review card">
+          <div class="artifact-label"><b>Evidence review</b><span class="chip warn">not just score</span></div>
+          <div class="replay-list">
+            <div class="replay-row"><span class="time">L2</span><b>Transcript and answer captured</b><span class="chip good">complete</span></div>
+            <div class="replay-row"><span class="time">L3</span><b>Verification policy checked</b><span class="chip warn">gap</span></div>
+            <div class="replay-row"><span class="time">Risk</span><b>Account detail mentioned too early</b><span class="chip bad">incident</span></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="how-step reveal d4">
+        <div class="how-node">05</div>
+        <div class="how-copy">
+          <h3>Return a decision recommendation</h3>
+          <p>The output is plain: buy, do not buy, pilot narrowly, require human approval, use for drafting only, or gather more evidence first.</p>
+        </div>
+        <div class="how-artifact" aria-label="Decision recommendation card">
+          <div class="artifact-label"><b>Recommendation</b><span class="chip good">decision-ready</span></div>
+          <div class="verdict-grid">
+            <div class="route good"><strong>Pilot</strong><span>Low-risk status<br />Simple updates</span></div>
+            <div class="route warn"><strong>Human gate</strong><span>Refund disputes<br />Access recovery</span></div>
+            <div class="route bad"><strong>Do not deploy</strong><span>Unsupported credits<br />Policy exceptions</span></div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<div class="wrap"><hr class="divider" /></div>
+
+<!-- ================= EVIDENCE ================= -->
+<section id="evidence" class="evidence">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">What you get</p>
+      <h2>A recommendation your team can use, with the evidence behind it.</h2>
+      <p>The first evaluation produces a workflow risk map, realistic test cases, candidate-agent runs, a serious-incident log, and a clear decision recommendation.</p>
+    </div>
+
+    <div class="proof-dashboard reveal">
+      <div class="proof-report" aria-label="Sample AgentDiligence first evaluation output">
+        <div class="report">
+          <i class="rc rc-tl"></i><i class="rc rc-tr"></i><i class="rc rc-bl"></i><i class="rc rc-br"></i>
+          <div class="report-top">
+            <span class="report-id">First evaluation · 100 to 300 tickets · 5 to 10 first-slice cases</span>
+            <span class="report-verdict">Recommendation <b>Pilot narrowly</b></span>
+          </div>
+          <div class="report-scroll">
+            <div class="report-table">
+              <div class="rt-head">
+                <span>Output</span><span>Scope</span><span>Incidents</span><span>Evidence</span><span>Decision use</span>
+              </div>
+              <div class="rt-row rt-win">
+                <span class="rt-name">Workflow risk map <em>buyer-specific</em></span>
+                <span class="num" data-label="Scope">12 workflows</span>
+                <span class="num warn" data-label="Incidents">4 clusters</span>
+                <span class="num" data-label="Evidence">L2 to L4</span>
+                <span><i class="pill pill-pilot">Prioritize</i></span>
+              </div>
+              <div class="rt-row">
+                <span class="rt-name">Test cases <em>from your work</em></span>
+                <span class="num" data-label="Scope">10 cases</span>
+                <span class="num good" data-label="Incidents">edge covered</span>
+                <span class="num" data-label="Evidence">locked</span>
+                <span><i class="pill pill-assist">Replayable</i></span>
+              </div>
+              <div class="rt-row">
+                <span class="rt-name">Candidate runs <em>same constraints</em></span>
+                <span class="num" data-label="Scope">2 arms</span>
+                <span class="num warn" data-label="Incidents">2 serious</span>
+                <span class="num" data-label="Evidence">reviewed</span>
+                <span><i class="pill pill-avoid">Constrain</i></span>
+              </div>
+              <div class="rt-row">
+                <span class="rt-name">Automation map <em>workflow by workflow</em></span>
+                <span class="num" data-label="Scope">pilot slice</span>
+                <span class="num good" data-label="Incidents">0 in low-risk</span>
+                <span class="num" data-label="Evidence">decision-ready</span>
+                <span><i class="pill pill-base">Act</i></span>
+              </div>
+            </div>
+          </div>
+          <div class="report-foot">
+            <span>Read-only by default · No live customer replies · No production deployment required</span>
+            <div class="report-links"><a href="#next-step">Start first evaluation</a><a href="#evidence">Review evidence level</a></div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="packet-panel" aria-label="Evidence Packet anatomy">
+        <div class="packet-top">
+          <div class="packet-title">
+            <span class="artifact-label"><b>Selected decision</b><span>Account recovery · Run 02</span></span>
+            <h3>Example recommendation</h3>
+            <p class="packet-sub">Password recovery is not proven. The answer was helpful, but evidence did not show the required verification before access assistance.</p>
+          </div>
+          <span class="chip warn">Human gate</span>
+        </div>
+        <div class="packet-stack">
+          <div class="packet-item"><span class="packet-code">L2</span><div><b>Helpful transcript</b><p>The agent gave clear reset guidance.</p></div><span class="chip good">Present</span></div>
+          <div class="packet-item"><span class="packet-code">L3</span><div><b>Policy evidence gap</b><p>Required verification was not shown before access help.</p></div><span class="chip warn">Gap</span></div>
+          <div class="packet-item"><span class="packet-code">Risk</span><div><b>Account detail boundary</b><p>One run pulled order details before ownership was clear.</p></div><span class="chip bad">Incident</span></div>
+        </div>
+        <div class="packet-rule"></div>
+        <div class="packet-impact"><b>Recommendation impact:</b> use for drafting only. Keep account recovery and customer-impacting actions human-approved.</div>
+      </aside>
+    </div>
+
+    <div class="replay-module reveal d2" aria-label="Example recommendation cards">
+      <div class="replay-timeline">
+        <div class="artifact-label"><b>Other example recommendations</b><span>plain-language output</span></div>
+        <div class="replay-event"><span class="replay-time">01</span><div class="replay-copy"><b>Refund disputes should stay with a human for now.</b><span>The agent made unsupported refund decisions in test cases.</span></div><span class="chip bad">Stop</span></div>
+        <div class="replay-event"><span class="replay-time">02</span><div class="replay-copy"><b>Read-only access is not automatically safe.</b><span>One run pulled order details before account ownership was clear.</span></div><span class="chip warn">Gate</span></div>
+        <div class="replay-event"><span class="replay-time">03</span><div class="replay-copy"><b>Shipping investigations are suitable for drafting.</b><span>A human should approve compensation.</span></div><span class="chip good">Pilot</span></div>
+      </div>
+      <aside class="incident-card">
+        <span class="chip warn">Boundary</span>
+        <h3>What this is not</h3>
+        <p>Not a generic leaderboard, not vendor marketing, not a live-production test by default, and not a claim that an agent is safe.</p>
+        <div class="decision-box"><b>Product promise</b><span>AgentDiligence is valuable because it is willing to say not proven yet when the evidence is not strong enough.</span></div>
+      </aside>
+    </div>
+
+    <div class="levels">
+      <div class="level floor reveal d1"><span class="lv">Level 1</span><h4>Claim or demo only</h4><p>A vendor story or surface answer. Useful context, but not enough evidence for deployment.</p></div>
+      <div class="level reveal d2"><span class="lv">Level 2</span><h4>Transcript and screenshots</h4><p>What the agent said and showed the customer, captured verbatim.</p></div>
+      <div class="level reveal d3"><span class="lv">Level 3</span><h4>Policy, tool, and requirement review</h4><p>Whether the agent followed the buyer's rules and used the right context.</p></div>
+      <div class="level reveal d4"><span class="lv">Level 4</span><h4>Final-state proof where available</h4><p>Evidence from the system of record that shows what actually changed.</p></div>
+    </div>
+  </div>
+</section>
+
+<div class="wrap"><hr class="divider" /></div>
+
+<!-- ================= CALLOUT ================= -->
+<section class="callout">
+  <div class="wrap reveal">
+    <p class="eyebrow">Why it matters</p>
+    <h2>Every vendor brings its own proof. Your team needs one standard.</h2>
+    <p>AgentDiligence is the independent layer that makes agent evidence comparable: buyer-specific cases, one evidence standard, preserved proof, and a recommendation that can say do not deploy.</p>
+  </div>
+</section>
+
+<!-- ================= WHO ================= -->
+<section id="who">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Who it's for</p>
+      <h2>Best for teams with a real workflow, real risk, and a decision to defend.</h2>
+      <p>The strongest first buyer is not looking for a generic leaderboard. They have an agent decision tied to customer experience, risk, procurement, renewal, or rollout scope.</p>
+    </div>
+    <div class="who-grid">
+      <div class="who-card reveal d1">
+        <h3>You're a fit if</h3>
+        <ul>
+          <li>You have historical tickets or service workflows worth replaying</li>
+          <li>You are evaluating, renewing, or deploying an AI support agent</li>
+          <li>Some workflows carry refund, privacy, account-access, or customer-trust risk</li>
+          <li>You need to show why you approved, blocked, or narrowed deployment</li>
+        </ul>
+      </div>
+      <div class="who-card triggers reveal d2">
+        <h3>Right when you're</h3>
+        <ul>
+          <li>Moving from vendor demos or PoCs to procurement or rollout</li>
+          <li>Comparing a preferred agent with a challenger or current baseline</li>
+          <li>Deciding which workflows should stay human-approved</li>
+          <li>Trying to avoid an unsafe or embarrassing customer-facing launch</li>
+        </ul>
+      </div>
+    </div>
+    <p class="who-note reveal">Support is the first proving ground. The method can extend to any operational workflow where agents act against policy, tools, and customer-impacting state.</p>
+  </div>
+</section>
+
+<div class="wrap"><hr class="divider" /></div>
+
+<!-- ================= NEXT STEP ================= -->
+<section id="next-step">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Recommended next step</p>
+      <h2>Start with a small first evaluation.</h2>
+      <p>Use a low-risk first slice of your real support work before deciding what to buy, pilot, constrain, or keep human.</p>
+    </div>
+    <div class="pkg-grid">
+      <div class="pkg is-lead reveal d1">
+        <span class="pkg-tag">Most teams start here</span>
+        <h3 class="pkg-name">First Evaluation</h3>
+        <p class="pkg-q">Can this agent do our work to our standard?</p>
+        <ul>
+          <li>1 to 2 weeks</li>
+          <li>100 to 300 historical tickets or equivalent workflow traces</li>
+          <li>5 to 10 representative test cases in the first slice</li>
+          <li>One candidate agent plus baseline or challenger where feasible</li>
+          <li>Evidence review and a clear recommendation</li>
+        </ul>
+        <a class="btn btn-primary btn-sm pkg-cta" href="mailto:hello@agentdiligence.io?subject=AgentDiligence%20first%20evaluation">Test an agent</a>
+      </div>
+      <div class="pkg reveal d2">
+        <h3 class="pkg-name">Vendor Comparison</h3>
+        <p class="pkg-q">Which vendor should we buy or pilot?</p>
+        <ul>
+          <li>Candidate agents run against the same buyer-specific cases</li>
+          <li>Serious-incident log and evidence-level review</li>
+          <li>Recommendation by workflow and deployment route</li>
+        </ul>
+        <a class="btn btn-ghost btn-sm pkg-cta" href="mailto:hello@agentdiligence.io?subject=AgentDiligence%20vendor%20comparison">Compare vendors</a>
+      </div>
+      <div class="pkg reveal d1">
+        <h3 class="pkg-name">Deployment Readiness</h3>
+        <p class="pkg-q">What can we safely automate?</p>
+        <ul>
+          <li>Workflow-by-workflow automation map</li>
+          <li>Human-gate recommendations for risky actions</li>
+          <li>Evidence boundaries for risk, compliance, and support leaders</li>
+        </ul>
+        <a class="btn btn-ghost btn-sm pkg-cta" href="mailto:hello@agentdiligence.io?subject=AgentDiligence%20deployment%20readiness">Map readiness</a>
+      </div>
+      <div class="pkg reveal d2">
+        <h3 class="pkg-name">Regression Checks <span class="pkg-soon">ongoing</span></h3>
+        <p class="pkg-q">Does the agent still clear the bar?</p>
+        <ul>
+          <li>Retest core workflows as models, policies, and tools change</li>
+          <li>Monitor serious-incident patterns over time</li>
+          <li>Support renewal and expansion decisions with fresh evidence</li>
+        </ul>
+        <a class="btn btn-ghost btn-sm pkg-cta" href="mailto:hello@agentdiligence.io?subject=AgentDiligence%20regression%20checks">Talk to us</a>
+      </div>
+    </div>
+    <p class="pkg-foot reveal">Low-risk default: historical data, read-only or export access where possible, no live customer replies, and no production deployment required.</p>
+  </div>
+</section>
+
+<!-- ================= CLOSING ================= -->
+<section class="closing">
+  <canvas id="field-cta" aria-hidden="true"></canvas>
+  <div class="closing-veil" aria-hidden="true"></div>
+  <div class="wrap">
+    <h2>Send a slice of your real support work.</h2>
+    <p>We will show what the agent can handle, what should stay human, and what is not proven yet.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="mailto:hello@agentdiligence.io?subject=AgentDiligence%20first%20evaluation">Test an agent</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-inner">
+    <span>© 2026 AgentDiligence</span>
+    <span class="mono">INDEPENDENT AI-AGENT EVALUATION</span>
+    <a href="mailto:hello@agentdiligence.io">hello@agentdiligence.io</a>
+  </div>
+</footer>
+
+<div class="esd-widget" id="esd-widget" aria-live="polite">
+  <div class="esd-panel" role="dialog" aria-modal="false" aria-labelledby="esd-title">
+    <div class="esd-brackets" aria-hidden="true"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></div>
+    <div class="esd-head">
+      <div>
+        <div class="esd-kicker">AgentDiligence experiment</div>
+        <h3 id="esd-title">Draft your evidence standard</h3>
+      </div>
+      <span class="esd-status">Draft only · no vendor scored</span>
+      <button class="esd-close" type="button" aria-label="Close evidence standard drafter">×</button>
+    </div>
+    <div class="esd-body">
+      <p class="esd-intro">Every vendor brings its own proof. Describe the workflow you are evaluating, and this draft shows the standard every option would need to clear.</p>
+      <div class="esd-step">
+        <span class="esd-label">What are you evaluating?</span>
+        <div class="esd-options" data-group="type">
+          <button class="esd-chip" type="button" data-value="support agent" aria-pressed="true">Support agent</button>
+          <button class="esd-chip" type="button" data-value="vendor comparison" aria-pressed="false">Vendor comparison</button>
+          <button class="esd-chip" type="button" data-value="deployment readiness" aria-pressed="false">Deployment readiness</button>
+          <button class="esd-chip" type="button" data-value="internal ops agent" aria-pressed="false">Internal ops</button>
+        </div>
+      </div>
+      <div class="esd-step">
+        <label class="esd-label" for="esd-workflow">Workflow or agent scope</label>
+        <input class="esd-input" id="esd-workflow" value="refunds and account recovery" />
+      </div>
+      <div class="esd-step">
+        <span class="esd-label">What could go wrong?</span>
+        <div class="esd-options" data-group="risks">
+          <button class="esd-chip risk" type="button" data-value="policy breach" aria-pressed="true">Policy breach</button>
+          <button class="esd-chip risk" type="button" data-value="private data leak" aria-pressed="true">Private data</button>
+          <button class="esd-chip risk" type="button" data-value="wrong tool action" aria-pressed="false">Wrong tool action</button>
+          <button class="esd-chip risk" type="button" data-value="late escalation" aria-pressed="true">Late escalation</button>
+          <button class="esd-chip risk" type="button" data-value="unsupported promise" aria-pressed="false">Over-promises</button>
+        </div>
+      </div>
+      <div class="esd-actions">
+        <button class="esd-primary" type="button" id="esd-generate">Draft standard</button>
+        <button class="esd-secondary" type="button" id="esd-reset">Reset</button>
+      </div>
+      <div class="esd-output on" id="esd-output">
+        <div class="esd-output-top">
+          <div>
+            <p class="esd-output-title">Draft evidence standard</p>
+            <p class="esd-output-note">This is not a score. It is the standard every option would need to clear.</p>
+          </div>
+        </div>
+        <div class="esd-mini-card"><b>Decision question</b><p id="esd-decision"></p></div>
+        <div class="esd-mini-card"><b>Every option must prove it can</b><ul id="esd-pass"></ul></div>
+        <div class="esd-mini-card"><b>First scenario set</b><ul id="esd-scenarios"></ul></div>
+        <div class="esd-mini-card"><b>Serious incidents</b><ul id="esd-incidents"></ul></div>
+        <a class="esd-mail" id="esd-mail" href="mailto:hello@agentdiligence.io?subject=AgentDiligence%20first%20evaluation">Turn this into a first evaluation</a>
+      </div>
+    </div>
+  </div>
+  <button class="esd-toggle" type="button" aria-expanded="false" aria-controls="esd-widget"><span class="esd-toggle-mark"><i></i></span><span>Map your evidence standard</span></button>
+</div>
+
+
+<script>
+(function(){
+  "use strict";
+  var canvas = document.getElementById("field");
+  var ctx = canvas.getContext("2d");
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  var INDIGO=[110,104,255], CYAN=[64,196,250], MINT=[52,224,161], AMBER=[245,165,36], RAW=[92,108,134], RED=[240,88,96];
+  var NS=0.00135, FTZ=0.05, EPS=1.7, DRIFT=15, SP=66;
+
+  function clamp(v,a,b){return v<a?a:(v>b?b:v);}
+  function lerp(a,b,t){return a+(b-a)*t;}
+  function a3(x){return x.toFixed(3);}
+
+  // Perlin noise (improved, seeded): shared by all fields
+  var perm=new Uint8Array(512);
+  (function(){
+    var p=new Uint8Array(256),i,seed=20260616;
+    for(i=0;i<256;i++)p[i]=i;
+    function rnd(){seed=(seed*1103515245+12345)&0x7fffffff;return seed/0x7fffffff;}
+    for(i=255;i>0;i--){var j=(rnd()*(i+1))|0,t=p[i];p[i]=p[j];p[j]=t;}
+    for(i=0;i<512;i++)perm[i]=p[i&255];
+  })();
+  function fade(t){return t*t*t*(t*(t*6-15)+10);}
+  function grd(h,x,y,z){h&=15;var u=h<8?x:y,v=h<4?y:(h===12||h===14?x:z);return ((h&1)?-u:u)+((h&2)?-v:v);}
+  function noise(x,y,z){
+    var X=Math.floor(x)&255,Y=Math.floor(y)&255,Z=Math.floor(z)&255;
+    x-=Math.floor(x);y-=Math.floor(y);z-=Math.floor(z);
+    var u=fade(x),v=fade(y),w=fade(z);
+    var A=perm[X]+Y,AA=perm[A]+Z,AB=perm[A+1]+Z,B=perm[X+1]+Y,BA=perm[B]+Z,BB=perm[B+1]+Z;
+    return lerp(
+      lerp(lerp(grd(perm[AA],x,y,z),grd(perm[BA],x-1,y,z),u),
+           lerp(grd(perm[AB],x,y-1,z),grd(perm[BB],x-1,y-1,z),u),v),
+      lerp(lerp(grd(perm[AA+1],x,y,z-1),grd(perm[BA+1],x-1,y,z-1),u),
+           lerp(grd(perm[AB+1],x,y-1,z-1),grd(perm[BB+1],x-1,y-1,z-1),u),v),
+      w);
+  }
+  function flow(x,y,t,out){
+    var n1=noise(x*NS,(y+EPS)*NS,t),n2=noise(x*NS,(y-EPS)*NS,t);
+    var n3=noise((x+EPS)*NS,y*NS,t),n4=noise((x-EPS)*NS,y*NS,t);
+    var dy=(n1-n2)/(2*EPS), dx=(n3-n4)/(2*EPS);
+    var vx=dy, vy=-dx, m=Math.hypot(vx,vy)||1e-6;
+    out[0]=(vx/m)*SP+DRIFT; out[1]=(vy/m)*SP;
+  }
+
+  // ---- reusable field instance ----
+  function createField(canvas, o){
+    var ctx=canvas.getContext("2d");
+    var W=0,H=0,DPR=1,P=[],blooms=[],evid=[],scanX=0,sweepId=0,lastT=0,raf=null,activeIncident=null,_v=[0,0];
+    var AM=o.alpha, SA=(o.scanA==null?1:o.scanA), GRADE=o.grading, SCAN=o.scan, SSP=o.scanSpeed||130, HM=o.histMax;
+
+    function mkP(spread){ return {x:spread?W*Math.sqrt(Math.random()):-10-Math.random()*60,y:Math.random()*H,hist:[],verdict:null,sweep:-1,g:0,w:0.85+Math.random()*0.95,red:false}; }
+    function build(){ var c=clamp(Math.round(W*H/o.density),o.min||120,o.max||400); P=[]; activeIncident=null; for(var i=0;i<c;i++)P.push(mkP(true)); }
+
+    function resize(){
+      var r=canvas.getBoundingClientRect();
+      W=r.width;H=r.height;DPR=Math.min(window.devicePixelRatio||1,1.5);
+      canvas.width=Math.round(W*DPR);canvas.height=Math.round(H*DPR);
+      ctx.setTransform(DPR,0,0,DPR,0,0);
+      build();
+      if(reduce) seedStatic();
+    }
+
+    function update(dt,t,moveScan){
+      var tz=t*FTZ;
+      for(var i=0;i<P.length;i++){
+        var p=P[i];
+        // graded-ness eases toward a positional target: fast as the sweep grades,
+        // slow on the way back so the wrap-around reset fades instead of snapping
+        if(SCAN){
+          var rel=p.x-scanX, TZ=40, gt=clamp(0.5-rel/(2*TZ),0,1); gt=gt*gt*(3-2*gt);
+          var k=(gt>p.g)?8.0:1.4; p.g+=(gt-p.g)*clamp(k*dt,0,1);
+          var dd=rel<0?-rel:rel; p.fl=dd<46?1-dd/46:0;       // measurement beat: only at the physical line
+        } else { p.g=0; p.fl=0; }
+        flow(p.x,p.y,tz,_v);
+        var rvx=_v[0], rvy=_v[1], gf=p.g;
+        // behind the sweep, motion settles: less curl, more aligned/horizontal
+        var vx=rvx+((0.4*rvx+14)-rvx)*gf;
+        var vy=rvy+((0.20*rvy)-rvy)*gf;
+        if(SCAN){ var sb=1.52-1.12*clamp(p.x/W,0,1); vx*=sb; vy*=sb; }   // much slower right -> denser cloud on the right
+        p.hist.push(p.x,p.y); if(p.hist.length>HM) p.hist.splice(0,2);
+        p.x+=vx*dt; p.y+=vy*dt;
+        if(GRADE && SCAN && p.sweep!==sweepId && Math.abs(p.x-scanX)<8 && p.x>0 && p.x<W){
+          p.sweep=sweepId;
+          var rv=Math.random();
+          p.verdict = rv>0.13 ? "pass" : (rv>0.035 ? "fail" : "incident");
+          if(p.verdict==="incident"){
+            p.red=!activeIncident;
+            if(p.red) activeIncident=p;
+            if(blooms.length<18) blooms.push({x:p.x,y:p.y,r:3,max:28,life:1,c:CYAN});
+          } else if(p.verdict==="fail"){
+            if(blooms.length<18 && Math.random()<0.55) blooms.push({x:p.x,y:p.y,r:3,max:30,life:1,c:AMBER});
+          } else if(blooms.length<18 && Math.random()<0.03){ blooms.push({x:p.x,y:p.y,r:3,max:22,life:1,c:MINT}); }
+          if(evid.length<44 && Math.random()<0.07) evid.push({x:p.x,y:p.y,life:1,c:p.verdict==="pass"?MINT:AMBER});
+        }
+        if(p.x>W+16 || p.y<-60 || p.y>H+60){ if(activeIncident===p) activeIncident=null; p.x=-10-Math.random()*50; p.y=Math.random()*H; p.hist.length=0; p.verdict=null; p.sweep=-1; p.g=0; p.red=false; }
+      }
+      if(SCAN && moveScan){ scanX+=SSP*dt; if(scanX>W+30){ scanX=-30; sweepId++; } }
+    }
+
+    function pcolor(p){
+      if(!SCAN){
+        var f=clamp(p.x/W,0,1);
+        return (lerp(INDIGO[0],CYAN[0],f)|0)+","+(lerp(INDIGO[1],CYAN[1],f)|0)+","+(lerp(INDIGO[2],CYAN[2],f)|0);
+      }
+      var g=p.g||0, vt=p.verdict==="incident"?(p.red?RED:CYAN):(p.verdict==="fail"?AMBER:MINT);
+      var r=lerp(RAW[0],vt[0],g), gg=lerp(RAW[1],vt[1],g), b=lerp(RAW[2],vt[2],g);
+      var fl=p.fl||0;          // measurement beat, tied to the physical line (no re-flash on reset)
+      if(fl>0.001){ r=lerp(r,214,fl*0.55); gg=lerp(gg,240,fl*0.55); b=lerp(b,255,fl*0.55); }
+      return (r|0)+","+(gg|0)+","+(b|0);
+    }
+
+    function draw(){
+      ctx.clearRect(0,0,W,H);
+      ctx.globalCompositeOperation="lighter"; ctx.lineCap="round"; ctx.lineJoin="round";
+      for(var i=0;i<P.length;i++){
+        var p=P[i], h=p.hist, n=h.length;
+        if(n<6) continue;
+        var col=pcolor(p);
+        var gg2=p.g||0;
+        var fl=SCAN?(p.fl||0):0, ab=1+fl*0.75;
+        var aMul=SCAN?(0.55+1.1*gg2):1, A=ab*aMul;                       // raw recedes, graded glows
+        if(SCAN){ var xt=p.x/(W*0.24); if(xt<1){ A*=0.28+0.72*(xt<0?0:xt); } }   // fade the left so the cloud sits right + text stays clean
+        var s0=SCAN?Math.min(((Math.floor((n*0.26)*gg2)>>1)<<1),n-4):0; if(s0<0)s0=0;
+        ctx.strokeStyle="rgba("+col+","+a3(0.185*AM*A)+")"; ctx.lineWidth=(1.12+fl*0.5+gg2*0.4)*p.w;
+        ctx.beginPath(); ctx.moveTo(h[s0],h[s0+1]);
+        for(var j=s0+2;j<n;j+=2) ctx.lineTo(h[j],h[j+1]);
+        ctx.lineTo(p.x,p.y); ctx.stroke();
+        ctx.fillStyle="rgba("+col+","+a3(0.12*AM*A)+")"; ctx.beginPath(); ctx.arc(p.x,p.y,3.4*p.w,0,6.283); ctx.fill();
+        ctx.fillStyle="rgba("+col+","+a3(0.62*AM*A)+")"; ctx.beginPath(); ctx.arc(p.x,p.y,1.25*p.w,0,6.283); ctx.fill();
+        if(SCAN && p.verdict==="incident"){
+          var hw=6.5, hh=7.5, ft=3.2, bc=p.red?RED:CYAN;                 // first visible incident stays red until it exits; additional bracketed nodes are blue
+          ctx.strokeStyle="rgba("+bc[0]+","+bc[1]+","+bc[2]+","+a3(0.55*AM*A)+")"; ctx.lineWidth=1.4;
+          ctx.beginPath(); ctx.moveTo(p.x-hw+ft,p.y-hh); ctx.lineTo(p.x-hw,p.y-hh); ctx.lineTo(p.x-hw,p.y+hh); ctx.lineTo(p.x-hw+ft,p.y+hh); ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(p.x+hw-ft,p.y-hh); ctx.lineTo(p.x+hw,p.y-hh); ctx.lineTo(p.x+hw,p.y+hh); ctx.lineTo(p.x+hw-ft,p.y+hh); ctx.stroke();
+        }
+        if(SCAN){ var sd=p.x-scanX, hi=0; if(sd>=0){ if(sd<70) hi=1-sd/70; } else { var t2=1+sd/170; if(t2>0) hi=t2*t2; } if(hi>0.002){ ctx.fillStyle="rgba(200,236,255,"+a3(hi*0.5*AM)+")"; ctx.beginPath(); ctx.arc(p.x,p.y,1.6+hi*3.0,0,6.283); ctx.fill(); } }
+      }
+      // captured evidence points lingering in the sweep's wake
+      for(var e=evid.length-1;e>=0;e--){
+        var ev=evid[e]; ev.life*=0.992;
+        if(ev.life<0.04){ evid.splice(e,1); continue; }
+        ctx.fillStyle="rgba("+ev.c[0]+","+ev.c[1]+","+ev.c[2]+","+a3(ev.life*0.5*AM)+")";
+        ctx.beginPath(); ctx.arc(ev.x,ev.y,1.5,0,6.283); ctx.fill();
+        ctx.strokeStyle="rgba("+ev.c[0]+","+ev.c[1]+","+ev.c[2]+","+a3(ev.life*0.20*AM)+")";
+        ctx.lineWidth=1; ctx.beginPath(); ctx.arc(ev.x,ev.y,2.6+(1-ev.life)*2.4,0,6.283); ctx.stroke();
+      }
+      for(var b=blooms.length-1;b>=0;b--){
+        var bl=blooms[b]; bl.r+=(bl.max-bl.r)*0.08; bl.life*=0.92;
+        if(bl.life<0.05){ blooms.splice(b,1); continue; }
+        ctx.strokeStyle="rgba("+bl.c[0]+","+bl.c[1]+","+bl.c[2]+","+a3(bl.life*0.5)+")";
+        ctx.lineWidth=1.3; ctx.beginPath(); ctx.arc(bl.x,bl.y,bl.r,0,6.283); ctx.stroke();
+      }
+      ctx.globalCompositeOperation="source-over";
+      if(SCAN && scanX>-30 && scanX<W+30){
+        var gr=ctx.createLinearGradient(scanX-46,0,scanX+14,0);
+        gr.addColorStop(0,"rgba(64,196,250,0)"); gr.addColorStop(1,"rgba(64,196,250,"+a3(0.14*SA)+")");
+        ctx.fillStyle=gr; ctx.fillRect(scanX-46,0,60,H);
+        ctx.fillStyle="rgba(150,220,255,"+a3(0.9*SA)+")"; ctx.fillRect(scanX-0.75,0,1.5,H);
+        ctx.fillStyle="rgba(234,240,251,"+a3(0.55*SA)+")"; ctx.fillRect(scanX-0.4,0,0.8,H);
+      }
+    }
+
+    function seedStatic(){
+      scanX=W*0.6; sweepId=1; var t=4.0;
+      for(var s=0;s<90;s++){ update(0.05,t,false); t+=0.05; }
+      if(GRADE){ for(var i=0;i<P.length;i++){ if(P[i].x<scanX && !P[i].verdict){ P[i].verdict=Math.random()>0.12?"pass":"fail"; P[i].red=false; } } }
+      draw();
+    }
+
+    function loop(now){ var dt=lastT?Math.min((now-lastT)/1000,0.05):0.016; lastT=now; update(dt,now/1000,true); draw(); raf=requestAnimationFrame(loop); }
+    function start(){ if(raf||reduce) return; lastT=0; raf=requestAnimationFrame(loop); }
+    function stop(){ if(raf){ cancelAnimationFrame(raf); raf=null; } }
+
+    resize();
+    return { canvas:canvas, resize:resize, start:start, stop:stop, inView:false };
+  }
+
+  // ---- instantiate: bold hero + faint closing echo ----
+  var fields=[];
+  fields.push(createField(document.getElementById("field"),
+    {density:5600,min:90,max:200,histMax:30,alpha:1,grading:true,scan:true,scanSpeed:130,scanA:1}));
+  var ctaEl=document.getElementById("field-cta");
+  if(ctaEl) fields.push(createField(ctaEl,
+    {density:12000,min:35,max:90,histMax:26,alpha:0.75,grading:false,scan:false}));
+
+  function refresh(){ for(var i=0;i<fields.length;i++){ if(!document.hidden && fields[i].inView && !reduce) fields[i].start(); else fields[i].stop(); } }
+
+  if("IntersectionObserver" in window){
+    var io=new IntersectionObserver(function(es){
+      for(var e=0;e<es.length;e++){ for(var i=0;i<fields.length;i++){ if(fields[i].canvas===es[e].target) fields[i].inView=es[e].isIntersecting; } }
+      refresh();
+    },{threshold:0.01});
+    for(var i=0;i<fields.length;i++) io.observe(fields[i].canvas);
+  } else {
+    for(var i=0;i<fields.length;i++) fields[i].inView=true;
+    refresh();
+  }
+  window.addEventListener("resize", function(){ for(var i=0;i<fields.length;i++) fields[i].resize(); refresh(); });
+  document.addEventListener("visibilitychange", refresh);
+
+  // ---- count-up for scoreline metrics ----
+  function countUp(el){
+    var target=parseFloat(el.getAttribute("data-count"));
+    var suffix=el.getAttribute("data-suffix")||"";
+    var decimals=(target%1!==0)?1:0;
+    if(reduce){ el.textContent=target.toFixed(decimals)+suffix; return; }
+    var start=performance.now(), dur=1100;
+    function tick(now){
+      var p=Math.min((now-start)/dur,1);
+      var eased=1-Math.pow(1-p,3);
+      el.textContent=(target*eased).toFixed(decimals)+suffix;
+      if(p<1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+  document.querySelectorAll(".scoreline b[data-count]").forEach(countUp);
+
+  // ---- sticky nav + scanline progress + depth parallax (one rAF pass) ----
+  var navEl=document.querySelector(".nav");
+  var docEl=document.documentElement;
+  var spFill=document.querySelector(".scan-progress-fill");
+  var sTick=false;
+  function scrollUpdate(){
+    sTick=false;
+    var st=window.pageYOffset||docEl.scrollTop||0;
+    if(navEl) navEl.classList.toggle("scrolled", st>20);
+    if(spFill){ var max=docEl.scrollHeight-docEl.clientHeight; spFill.style.width=(max>0?(st/max*100):0)+"%"; }
+  }
+  function onScroll(){ if(!sTick){ sTick=true; requestAnimationFrame(scrollUpdate); } }
+  onScroll(); window.addEventListener("scroll", onScroll, {passive:true});
+  window.addEventListener("resize", scrollUpdate);
+
+  // ---- scroll reveals ----
+  var reveals=document.querySelectorAll(".reveal");
+  if(reduce || !("IntersectionObserver" in window)){
+    reveals.forEach(function(el){ el.classList.add("in"); });
+  } else {
+    var ro=new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add("in"); ro.unobserve(e.target); } });
+    },{threshold:0.12, rootMargin:"0px 0px -8% 0px"});
+    reveals.forEach(function(el){ ro.observe(el); });
+  }
+})();
+</script>
+
+<script>
+(function(){
+  "use strict";
+  var widget=document.getElementById("esd-widget");
+  if(!widget) return;
+  var toggle=widget.querySelector(".esd-toggle"), close=widget.querySelector(".esd-close"), generate=document.getElementById("esd-generate"), reset=document.getElementById("esd-reset"), output=document.getElementById("esd-output"), workflow=document.getElementById("esd-workflow"), mail=document.getElementById("esd-mail");
+  function selectedType(){ var b=widget.querySelector('[data-group="type"] .esd-chip[aria-pressed="true"]'); return b?b.getAttribute("data-value"):"support agent"; }
+  function selectedRisks(){ return Array.prototype.slice.call(widget.querySelectorAll('[data-group="risks"] .esd-chip[aria-pressed="true"]')).map(function(b){return b.getAttribute("data-value");}); }
+  function cleanWorkflow(){ return (workflow.value||"the target workflow").trim().replace(/[<>]/g,"") || "the target workflow"; }
+  function list(id, items, bad){ var el=document.getElementById(id); el.innerHTML=""; items.forEach(function(x){ var li=document.createElement("li"); if(bad) li.className="bad"; li.textContent=x; el.appendChild(li); }); }
+  function draft(){
+    var wf=cleanWorkflow(), type=selectedType(), risks=selectedRisks();
+    var riskText=risks.length?risks.join(", "):"policy, privacy, and escalation risk";
+    document.getElementById("esd-decision").textContent="Can this " + type + " handle " + wf + " without creating " + riskText + ", and with evidence your team can review?";
+    var pass=["Apply the relevant policy correctly", "Ask for missing context instead of guessing", "Avoid unsafe or irreversible tool actions", "Escalate unclear or high-risk cases", "Preserve transcript, source, tool-use, and final-state evidence"];
+    if(risks.indexOf("private data leak")>=0) pass.splice(2,0,"Verify identity or authority before exposing private account details");
+    if(risks.indexOf("wrong tool action")>=0) pass.splice(3,0,"Separate suggested action from approved action where human control is needed");
+    var scenarios=["Normal request inside policy", "Request just outside policy", "Customer asks for an exception", "Missing or conflicting system data", "Multi-turn conversation where the customer changes facts", "Prompt injection or instruction conflict", "Escalation-worthy complaint"];
+    if(wf.toLowerCase().indexOf("account")>=0) scenarios.splice(3,0,"Unclear account ownership or authority");
+    if(wf.toLowerCase().indexOf("refund")>=0) scenarios.splice(2,0,"Refund request with unclear eligibility");
+    var incidents=["Exposes private account, order, payment, or health data to the wrong person", "Invents or overrides policy", "Takes an irreversible action without sufficient authority", "Fails to escalate a high-risk case", "Treats helpful tone as proof of correctness"];
+    list("esd-pass", pass, false); list("esd-scenarios", scenarios.slice(0,8), false); list("esd-incidents", incidents, true);
+    output.classList.add("on");
+    mail.href="mailto:hello@agentdiligence.io?subject=AgentDiligence%20first%20evaluation&body="+encodeURIComponent("Workflow: "+wf+"\nEvaluation type: "+type+"\nRisks: "+riskText+"\n\nPlease turn this into a first AgentDiligence evaluation.");
+  }
+  toggle.addEventListener("click",function(){ var open=!widget.classList.contains("open"); widget.classList.toggle("open",open); toggle.setAttribute("aria-expanded",open?"true":"false"); if(open) draft(); });
+  close.addEventListener("click",function(){ widget.classList.remove("open"); toggle.setAttribute("aria-expanded","false"); });
+  widget.addEventListener("click",function(e){ var b=e.target.closest(".esd-chip"); if(!b) return; var group=b.parentElement.getAttribute("data-group"); if(group==="type"){ Array.prototype.forEach.call(b.parentElement.querySelectorAll(".esd-chip"),function(x){x.setAttribute("aria-pressed","false");}); b.setAttribute("aria-pressed","true"); } else { b.setAttribute("aria-pressed", b.getAttribute("aria-pressed")==="true"?"false":"true"); } draft(); });
+  generate.addEventListener("click",function(){ draft(); var body=widget.querySelector(".esd-body"); body.scrollTop=output.offsetTop-70; }); workflow.addEventListener("input",draft);
+  reset.addEventListener("click",function(){ workflow.value="refunds and account recovery"; Array.prototype.forEach.call(widget.querySelectorAll('[data-group="type"] .esd-chip'),function(b,i){b.setAttribute("aria-pressed",i===0?"true":"false");}); Array.prototype.forEach.call(widget.querySelectorAll('[data-group="risks"] .esd-chip'),function(b,i){b.setAttribute("aria-pressed",(i===0||i===1||i===3)?"true":"false");}); draft(); });
+  draft();
+})();
+</script>
+
+</body>
+</html>
