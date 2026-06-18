@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AgentDiligence Method First Mockup</title>
+<meta name="description" content="A method-first AgentDiligence homepage mockup focused on buyer evidence before AI support-agent deployment." />
+<meta name="robots" content="noindex,nofollow" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#070B14;
+    --bg2:#0B1220;
+    --ink:#F7FAFF;
+    --muted:#A7B2C7;
+    --soft:#728099;
+    --line:rgba(160,180,220,.17);
+    --line2:rgba(160,200,255,.32);
+    --panel:#101827;
+    --panel2:#131F33;
+    --paper:#F8FBFF;
+    --paperInk:#101827;
+    --paperMuted:#5B667A;
+    --blue:#49A8FF;
+    --cyan:#62D9FF;
+    --green:#48E1A4;
+    --amber:#FFB84D;
+    --red:#FF6B7A;
+    --violet:#8F7BFF;
+    --max:1180px;
+    --gut:clamp(22px,5vw,64px);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    color:var(--ink);
+    background:
+      radial-gradient(circle at 76% 12%, rgba(73,168,255,.23), transparent 30%),
+      radial-gradient(circle at 15% 2%, rgba(143,123,255,.19), transparent 26%),
+      linear-gradient(180deg,#070B14 0%,#0B1220 46%,#070B14 100%);
+    font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 var(--gut)}
+  .mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+  .nav{
+    position:sticky;top:0;z-index:40;
+    border-bottom:1px solid rgba(255,255,255,.07);
+    background:rgba(7,11,20,.77);
+    backdrop-filter:blur(18px);
+  }
+  .nav-inner{height:72px;display:flex;align-items:center;justify-content:space-between;gap:22px}
+  .brand{display:flex;align-items:center;gap:12px;font-weight:750;letter-spacing:-.03em;font-size:19px}
+  .mark{width:30px;height:30px;border-radius:10px;background:linear-gradient(135deg,#182238,#0B1020);border:1px solid var(--line2);position:relative;box-shadow:0 18px 40px rgba(0,0,0,.22)}
+  .mark:before{content:"";position:absolute;inset:7px 9px;border-left:2px solid var(--cyan);border-right:2px solid var(--cyan);border-radius:5px;opacity:.9}
+  .mark:after{content:"";position:absolute;width:7px;height:7px;border-radius:2px;left:11px;top:11px;background:linear-gradient(135deg,var(--green),var(--cyan));box-shadow:0 0 16px rgba(98,217,255,.55)}
+  .nav-links{display:flex;align-items:center;gap:24px;color:var(--muted);font-size:14px;font-weight:600}
+  .nav-links a:hover{color:var(--ink)}
+  .nav-pill{padding:9px 14px;border:1px solid var(--line2);border-radius:999px;color:var(--ink)}
+
+  .hero{position:relative;overflow:hidden;padding:88px 0 58px}
+  .grid-bg{position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);background-size:52px 52px;mask-image:linear-gradient(to bottom,black,transparent 84%);opacity:.5}
+  .hero-layout{position:relative;display:grid;grid-template-columns:minmax(0,.92fr) minmax(460px,1.08fr);gap:54px;align-items:center}
+  .hero-layout>*{min-width:0}
+  .eyebrow{display:inline-flex;align-items:center;gap:9px;border:1px solid var(--line);border-radius:999px;padding:8px 12px;color:#CFE8FF;background:rgba(16,24,39,.62);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+  .eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 16px var(--green)}
+  h1{font-size:clamp(44px,6vw,76px);line-height:.96;letter-spacing:-.06em;margin:22px 0 0;font-weight:800;max-width:11ch}
+  h1 span{color:var(--cyan)}
+  .hero-copy{font-size:19px;color:var(--muted);max-width:640px;margin:24px 0 0}
+  .hero-copy strong{color:var(--ink);font-weight:650}
+  .cta-row{display:flex;align-items:center;flex-wrap:wrap;gap:13px;margin-top:30px}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:13px 18px;border-radius:12px;font-weight:750;font-size:15px;border:1px solid transparent;transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease,background .16s ease}
+  .btn:hover{transform:translateY(-2px)}
+  .primary{background:linear-gradient(135deg,var(--green),var(--cyan));color:#04111B;box-shadow:0 18px 42px rgba(73,168,255,.26)}
+  .secondary{border-color:var(--line2);color:var(--ink);background:rgba(255,255,255,.035)}
+  .first-slice{margin-top:28px;display:flex;flex-wrap:wrap;gap:8px;color:#BCD0E9;font-size:12.5px}
+  .first-slice span{border:1px solid rgba(160,200,255,.18);background:rgba(16,24,39,.56);padding:7px 10px;border-radius:999px}
+
+  .product-board{position:relative;width:100%;min-width:0;border:1px solid var(--line2);border-radius:28px;background:linear-gradient(180deg,rgba(248,251,255,.98),rgba(233,241,252,.96));color:var(--paperInk);box-shadow:0 34px 90px rgba(0,0,0,.42), inset 0 1px 0 #fff;overflow:hidden}
+  .board-top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 20px;border-bottom:1px solid rgba(17,24,39,.09);background:rgba(255,255,255,.6)}
+  .window-dots{display:flex;gap:7px}.window-dots i{width:10px;height:10px;border-radius:50%;background:#D5DEE9}.window-dots i:nth-child(1){background:#FF7E86}.window-dots i:nth-child(2){background:#FFBF5E}.window-dots i:nth-child(3){background:#4BDD9B}
+  .board-title{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#68758A;font-weight:800}
+  .scenario{padding:22px 22px 10px}
+  .scenario-card{border:1px solid #D9E3F1;border-radius:18px;padding:18px;background:#FFFFFF;box-shadow:0 10px 28px rgba(30,41,59,.08)}
+  .scenario-kicker{color:#68758A;font-size:12px;text-transform:uppercase;letter-spacing:.1em;font-weight:800}
+  .scenario h3{font-size:20px;line-height:1.2;margin:8px 0 8px;letter-spacing:-.03em}
+  .scenario p{margin:0;color:var(--paperMuted);font-size:14px}
+  .lanes{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:12px 22px 18px}
+  .lane{background:#fff;border:1px solid #DCE6F2;border-radius:17px;padding:15px;min-height:208px;box-shadow:0 9px 20px rgba(30,41,59,.06)}
+  .lane-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;flex-wrap:wrap;font-size:13px;font-weight:800;color:#182234}
+  .chip{font-size:11px;border-radius:999px;padding:4px 7px;font-weight:800}.good{color:#006B45;background:#DFF8EF}.warn{color:#8A5700;background:#FFF2D7}.stop{color:#9B2334;background:#FFE1E6}
+  .lane ul{list-style:none;padding:0;margin:14px 0 0;display:grid;gap:10px}
+  .lane li{display:flex;align-items:flex-start;gap:8px;color:#59657A;font-size:12.5px}.lane li b{color:#182234}.tick{width:16px;height:16px;border-radius:5px;display:inline-flex;align-items:center;justify-content:center;flex:none;font-size:11px;background:#EAF2FF;color:#276AB3;font-weight:900;margin-top:1px}
+  .verdict{margin:0 22px 22px;border-radius:20px;background:#101827;color:#EDF6FF;padding:18px;display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;box-shadow:0 18px 34px rgba(17,24,39,.2)}
+  .verdict small{display:block;color:#89A3C5;font-size:11px;text-transform:uppercase;letter-spacing:.12em;font-weight:800}.verdict b{display:block;margin-top:5px;font-size:18px;letter-spacing:-.03em}.verdict .pill{background:linear-gradient(135deg,var(--amber),#FFE08A);color:#271803;padding:9px 12px;border-radius:999px;font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.06em}
+
+  section{padding:84px 0;border-top:1px solid rgba(255,255,255,.06)}
+  .section-head{max-width:780px;margin-bottom:34px}.section-head h2{font-size:clamp(31px,4vw,50px);line-height:1.02;letter-spacing:-.055em;margin:10px 0 0}.section-head p{color:var(--muted);font-size:18px;margin:16px 0 0;max-width:66ch}.label{font-family:"IBM Plex Mono";color:var(--cyan);font-size:12px;text-transform:uppercase;letter-spacing:.16em;font-weight:700}
+  .compare{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.compare-card{background:linear-gradient(180deg,rgba(19,31,51,.95),rgba(12,19,32,.95));border:1px solid var(--line);border-radius:20px;padding:24px}.compare-card h3{margin:0;font-size:20px;letter-spacing:-.03em}.compare-card p{margin:12px 0 0;color:var(--muted);font-size:15px}.compare-card.feature{border-color:rgba(98,217,255,.55);box-shadow:0 0 0 1px rgba(98,217,255,.12),0 26px 60px rgba(73,168,255,.12)}
+  .flow{display:grid;grid-template-columns:1.1fr .9fr;gap:20px;align-items:stretch}.flow-card,.output-card{background:rgba(16,24,39,.72);border:1px solid var(--line);border-radius:24px;padding:26px}.steps{display:grid;gap:12px}.step{display:grid;grid-template-columns:34px 1fr;gap:13px;align-items:start}.step-num{width:34px;height:34px;border-radius:11px;background:rgba(98,217,255,.12);color:var(--cyan);display:flex;align-items:center;justify-content:center;font-weight:850}.step h3{margin:0;font-size:17px}.step p{margin:4px 0 0;color:var(--muted);font-size:14px}.output-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.output{border:1px solid var(--line);border-radius:15px;padding:14px;background:rgba(255,255,255,.035)}.output b{display:block;font-size:14px}.output span{display:block;margin-top:4px;color:var(--muted);font-size:12.5px}
+  .recommendations{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}.rec{position:relative;background:#F8FBFF;color:#101827;border-radius:21px;padding:22px;border:1px solid rgba(255,255,255,.65);box-shadow:0 20px 50px rgba(0,0,0,.22)}.rec:before{content:"";position:absolute;left:22px;right:22px;top:0;height:4px;border-radius:0 0 999px 999px;background:var(--blue)}.rec h3{margin:8px 0 8px;font-size:18px;letter-spacing:-.03em}.rec p{margin:0;color:#5B667A;font-size:14.5px}.rec.stop:before{background:var(--red)}.rec.warn:before{background:var(--amber)}.rec.good:before{background:var(--green)}
+  .proof{display:grid;grid-template-columns:.9fr 1.1fr;gap:20px}.boundary{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:22px;padding:24px}.boundary h3{margin:0 0 14px}.boundary ul{margin:0;padding-left:20px;color:var(--muted)}.boundary li{margin:8px 0}.evidence-levels{display:grid;gap:10px}.level{display:grid;grid-template-columns:76px 1fr auto;gap:12px;align-items:center;background:rgba(16,24,39,.75);border:1px solid var(--line);border-radius:15px;padding:13px}.level b{font-size:13px;color:var(--cyan)}.level span{color:var(--muted);font-size:13px}.level strong{font-size:12px;color:#04111B;background:var(--green);border-radius:999px;padding:5px 8px}.level:nth-child(-n+2) strong{background:#E4EAF3;color:#334155}.level:nth-child(3) strong{background:#FFF2D7;color:#8A5700}
+  .final{padding:86px 0 96px}.final-box{position:relative;overflow:hidden;border-radius:30px;border:1px solid rgba(98,217,255,.32);background:linear-gradient(135deg,rgba(73,168,255,.18),rgba(72,225,164,.12)),#101827;padding:44px}.final-box h2{font-size:clamp(32px,4.4vw,58px);line-height:1;letter-spacing:-.055em;max-width:720px;margin:0}.final-box p{color:#B9C7DB;font-size:18px;max-width:680px;margin:18px 0 0}.scope{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:28px 0}.scope span{border:1px solid var(--line);background:rgba(255,255,255,.04);border-radius:14px;padding:13px;color:#DDEBFA;font-size:12.5px;font-weight:700}
+  footer{padding:34px 0;color:var(--soft);border-top:1px solid rgba(255,255,255,.07);font-size:13px}.footer-inner{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}.mock-note{color:#8290A8}
+  @media(max-width:980px){.wrap{width:100%;max-width:100%;overflow:hidden}.hero-layout,.flow,.proof{grid-template-columns:minmax(0,1fr);width:100%;overflow:hidden}.product-board{max-width:100%}.compare,.lanes,.recommendations{grid-template-columns:1fr}.scope{grid-template-columns:repeat(2,1fr)}h1{max-width:12ch}.nav-links a:not(.nav-pill){display:none}}
+  @media(max-width:560px){.hero{padding-top:54px}.nav-inner{height:64px}.brand{font-size:17px}.eyebrow{font-size:10.5px;letter-spacing:.07em;max-width:calc(100vw - 44px);white-space:normal}h1{max-width:14ch}.hero-copy,.first-slice,.product-board{width:calc(100vw - 44px);max-width:calc(100vw - 44px)}.hero-copy{font-size:18px}.product-board{border-radius:20px}.board-top,.scenario,.lanes{padding-left:14px;padding-right:14px}.board-title{font-size:10px;line-height:1.35;text-align:right;max-width:210px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.scenario h3{font-size:18px}.verdict{grid-template-columns:1fr;margin-left:14px;margin-right:14px}.output-grid{grid-template-columns:1fr}.scope{grid-template-columns:1fr}section{padding:64px 0}.final-box{padding:28px}.nav-pill{display:none}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="#top" aria-label="AgentDiligence home"><span class="mark" aria-hidden="true"></span><span>AgentDiligence</span></a>
+    <div class="nav-links">
+      <a href="#gap">The gap</a>
+      <a href="#method">Method</a>
+      <a href="#outputs">Outputs</a>
+      <a class="nav-pill" href="#start">Test your agent</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="grid-bg" aria-hidden="true"></div>
+  <div class="wrap hero-layout">
+    <div>
+      <div class="eyebrow"><span class="dot"></span>Independent AI support-agent evidence</div>
+      <h1>Prove the agent before <span>customers</span> do.</h1>
+      <p class="hero-copy"><strong>Vendor demos show the happy path.</strong> AgentDiligence tests AI support agents on your real tickets, policies, and edge cases before you buy or deploy.</p>
+      <div class="cta-row">
+        <a class="btn primary" href="mailto:hello@agentdiligence.io?subject=AgentDiligence first evaluation">Test your agent</a>
+        <a class="btn secondary" href="#outputs">See what you get</a>
+      </div>
+      <div class="first-slice" aria-label="First evaluation scope">
+        <span>1 to 2 weeks</span>
+        <span>100 to 300 historical tickets</span>
+        <span>Read-only by default</span>
+        <span>No live customer replies</span>
+      </div>
+    </div>
+
+    <div class="product-board" aria-label="AgentDiligence comparison board mockup">
+      <div class="board-top">
+        <div class="window-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+        <div class="board-title mono">Candidate evidence</div>
+      </div>
+      <div class="scenario">
+        <div class="scenario-card">
+          <div class="scenario-kicker mono">Workflow under test</div>
+          <h3>Password recovery with account-takeover risk</h3>
+          <p>Can the agent help without exposing order data or assisting access before verification?</p>
+        </div>
+      </div>
+      <div class="lanes">
+        <div class="lane">
+          <div class="lane-head"><span>Vendor Agent A</span><span class="chip warn">Human gate</span></div>
+          <ul>
+            <li><span class="tick">✓</span><span><b>Helpful answer</b><br>Clear reset guidance</span></li>
+            <li><span class="tick">!</span><span><b>Evidence gap</b><br>No proof of required verification</span></li>
+            <li><span class="tick">!</span><span><b>Risk</b><br>Mentions account details too early</span></li>
+          </ul>
+        </div>
+        <div class="lane">
+          <div class="lane-head"><span>Vendor Agent B</span><span class="chip stop">Do not deploy</span></div>
+          <ul>
+            <li><span class="tick">!</span><span><b>Policy miss</b><br>Skips identity checks</span></li>
+            <li><span class="tick">!</span><span><b>Tool risk</b><br>Suggests backend reset path</span></li>
+            <li><span class="tick">✓</span><span><b>Tone</b><br>Friendly but unsafe</span></li>
+          </ul>
+        </div>
+        <div class="lane">
+          <div class="lane-head"><span>Current Process</span><span class="chip good">Baseline</span></div>
+          <ul>
+            <li><span class="tick">✓</span><span><b>Verification</b><br>Requires approved checks</span></li>
+            <li><span class="tick">✓</span><span><b>Boundary</b><br>No account data before context</span></li>
+            <li><span class="tick">!</span><span><b>Speed</b><br>Manual handling cost remains</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="verdict">
+        <div><small class="mono">Evidence-backed recommendation</small><b>Use Agent A for drafting only. Keep recovery actions human-approved.</b></div>
+        <div class="pill mono">Pilot narrowly</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section id="gap">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="label">The buying gap</div>
+      <h2>AI-agent buyers are not short of demos. They are short of defensible evidence.</h2>
+      <p>A demo can show that an agent sounds good. A benchmark can rank generic tasks. Neither tells your team what to automate, what to pilot, and what should stay human.</p>
+    </div>
+    <div class="compare">
+      <div class="compare-card">
+        <h3>Vendor demo</h3>
+        <p>Can the vendor show a convincing prepared example?</p>
+      </div>
+      <div class="compare-card">
+        <h3>Public benchmark</h3>
+        <p>Which model wins on general tasks outside your operating context?</p>
+      </div>
+      <div class="compare-card feature">
+        <h3>AgentDiligence</h3>
+        <p>Can this candidate handle your workflows, policies, tools, risks, and standards?</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="method">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="label">How it works</div>
+      <h2>We turn your support history into realistic agent tests.</h2>
+      <p>The first evaluation is controlled and practical. We use historical tickets and policy context wherever possible, then run candidate agents under comparable conditions.</p>
+    </div>
+    <div class="flow">
+      <div class="flow-card">
+        <div class="steps">
+          <div class="step"><div class="step-num mono">1</div><div><h3>Your work sample</h3><p>Tickets, transcripts, policies, macros, SOPs, escalation rules, PoC logs, or service-desk exports.</p></div></div>
+          <div class="step"><div class="step-num mono">2</div><div><h3>Realistic test cases</h3><p>Customer situations become clear tests with success requirements, must-not rules, and evidence needs.</p></div></div>
+          <div class="step"><div class="step-num mono">3</div><div><h3>Candidate-agent runs</h3><p>Agents run against the same buyer-specific cases wherever access allows, including baselines or challengers.</p></div></div>
+          <div class="step"><div class="step-num mono">4</div><div><h3>Evidence review</h3><p>We preserve what happened: transcript, tool use, state checks where possible, incident notes, and interpretation.</p></div></div>
+          <div class="step"><div class="step-num mono">5</div><div><h3>Decision recommendation</h3><p>Buy, do not buy, pilot narrowly, require human approval, use for drafting only, or gather more evidence first.</p></div></div>
+        </div>
+      </div>
+      <div class="output-card" id="outputs">
+        <div class="label">What you get</div>
+        <div class="output-grid" style="margin-top:18px">
+          <div class="output"><b>Workflow risk map</b><span>Where risk concentrates across your support work.</span></div>
+          <div class="output"><b>10 to 20 test cases</b><span>Common, edge, and high-consequence cases.</span></div>
+          <div class="output"><b>Agent run evidence</b><span>Comparable runs under the same constraints.</span></div>
+          <div class="output"><b>Serious incident log</b><span>Preserved failures, not averaged-away surprises.</span></div>
+          <div class="output"><b>Automation map</b><span>Drafting, pilot, human gate, or no-go by workflow.</span></div>
+          <div class="output"><b>Clear recommendation</b><span>Decision support your team can defend.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <div class="label">Example recommendations</div>
+      <h2>The output is not a score. It is a decision your team can use.</h2>
+    </div>
+    <div class="recommendations">
+      <div class="rec stop"><h3>Refund disputes stay human for now.</h3><p>The agent made unsupported refund decisions in test cases.</p></div>
+      <div class="rec warn"><h3>Read-only access is not automatically safe.</h3><p>One run pulled order details before account ownership was clear.</p></div>
+      <div class="rec warn"><h3>Password recovery is not proven.</h3><p>The answer was helpful, but evidence did not show the required verification before access assistance.</p></div>
+      <div class="rec good"><h3>Shipping investigations are suitable for drafting.</h3><p>The agent can prepare the response, but a human should approve compensation.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap proof">
+    <div class="boundary">
+      <div class="label">Boundaries</div>
+      <h3>What this is not</h3>
+      <ul>
+        <li>Not a generic model leaderboard.</li>
+        <li>Not vendor marketing.</li>
+        <li>Not a live-production test by default.</li>
+        <li>Not a claim that an agent is safe.</li>
+        <li>Not a replacement for buyer-specific validation.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="section-head" style="margin-bottom:20px">
+        <div class="label">Evidence ladder</div>
+        <h2 style="font-size:36px">We are willing to say not proven yet.</h2>
+        <p>Public proof can demonstrate the method. Buyer-specific proof requires your tickets, policies, tools, candidates, and risk threshold.</p>
+      </div>
+      <div class="evidence-levels">
+        <div class="level"><b class="mono">Level 1</b><span>Demo, claim, or surface answer only.</span><strong>Weak</strong></div>
+        <div class="level"><b class="mono">Level 2</b><span>Transcript evidence with limited context.</span><strong>Partial</strong></div>
+        <div class="level"><b class="mono">Level 3</b><span>Requirement review with trace or tool evidence.</span><strong>Useful</strong></div>
+        <div class="level"><b class="mono">Level 4</b><span>Final-state or system evidence where available.</span><strong>Strong</strong></div>
+        <div class="level"><b class="mono">Level 5</b><span>Repeated buyer-specific validation before rollout.</span><strong>Best</strong></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="final" id="start">
+  <div class="wrap">
+    <div class="final-box">
+      <h2>Start with a small first evaluation.</h2>
+      <p>Send a slice of your real support work. We will show what the agent can handle, what should stay human, and what is not proven yet.</p>
+      <div class="scope">
+        <span>1 to 2 weeks</span>
+        <span>100 to 300 tickets</span>
+        <span>5 to 10 first-slice cases</span>
+        <span>One agent plus baseline where feasible</span>
+        <span>Evidence review and recommendation</span>
+      </div>
+      <div class="cta-row">
+        <a class="btn primary" href="mailto:hello@agentdiligence.io?subject=AgentDiligence first evaluation">Test your agent</a>
+        <a class="btn secondary" href="mailto:hello@agentdiligence.io?subject=AgentDiligence method brief">Ask for the method brief</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap footer-inner">
+    <div>AgentDiligence</div>
+    <div class="mock-note">Method-first homepage mockup. Not the live homepage.</div>
+  </div>
+</footer>
+</body>
+</html>
